@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.interlocking.InterlockingMapper">
+    <insert id="Interlocking_insert_temp_result">
+        INSERT INTO dxj_alarmtype_temp(deptName,routeName,zoneName,devName,scPart,scContent,altpid,stdValue,abnormalHandleAdminType,abnormalHandleUser,abnormalHandleDealDepart)
+        VALUES ("${deptName}" ,"${routeName}","${zoneName}","${devName}","${scPart}","${scContent}","${altpid}","${stdValue}","${alarmType}","${userName}","${selectDepart}")
+    </insert>
+    <update id="Interlocking_changeAlarmType">
+         UPDATE dxj_spot_result SET abnormalHandleAdminType ="${alarmType}",abnormalHandleUser ="${userName}" ,abnormalHandleDealDepart="${selectDepart}"
+         WHERE ID ="${resultId}"
+    </update>
+    <update id="Interlocking_update_temp_result">
+        UPDATE  dxj_alarmtype_temp
+        SET abnormalHandleAdminType ="${alarmType}",abnormalHandleUser ="${userName}" ,abnormalHandleDealDepart="${selectDepart}"
+        WHERE deptName="${deptName}"  and  routeName="${routeName}" AND  zoneName="${zoneName}"
+            AND   devName="${devName}" AND scPart="${scPart}" AND scContent="${scContent}"
+           AND altpid="${altpid}" AND stdValue ="${stdValue}"
+    </update>
+    <update id="Interlocking_changeAlarmPersonLiable">
+              UPDATE dxj_spot_result SET  alarm_personLiable="${alarm_personLiable}"  WHERE ID ="${resultId}"
+    </update>
+    <update id="Interlocking_update_alarm_result">
+         UPDATE  dxj_spot_alarm
+         SET   alarm_manager ="${alarm_manage}"
+         WHERE DEPT_NAME="${deptName}"  and  ROUTE_NAME="${routeName}" AND  ZONE_NAME="${zoneName}"
+            AND   devName="${devName}" AND SC_PART="${scPart}" AND SC_CONTENT="${scContent}"
+    </update>
+
+
+    <select id="Interlocking_get_deptName" resultType="com.demo.model.interlocking.Interlocking">
+            SELECT deptName from dxj_spot_rout_zone_devname
+            GROUP BY deptName
+
+    </select>
+    <select id="Interlocking_get_routeName" resultType="com.demo.model.interlocking.Interlocking">
+             SELECT deptName,routeName from dxj_spot_rout_zone_devname
+                  GROUP BY deptName,routeName
+    </select>
+    <select id="Interlocking_get_zoneName" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT deptName,routeName ,zoneName from dxj_spot_rout_zone_devname
+          GROUP BY deptName,routeName ,zoneName
+    </select>
+    <select id="Interlocking_get_devName" resultType="com.demo.model.interlocking.Interlocking">
+                SELECT deptName,routeName,zoneName,devName from dxj_spot_rout_zone_devname
+            GROUP BY deptName,routeName,zoneName,devName
+    </select>
+    <select id="Interlocking_get_scPart" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT  DEPT_NAME as deptName,ROUTE_NAME as routeName ,ZONE_NAME as zoneName ,devName,SC_PART as scPart from dxj_spot_result
+        GROUP BY DEPT_NAME,ROUTE_NAME,ZONE_NAME,devName,SC_PART
+    </select>
+    <select id="Interlocking_get_content" resultType="com.demo.model.interlocking.Interlocking">
+
+        SELECT  DEPT_NAME as deptName,ROUTE_NAME as routeName ,ZONE_NAME as zoneName ,devName,SC_PART as scPart,SC_CONTENT as scContent
+
+      from dxj_spot_result
+
+      GROUP BY DEPT_NAME,ROUTE_NAME,ZONE_NAME,devName,SC_PART,SC_CONTENT
+    </select>
+    <select id="Interlocking_get_result" resultType="com.demo.model.interlocking.Interlocking">
+
+        SELECT
+        DEPT_NAME as deptName,ROUTE_NAME as routeName ,ZONE_NAME as zoneName ,devName,SC_PART as scPart,
+        DATE_FORMAT(uploadResultTime, '%Y-%m-%d %T') as uploadResultTime,
+        DATE_FORMAT(TASKEND_TM, '%Y-%m-%d %T') as taskEndTime,
+        DATE_FORMAT(TASKSTART_TM, '%Y-%m-%d %T') as taskStartTime,
+        SC_CONTENT as scContent,
+        RESULT as result,
+        USERNAME as userName,
+        SHIFTGROUPNAME as team,
+        CHARGE_CNAME as personLiable,
+        std_value as stdValue,
+        ALTPID as altpid,
+        REMARK as remark,
+        alarm_manage_name as dealUser,
+        alarm_remark as deal_remark,
+        alarm_flag as alarmFlag,
+        ID as resultId,
+        alarm_personLiable as dealPerson,
+        abnormalHandleType,
+        abnormalHandleUser,
+        abnormalHandleAdminType,
+        abnormalHandleDealDepart
+        FROM dxj_spot_result
+        WHERE
+        <if test="startTime != ''">
+            TASKSTART_TM>= "${startTime}"
+        </if>
+        <if test="endTime != ''">
+            AND  TASKSTART_TM &lt; "${endTime}"
+        </if>
+        <if test="deptName != 'test' and deptName != ''">
+            and  DEPT_NAME="${deptName}"
+        </if>
+        <if test="routeName != 'test' and routeName != ''">
+            and ROUTE_NAME="${routeName}"
+        </if>
+        <if test="zoneName != 'test' and zoneName != ''">
+            and ZONE_NAME="${zoneName}"
+        </if>
+        <if test="devName != 'test'  and devName != ''">
+            and devName="${devName}"
+        </if>
+        <if test="scPart != 'test' and scPart != ''">
+            and SC_PART="${scPart}"
+        </if>
+        <if test="scContent != 'test' and scContent != '' ">
+            and SC_CONTENT ="${scContent}"
+        </if>
+        and   DEPT_NAME !='综合工段'
+        and(
+        ALTPID =3
+        <if test="zcCheck=='true'">
+            or  ALTPID =0
+        </if>
+        <if test="wjCheck=='true'">
+            or ALTPID is  null
+        </if>
+
+        <if test="bjCheck=='true'">
+            <if test="bjType1=='true' || bjType2=='true'|| bjType3=='true'">
+                or  abnormalHandleType =0
+                <if test="bjType1=='true'">
+                    or  abnormalHandleAdminType =1
+                </if>
+                <if test="bjType2=='true'">
+                    or  abnormalHandleAdminType =2
+                </if>
+                <if test="bjType3=='true'">
+                    or  abnormalHandleAdminType =3
+                </if>
+            </if>
+            <if test="bjType1=='false' and bjType2=='false'and bjType3=='false'">
+                or ALTPID =1 or  ALTPID =2
+            </if>
+
+        </if>
+        )
+        LIMIT ${startPage},${numPerPage}
+
+
+
+
+
+        <!--SELECT a.*,GROUP_CONCAT(DISTINCT b.user) dealPerson FROM (-->
+        <!--SELECT-->
+        <!--DEPT_NAME as deptName,ROUTE_NAME as routeName ,ZONE_NAME as zoneName ,devName,SC_PART as scPart,-->
+        <!--DATE_FORMAT(uploadResultTime, '%Y-%m-%d %T') as uploadResultTime,-->
+        <!--DATE_FORMAT(TASKEND_TM, '%Y-%m-%d %T') as taskEndTime,-->
+        <!--DATE_FORMAT(TASKSTART_TM, '%Y-%m-%d %T') as taskStartTime,-->
+        <!--SC_CONTENT as scContent,-->
+        <!--RESULT as result,-->
+        <!--USERNAME as userName,-->
+        <!--CHARGE_CNAME as personLiable,-->
+        <!--std_value as stdValue,-->
+        <!--ALTPID as altpid,-->
+        <!--REMARK as remark,-->
+        <!--alarm_manage_name as dealUser,-->
+        <!--alarm_remark as deal_remark,-->
+        <!--alarm_flag as alarmFlag,-->
+        <!--ID as resultId,-->
+        <!--abnormalHandleType,-->
+        <!--abnormalHandleUser,-->
+        <!--abnormalHandleAdminType,-->
+        <!--abnormalHandleDealDepart-->
+        <!--FROM dxj_spot_result-->
+        <!--WHERE-->
+            <!--<if test="startTime != ''">-->
+                        <!--TASKSTART_TM>= "${startTime}"-->
+            <!--</if>-->
+            <!--<if test="endTime != ''">-->
+                <!--AND  TASKSTART_TM &lt; "${endTime}"-->
+            <!--</if>-->
+            <!--<if test="deptName != 'test' and deptName != ''">-->
+                   <!--and  DEPT_NAME="${deptName}"-->
+            <!--</if>-->
+            <!--<if test="routeName != 'test' and routeName != ''">-->
+                    <!--and ROUTE_NAME="${routeName}"-->
+            <!--</if>-->
+            <!--<if test="zoneName != 'test' and zoneName != ''">-->
+                    <!--and ZONE_NAME="${zoneName}"-->
+            <!--</if>-->
+            <!--<if test="devName != 'test'  and devName != ''">-->
+                    <!--and devName="${devName}"-->
+            <!--</if>-->
+            <!--<if test="scPart != 'test' and scPart != ''">-->
+                    <!--and SC_PART="${scPart}"-->
+            <!--</if>-->
+            <!--<if test="scContent != 'test' and scContent != '' ">-->
+                    <!--and SC_CONTENT ="${scContent}"-->
+            <!--</if>-->
+             <!--and   DEPT_NAME !='综合工段'-->
+            <!--and(-->
+            <!--ALTPID =3-->
+            <!--<if test="zcCheck=='true'">-->
+                <!--or  ALTPID =0-->
+            <!--</if>-->
+            <!--<if test="wjCheck=='true'">-->
+                <!--or ALTPID is  null-->
+            <!--</if>-->
+
+            <!--<if test="bjCheck=='true'">-->
+                <!--<if test="bjType1=='true' || bjType2=='true'|| bjType3=='true'">-->
+                    <!--or  abnormalHandleType =0-->
+                    <!--<if test="bjType1=='true'">-->
+                        <!--or  abnormalHandleAdminType =1-->
+                    <!--</if>-->
+                    <!--<if test="bjType2=='true'">-->
+                        <!--or  abnormalHandleAdminType =2-->
+                    <!--</if>-->
+                    <!--<if test="bjType3=='true'">-->
+                        <!--or  abnormalHandleAdminType =3-->
+                    <!--</if>-->
+                <!--</if>-->
+                <!--<if test="bjType1=='false' and bjType2=='false'and bjType3=='false'">-->
+                    <!--or ALTPID =1 or  ALTPID =2-->
+                <!--</if>-->
+
+            <!--</if>-->
+            <!--)-->
+           <!--LIMIT ${startPage},${numPerPage}-->
+        <!--)a  LEFT  JOIN dxj_config_liable b    ON  (b.department LIKE CONCAT("%",a.abnormalHandleDealDepart ,"%") and  a.abnormalHandleAdminType=b.alarmType)-->
+
+        <!--GROUP BY a.deptName,routeName ,zoneName ,devName, scPart,uploadResultTime,taskEndTime,taskStartTime,scContent,result,userName,personLiable,stdValue,-->
+        <!--altpid,alarmFlag,remark-->
+
+    </select>
+    <select id="Interlocking_get_result1_total" resultType="java.lang.Integer">
+        SELECT
+     count(1) as totalNum
+        from
+        dxj_spot_result
+
+        WHERE
+
+        <if test="startTime != ''">
+            TASKSTART_TM>= "${startTime}"
+        </if>
+        <if test="endTime != ''">
+            AND  TASKSTART_TM &lt; "${endTime}"
+        </if>
+        <if test="deptName != 'test' and deptName != ''">
+            and  DEPT_NAME="${deptName}"
+        </if>
+        <if test="routeName != 'test' and routeName != ''">
+            and ROUTE_NAME="${routeName}"
+        </if>
+        <if test="zoneName != 'test' and zoneName != ''">
+            and ZONE_NAME="${zoneName}"
+        </if>
+        <if test="devName != 'test'  and devName != ''">
+            and devName="${devName}"
+        </if>
+        <if test="scPart != 'test' and scPart != ''">
+            and SC_PART="${scPart}"
+        </if>
+        <if test="scContent != 'test' and scContent != '' ">
+            and SC_CONTENT ="${scContent}"
+        </if>
+       and DEPT_NAME !='综合工段'
+        and(
+              ALTPID =3
+        <if test="zcCheck=='true'">
+            or  ALTPID =0
+        </if>
+        <if test="wjCheck=='true'">
+            or ALTPID is  null
+        </if>
+
+        <if test="bjCheck=='true'">
+            <if test="bjType1=='true' || bjType2=='true'|| bjType3=='true'">
+                <if test="bjType1=='true'">
+                    or abnormalHandleAdminType =1
+                </if>
+                <if test="bjType2=='true'">
+                    or  abnormalHandleAdminType =2
+                </if>
+                <if test="bjType3=='true'">
+                    or  abnormalHandleAdminType =3
+                </if>
+            </if>
+            <if test="bjType1=='false' and bjType2=='false'and bjType3=='false'">
+                or ALTPID =1 or  ALTPID =2
+            </if>
+        </if>
+        )
+
+    </select>
+    <select id="Interlocking_get_byId_result" resultType="com.demo.model.interlocking.Interlocking">
+          SELECT   DEPT_NAME as deptName,ROUTE_NAME as routeName ,ZONE_NAME as zoneName ,devName,SC_PART as scPart,SC_CONTENT as scContent,
+                std_value as stdValue, ALTPID as altpid,abnormalHandleDealDepart,abnormalHandleAdminType,  SHIFTGROUPNAME as team
+           FROM dxj_spot_result WHERE ID="${resultId}"
+    </select>
+    <select id="Interlocking_get_temp_result" resultType="com.demo.model.interlocking.Interlocking">
+          SELECT * FROM dxj_alarmtype_temp WHERE  deptName="${deptName}"  and  routeName="${routeName}" AND  zoneName="${zoneName}"
+            AND   devName="${devName}" AND scPart="${scPart}" AND scContent="${scContent}"
+           AND altpid="${altpid}" AND stdValue ="${stdValue}"
+    </select>
+    <select id="search_config_alarm_liable_all" resultType="com.demo.model.universal.ConfigUser">
+        SELECT user,alarmType,department,team FROM dxj_config_liable
+    </select>
+    <select id="Interlocking_get_all_alarm_byDay" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT
+            ID as resultId,
+            DEPT_NAME as deptName,ROUTE_NAME as routeName ,ZONE_NAME as zoneName ,devName,SC_PART as scPart,
+            DATE_FORMAT(TASKSTART_TM, '%Y-%m-%d %T') as taskStartTime,
+            SC_CONTENT as scContent,
+            std_value as stdValue,
+            ALTPID as altpid,
+            abnormalHandleUser,
+            abnormalHandleAdminType,
+            abnormalHandleDealDepart
+        FROM
+            dxj_spot_result
+        WHERE
+            TASKSTART_TM >=CONCAT(CURDATE(),' 00:00:00')
+            AND CONCAT(CURDATE(),' 23:59:59')>TASKSTART_TM
+            AND ALTPID>0
+            AND abnormalHandleDealDepart IS NULL
+    </select>
+    <select id="Interlocking_get_all_alarmType" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT  * FROM dxj_alarmtype_temp
+    </select>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.equip.sk.pd2.SpotSKPD2DetailedMapper">
+    <select id="SK_PD2_SB_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+
+				'碎矿' as 'devName',
+				MAX(CASE	WHEN  SC_CONTENT LIKE '挡矿皮上%' THEN tempResult END ) as 'a1',
+				MAX(CASE WHEN  SC_CONTENT LIKE '首轮驱动滚筒轴承润滑%' THEN tempResult END ) as 'a2',
+				MAX(CASE WHEN  SC_CONTENT LIKE '托辊%' THEN tempResult END ) as 'a3',
+				MAX(CASE WHEN  SC_CONTENT LIKE '上、下%' THEN tempResult END ) as 'a4',
+				MAX(CASE WHEN  SC_CONTENT LIKE '皮带%' THEN tempResult END ) as 'a5',
+				MAX(CASE WHEN  SC_CONTENT LIKE '电机与减速机%' THEN tempResult END ) as 'a6',
+				MAX(CASE WHEN  SC_CONTENT LIKE '电机、减速机%' THEN tempResult END ) as 'a7',
+				MAX(CASE WHEN  SC_CONTENT LIKE '减速机内润滑油油质%' THEN tempResult END ) as 'a8',
+				MAX(CASE WHEN  SC_CONTENT LIKE '减速机内润滑油位%' THEN tempResult END ) as 'a9'
+
+FROM
+		(SELECT
+					SC_CONTENT,RESULT,
+				(CASE
+               WHEN RESULT='停机不检' THEN RESULT
+				WHEN		SC_CONTENT="电机轴承温度"  THEN RESULT
+				WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+				WHEN 	(ALTPID = 0)  THEN '正常'
+				WHEN  (ALTPID=1 OR ALTPID=2) THEN   CONCAT(RESULT,'故障')
+				ELSE RESULT
+				END ) as tempResult
+
+		FROM
+				dxj_spot_result
+		WHERE
+					(DEPT_NAME="碎矿设备"			AND devName="2#皮带运输机")
+
+				AND to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as tmp
+
+
+        </select>
+    <select id="SK_PD2_SC_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+
+				'生产' as 'devName',
+				MAX(CASE WHEN  SC_CONTENT LIKE '皮带尾轮%' THEN tempResult END ) as 'a1',
+				MAX(CASE WHEN  SC_CONTENT LIKE '皮带运行%' THEN tempResult END ) as 'a2',
+				MAX(CASE WHEN  SC_CONTENT LIKE '皮带逆止器%' THEN tempResult END ) as 'a3',
+				MAX(CASE WHEN  SC_CONTENT LIKE '皮带减速机%' THEN tempResult END ) as 'a4',
+				MAX(CASE WHEN  SC_CONTENT LIKE '机台%' THEN tempResult END ) as 'a5',
+				MAX(CASE WHEN  SC_CONTENT LIKE '皮带下矿%' THEN tempResult END ) as 'a6'
+FROM
+(
+			SELECT
+						devName,SC_CONTENT,SC_PART,
+					(	CASE
+										WHEN RESULT='停机不检' THEN RESULT
+										WHEN  (ALTPID = 2 OR ALTPID=1)  THEN '故障'
+										WHEN ALTPID=0 THEN '正常'  else  RESULT END
+
+			)tempResult
+			 from dxj_spot_result
+
+
+					where  DEPT_NAME = '碎矿生产'
+							and devName='2#皮带运输机'
+						AND TO_DAYS(TASKSTART_TM)=TO_DAYS(NOW())
+							)as tmp
+
+
+    </select>
+    <select id="SK_PD2_DY_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+        SELECT
+ '电仪' as 'devName',
+		MAX(CASE WHEN SC_CONTENT ='测振'         THEN tempResult  end )  as   'a1',
+		MAX(CASE WHEN SC_CONTENT ='测温'            THEN tempResult  end )  as   'a2',
+		MAX(CASE WHEN SC_CONTENT ='有无异常'          THEN tempResult  end )  as   'a3',
+		MAX(CASE WHEN SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a4'
+FROM
+		(
+			SELECT
+						SC_CONTENT,
+						(CASE
+						WHEN RESULT='停机不检' THEN RESULT
+						WHEN 	(SC_CONTENT="测振" OR SC_CONTENT="测温") THEN RESULT
+						WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+						WHEN 	(ALTPID = 0)  THEN '正常'
+						ELSE RESULT
+						END  ) as tempResult,
+						RESULT
+
+			FROM
+					dxj_spot_result
+			WHERE
+					(DEPT_NAME="电仪工段" AND devName="2#皮带运输机电机")
+			AND
+							to_days(TASKSTART_TM) = to_days(now()) -- 当天数据
+		)as temp
+    </select>
+
+
+</mapper>

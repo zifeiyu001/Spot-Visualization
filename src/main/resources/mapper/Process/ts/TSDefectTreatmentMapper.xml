@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.process.ts.TS1DefectTreatmentMapper">
+        <select id="TS_DEFECT_TREATMENT_LIST" resultType="com.demo.model.equip.DefectTreatment">
+           SELECT
+                (CASE WHEN DEPT_NAME='精尾设备' THEN '设备'
+                WHEN DEPT_NAME='电仪工段' THEN '电仪'
+                WHEN DEPT_NAME='精尾生产' THEN '生产'
+                END ) as section,
+                COUNT(alarm_flag) AS total,
+                COUNT(alarm_flag = 'Y' OR NULL) AS processed,
+                COUNT(alarm_flag = 'N' OR NULL) AS untreated
+            FROM
+                dxj_spot_result
+            WHERE
+
+				( ROUTE_NAME='尾砂泵' OR ROUTE_NAME='2系统压滤、过滤机' OR ROUTE_NAME='压滤、过滤机'
+				OR ROUTE_NAME='压滤机岗' OR ROUTE_NAME='过滤机岗')
+                and  ALTPID !=0
+								and  alarm_flag='N'
+								AND
+--                 YEARWEEK(date_format(TASKSTART_TM, '%Y-%m-%d'),1) = YEARWEEK(now(), 1)-- 一周数据（测试用）
+	date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            GROUP BY
+                section;
+        </select>
+
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.report.equip.mf.ReportSBMFGFJMapper">
+    <select id="REPORT_SB_FX_GFJ_RUN_LIST" resultType="com.demo.model.report.Report">
+select
+			devName as equipName
+,
+(CASE
+-- 稀油站
+		WHEN SC_CONTENT='机体、管路是否漏气' THEN '机体管路'
+		WHEN SC_CONTENT='电机及风机各紧固螺栓是否有松动' THEN '紧固螺栓'
+		WHEN SC_CONTENT='轴向窜动是否在标准范围内' THEN '轴向窜动'
+		WHEN SC_CONTENT='运行是否有异响' THEN '运行'
+		WHEN SC_CONTENT='进出口阀门是否能正常开启' THEN '进出口阀门'
+
+--  鼓风机
+		WHEN SC_CONTENT='供回油管、阀、接头是否漏油' THEN '供回油管'
+		WHEN SC_CONTENT='供油压力' THEN '供油压力'
+		WHEN SC_CONTENT='冷却器使用是否正常（无堵塞，排出水无油、矿浆）' THEN '冷却器'
+		WHEN SC_CONTENT='回油滤网有无堵塞' THEN '回油滤网'
+		WHEN SC_CONTENT='油泵压力' THEN '油泵压力'
+		WHEN SC_CONTENT='油泵运转是否正常、给油量是否稳定、连续' THEN '油泵运转'
+		WHEN SC_CONTENT='油站供油温度' THEN '供油温度'
+		WHEN SC_CONTENT='油站油箱温度' THEN '油箱温度'
+		WHEN SC_CONTENT='油箱内油质是否符合要求' THEN '油质'
+		WHEN SC_CONTENT='油箱油位是否在标准范围内' THEN '油位'
+		else SC_CONTENT
+END
+) AS part
+			,RESULT as result
+			,ALTPID as altpid
+from
+			dxj_spot_result
+WHERE
+			DEPT_NAME='磨浮设备'
+		AND
+			(ZONE_NAME='鼓风机')
+		AND TASKSTART_TM="${time}"
+ORDER BY equipName ,part
+    </select>
+
+    <select id="REPORT_SB_FX_FXZ_RUN_LIST" resultType="com.demo.model.report.Report">
+      select
+                devName as equipName,
+
+                (CASE WHEN SC_PART='液位控制器执行机构紧固螺栓' THEN '紧固螺栓'
+                            WHEN SC_PART='进料管、进料短接、阀门' THEN '管道阀门无泄漏'
+
+                        WHEN SC_PART='轴承体' AND SC_CONTENT='润滑油是否充足' THEN '紧固螺栓'
+                    WHEN SC_PART='轴承体' AND SC_CONTENT='润滑油油位是否在标准范围内' THEN '油位'
+                else SC_PART
+                END
+                ) as part,
+                RESULT,
+                ALTPID
+      from
+         dxj_spot_result
+      WHERE
+              DEPT_NAME='磨浮设备' AND ZONE_NAME='浮选柱'
+                AND TASKSTART_TM="${time}"
+        ORDER BY FIELD(equipName,'铜精一浮选柱','铜精二浮选柱','1#铜精选一给矿泵','2#铜精选一给矿泵','1#铜精选二给矿泵','2#铜精选二给矿泵'),part
+
+
+    </select>
+    <select id="REPORT_SB_FX_DCB_RUN_LIST" resultType="com.demo.model.report.Report">
+        select
+(
+CASE
+	WHEN devName = '1#事故泵' THEN '事故泵'
+	WHEN devName = '2#事故泵' THEN '事故泵'
+	WHEN devName = '3#事故泵' THEN '事故泵'
+	WHEN devName = '1#扫Ⅰ泡沫泵' THEN '扫I泡沫泵'
+	WHEN devName = '1#扫Ⅱ泡沫泵' THEN '扫II泡沫泵'
+	WHEN devName = '2#扫Ⅰ泡沫泵' THEN '扫I泡沫泵'
+	WHEN devName = '2#扫Ⅱ泡沫泵' THEN '扫II泡沫泵'
+	WHEN devName = '1#硫粗选泡沫泵' THEN '硫粗选泡沫泵'
+	WHEN devName = '2#硫粗选泡沫泵' THEN '硫粗选泡沫泵'
+
+	WHEN devName = '1#硫粗选给矿泵' THEN '硫粗选给矿泵'
+	WHEN devName = '2#硫粗选给矿泵' THEN '硫粗选给矿泵'
+	WHEN devName = '1#硫精一泡沫泵' THEN '硫精一泡沫泵'
+	WHEN devName = '2#硫精一泡沫泵' THEN '硫精一泡沫泵'
+
+	WHEN devName = '1#精扫一精矿泵' THEN '精扫一精矿泵'
+	WHEN devName = '2#精扫一精矿泵' THEN '精扫一精矿泵'
+	WHEN devName = '1#精扫二尾矿泵' THEN '精扫二尾矿泵'
+	WHEN devName = '2#精扫二尾矿泵' THEN '精扫二尾矿泵'
+
+	WHEN devName = '1#铜精选一给矿泵' THEN '铜精选一给矿泵'
+	WHEN devName = '2#铜精选一给矿泵' THEN '铜精选一给矿泵'
+
+	WHEN devName = '1#铜精选二给矿泵' THEN '铜精选二给矿泵'
+	WHEN devName = '2#铜精选二给矿泵' THEN '铜精选二给矿泵'
+	else devName
+END
+) as equipName
+,devName as part
+	,RESULT as result
+	,max(ALTPID) as altpid
+from
+		dxj_spot_result
+WHERE
+		DEPT_NAME='磨浮设备' AND (ROUTE_NAME='浮选底层' OR
+( ROUTE_NAME='浮选柱' AND devName LIKE '%铜精选%' ))
+and devName != '1#离心式渣浆泵（再磨砂）' and  devName != '2#离心式渣浆泵（再磨砂）'
+and devName != '1#脱泥泵' and  devName != '2#脱泥泵'
+		AND TASKSTART_TM="${time}"
+
+GROUP BY equipName,part
+ORDER BY  equipName DESC,CAST(TRIM('#' FROM part) AS SIGNED)
+    </select>
+
+
+</mapper>

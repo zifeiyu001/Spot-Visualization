@@ -278,7 +278,12 @@ public class InterlockingController {
                 }
             }
         }
+
+
+
         return spotResults;
     }
+
+
 
 }

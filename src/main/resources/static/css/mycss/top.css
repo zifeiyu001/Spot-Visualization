@@ -1,0 +1,69 @@
+@charset "utf-8";
+.bgcolor-1 { background: #f0efee; }
+.bgcolor-2 { background: #f9f9f9; }
+.bgcolor-3 { background: #e8e8e8; }/*light grey*/
+.bgcolor-4 { background: #2f3238; color: #fff; }/*Dark grey*/
+.bgcolor-5 { background: #df6659; color: #521e18; }/*pink1*/
+.bgcolor-6 { background: #2fa8ec; }/*sky blue*/
+.bgcolor-7 { background: #d0d6d6; }/*White tea*/
+.bgcolor-8 { background: #3d4444; color: #fff; }/*Dark grey2*/
+.bgcolor-9 { background: #ef3f52; color: #fff;}/*pink2*/
+.bgcolor-10{ background: #64448f; color: #fff;}/*Violet*/
+.bgcolor-11{ background: #3755ad; color: #fff;}/*dark blue*/
+.bgcolor-12{ background: #3498DB; color: #fff;}/*light blue*/
+/*.bgcolor-12{ background: #000; color: #fff;}/*light blue*/
+/* Header */
+.htmleaf-header{
+	padding: 1em 190px 1em;
+	letter-spacing: -1px;
+	text-align: center;
+}
+.htmleaf-header h1 {
+	font-weight: 600;
+	font-size: 2em;
+	line-height: 1;
+	margin-bottom: 0;
+	font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", "FontAwesome", sans-serif;
+}
+.htmleaf-header h1 span {
+	font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", "FontAwesome", sans-serif;
+	display: block;
+	font-size: 60%;
+	font-weight: 400;
+	padding: 0.8em 0 0.5em 0;
+	color: #c3c8cd;
+}
+  	#header{
+	    background-image: url('/images/start.jpg');
+        background-size: 100% 100%;
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
+	#logo{
+		text-align:center;
+	}
+	#logo img{
+		height:100px;
+	    width: auto;	
+	}
+
+	#mytitle{
+	    line-height: 100px;/*垂直居中关键*/
+		height: 100px;
+        text-align:center;
+        font-size: 42px;
+        font-weight: bold;
+		color:#00ff00;
+		text-shadow: 5px 5px 5px #FF0000;
+	}
+.mycontainer {
+	padding: 1em 20px 1em;
+	letter-spacing: -1px;
+}
+.mytree_node{
+	overflow-y:auto;
+	overflow-x:auto;
+	white-space:nowrap;
+	width:100%;
+	height:800px;
+}

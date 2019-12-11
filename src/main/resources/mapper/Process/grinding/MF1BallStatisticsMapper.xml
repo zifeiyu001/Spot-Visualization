@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.process.mk.MF1BallStatisticsMapper">
+        <select id="MK_1_BALL_STATISTICS_LIST" resultType="com.demo.model.equip.SpotStatistics">
+ SELECT MAX(reality)reality, MAX(plan) plan from
+
+( select
+      (case WHEN DocTagName="MK_JQJ_1.JQL_PV" THEN DocValue END ) as reality,
+			(CASE	WHEN DocTagName="MK_JQJ_1.QZJH" THEN DocValue  END  )as  plan
+
+      from docdata
+        WHERE (DocTagName="MK_JQJ_1.JQL_PV"
+        or  DocTagName="MK_JQJ_1.QZJH")
+        AND TO_DAYS(DataTime) =TO_DAYS(NOW())
+        ORDER BY DataTime DESC LIMIT 2)a
+        </select>
+
+</mapper>

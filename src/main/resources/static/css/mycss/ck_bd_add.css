@@ -1,0 +1,5 @@
+@charset "utf-8";
+td .form-control{ width:25%;margin-left:auto;margin-right:auto;}
+td input{text-align:center;}
+td div{width:25%;}
+td select{width:25%;}

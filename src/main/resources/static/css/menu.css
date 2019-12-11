@@ -1,0 +1,42 @@
+.menu {
+    height: 9%;
+    width: 100%;
+    display: inline-block;
+}
+.menu .title{
+    width: 33%;     height: 100%;
+    margin: 0;
+    color: white;
+    float: left;
+    min-width: 200px;
+    text-align: center;
+    line-height: 200%;
+}
+.menu .menuLeft,.menuRight{
+    width: 33%;
+    height: 100%;
+    float: left;
+    min-width: 100px;
+    color: #FFFFFF;
+}
+.menu .menuRight .currentTime{
+    margin-top: 6%;
+    margin-left: 45%;
+    float: left;
+}
+.menu .menuLeft a,.menuRight a {
+    position: relative;
+    z-index: 1;
+    width: 21%;
+    height: 37%;
+    text-align: center;
+    float: left;
+    list-style-type:none;
+    text-decoration: none;
+    margin: 5%;
+    background-image: url("/images/module/bnt.png");
+    background-size: 100% 100%;
+    color: #FFFFFF;
+    transition: .4s;
+    border-radius:5px 0;
+}

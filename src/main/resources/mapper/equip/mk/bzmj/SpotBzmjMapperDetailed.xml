@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.equip.mk.bzmj.SpotBzmjDetailedMapper">
+    <select id="SPOT_MK_BZMJ_MF_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+    '磨浮' as 'devName',
+	MAX(CASE WHEN spot='轴向速度1'      THEN tempResult  end ) as  'a1',
+	MAX(CASE WHEN spot='水平速度1'      THEN tempResult  end ) as  'a2',
+	MAX(CASE WHEN spot='垂直速度1'      THEN tempResult  end ) as  'a3',
+	MAX(CASE WHEN spot='温度1'          THEN tempResult  end ) as  'a4',
+	MAX(CASE WHEN spot='轴向速度2'      THEN tempResult  end ) as  'a5',
+	MAX(CASE WHEN spot='水平速度2'      THEN tempResult  end ) as  'a6',
+	MAX(CASE WHEN spot='垂直速度2'      THEN tempResult  end ) as  'a7',
+	MAX(CASE WHEN spot='温度2' 		     THEN tempResult  end ) as  'a8',
+	MAX(CASE WHEN spot='结构' 			 THEN tempResult  end ) as  'a9',
+	MAX(CASE WHEN spot='干油润滑站'     THEN tempResult  end ) as  'a10',
+	MAX(CASE WHEN spot='轴向速度3'      THEN tempResult  end ) as  'a11',
+	MAX(CASE WHEN spot='水平速度3'      THEN tempResult  end ) as  'a12',
+	MAX(CASE WHEN spot='垂直速度3'      THEN tempResult  end ) as  'a13',
+	MAX(CASE WHEN spot='温度3'          THEN tempResult  end ) as  'a14',
+	MAX(CASE WHEN spot='轴向速度4'      THEN tempResult  end ) as  'a15',
+	MAX(CASE WHEN spot='水平速度4'      THEN tempResult  end ) as  'a16',
+	MAX(CASE WHEN spot='垂直速度4'      THEN tempResult  end ) as  'a17',
+	MAX(CASE WHEN spot='温度4' 		      THEN tempResult  end ) as  'a18',
+	MAX(CASE WHEN spot='高压润滑系统'   THEN tempResult  end ) as  'a19',
+	MAX(CASE WHEN spot='低压润滑系统'   THEN tempResult  end ) as  'a20'
+
+FROM
+	(SELECT
+		(CASE
+				WHEN  SC_PART='进料端轴承轴向速度' THEN '轴向速度2'
+				WHEN  SC_PART='进料端轴承水平速度' THEN '水平速度2'
+				WHEN  SC_PART='进料端轴承垂直速度' THEN '垂直速度2'
+				WHEN  SC_PART='进料端轴承座温度' THEN '温度2'
+				WHEN  SC_PART='出料端轴承轴向速度' THEN '轴向速度1'
+				WHEN  SC_PART='出料端轴承水平速度' THEN '水平速度1'
+				WHEN  SC_PART='出料端轴承垂直速度' THEN '垂直速度1'
+				WHEN  SC_PART='出料端轴承座温度' THEN '温度1'
+				WHEN  SC_PART='进料端小齿轮轴承轴向速度' THEN '轴向速度4'
+				WHEN  SC_PART='进料端小齿轮轴承水平速度' THEN '水平速度4'
+				WHEN  SC_PART='进料端小齿轮轴承垂直速度' THEN '垂直速度4'
+				WHEN  SC_PART='进料端小齿轮轴承座温度' THEN '温度4'
+				WHEN  SC_PART='出料端小齿轮轴承轴向速度' THEN '轴向速度3'
+				WHEN  SC_PART='出料端小齿轮轴承水平速度' THEN '水平速度3'
+				WHEN  SC_PART='出料端小齿轮轴承垂直速度' THEN '垂直速度3'
+				WHEN  SC_PART='出料端小齿轮轴承座温度' THEN '温度3'
+				WHEN  devName='半自磨机干油润滑站' THEN '干油润滑站'
+				WHEN  devName='MZS6433高压稀油润滑系统' THEN '高压润滑系统'
+				WHEN  devName='MZS6433低压稀油润滑系统' THEN '低压润滑系统'
+				WHEN  devName='半自磨机结构' THEN '结构'
+		END )as spot,
+    (CASE
+               WHEN RESULT='停机不检' THEN RESULT
+				WHEN ((devName='半自磨机干油润滑站' OR devName='半自磨机结构' OR ZONE_NAME='半自磨机稀油润滑系统') AND (ALTPID = 2 OR ALTPID=1))  THEN '故障'
+				WHEN ((devName='半自磨机干油润滑站' OR devName='半自磨机结构' OR ZONE_NAME='半自磨机稀油润滑系统') AND (ALTPID = 0))  THEN '正常'
+				WHEN  (ALTPID=1 OR ALTPID=2) THEN   CONCAT(RESULT,'故障')
+			 ELSE RESULT
+		END ) as tempResult
+
+	FROM
+				dxj_spot_result
+	WHERE
+
+					(	devName='半自磨机传动部电机'
+						OR
+							devName='半自磨机传动齿轮'
+						OR
+							devName='半自磨机干油润滑站'
+						OR
+							devName='半自磨机结构'
+						OR
+							ZONE_NAME='半自磨机稀油润滑系统'
+				)
+				AND
+						to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+	GROUP BY spot) as m
+        </select>
+    <select id="SPOT_MK_BZMJ_SC_LIST" resultType="com.demo.model.equip.detailedData">
+        SELECT
+  '生产' as 'devName',
+	MAX(CASE WHEN SC_PART='筒体端面'    THEN temResult  end ) as  'a1',
+	MAX(CASE WHEN SC_PART='流量计'      THEN temResult  end ) as  'a2',
+	MAX(CASE WHEN SC_PART='补加水阀'      THEN temResult  end ) as  'a3',
+	MAX(CASE WHEN SC_PART='补加水管'          THEN temResult  end ) as  'a4',
+	MAX(CASE WHEN SC_PART='甘油喷射系统'      THEN temResult  end ) as  'a5',
+	MAX(CASE WHEN SC_PART='排矿浓度'      THEN temResult  end ) as  'a6',
+	MAX(CASE WHEN devName ='MZS6433低压稀油润滑系统' and SC_CONTENT='油泵是否工作正常'      THEN temResult  end ) as  'a7',
+	MAX(CASE WHEN devName ='MZS6433低压稀油润滑系统' and SC_CONTENT='冷却水是否正常' 		     THEN temResult  end ) as  'a8',
+	MAX(CASE WHEN devName ='MZS6433高压稀油润滑系统' and SC_CONTENT='是否漏油'  			 THEN temResult  end ) as  'a9',
+	MAX(CASE WHEN devName ='MZS6433高压稀油润滑系统' and SC_CONTENT='冷却水是否正常'     THEN temResult  end ) as  'a10'
+FROM
+(
+			SELECT
+						devName,SC_CONTENT,SC_PART,
+					(	CASE
+										WHEN RESULT='停机不检' THEN RESULT
+										WHEN  (ALTPID = 2 OR ALTPID=1)  THEN '故障'
+										WHEN ALTPID=0 THEN '正常' END
+
+			)temResult
+			 from dxj_spot_result
+					where  DEPT_NAME = '磨浮生产'
+							AND ROUTE_NAME = '磨矿岗'
+							and (devName='MZS6433半自磨机'
+							OR devName LIKE 'MZS6433%压稀油润滑系统'))as tmp
+
+
+    </select>
+    <select id="SPOT_MK_BZMJ_DY_LIST" resultType="com.demo.model.equip.detailedData">
+        SELECT
+ '电仪' as 'devName',
+		MAX(CASE WHEN SC_PART='传动部电机有无异响'         THEN tempResult  end )  as   'a1',
+		MAX(CASE WHEN SC_PART='传动部电机滑环'             THEN tempResult  end )  as   'a2',
+		MAX(CASE WHEN SC_PART='传动部电机轴承油位'         THEN tempResult  end )  as   'a3',
+		MAX(CASE WHEN SC_PART='MZS6433低压稀油站电机温度'  THEN RESULT      end )  as   'a4',
+		MAX(CASE WHEN SC_PART='MZS6433低压稀油站电机振动'  THEN tempResult  end )  as   'a5',
+		MAX(CASE WHEN SC_PART='MZS6433高压稀油站电机温度'  THEN RESULT      end )  as   'a6',
+		MAX(CASE WHEN SC_PART='MZS6433高压稀油站电机振动'  THEN tempResult  end )  as   'a7'
+FROM
+		(
+			SELECT
+						SC_PART,
+						(CASE
+						WHEN RESULT='停机不检' THEN RESULT
+						WHEN ((SC_PART='传动部电机有无异响'
+									OR SC_PART='传动部电机滑环'
+									OR SC_PART='传动部电机轴承油位'
+									OR SC_PART='MZS6433低压稀油站电机振动'
+									OR SC_PART='MZS6433高压稀油站电机振动'
+									) AND (ALTPID = 2 OR ALTPID=1))  THEN '故障'
+						WHEN ((SC_PART='传动部电机有无异响'
+									OR SC_PART='传动部电机滑环'
+									OR SC_PART='传动部电机轴承油位'
+									OR SC_PART='MZS6433低压稀油站电机振动'
+									OR SC_PART='MZS6433高压稀油站电机振动'
+									) AND (ALTPID = 0))  THEN '正常'
+									ELSE RESULT
+						END ) as tempResult,
+						RESULT
+
+			FROM
+					dxj_spot_result
+			WHERE
+					(		(
+			ZONE_NAME = '半自磨机'
+			OR ZONE_NAME = '半自磨机稀油润滑系统'
+		)
+		OR devName = 'MZS6433半自磨机电机'
+		OR devName LIKE 'MZS6433半自磨机%电机'
+				)
+			AND
+							to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as temp
+
+    </select>
+
+</mapper>

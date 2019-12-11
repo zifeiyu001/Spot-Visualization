@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.report.workShop.WorkShopReportMapper">
+    <select id="workShop_report_spot_zong_list" resultType="com.demo.model.report.Report">
+
+
+  SELECT
+                    <if test="workshop=='碎矿工段' || workshop =='磨浮工段'|| workshop=='精尾工段' || workshop=='电仪工段'">
+                          (CASE WHEN DEPT_NAME LIKE "磨浮%" THEN "磨浮工段"
+                          WHEN DEPT_NAME LIKE "碎矿%" THEN "碎矿工段"
+                          WHEN DEPT_NAME LIKE "精尾%" THEN "精尾工段"
+                          ELSE DEPT_NAME END) as zoneName,
+                    </if>
+                    <if test="workshop=='全厂'">
+                        '全厂' as zoneName,
+                    </if>
+                    COUNT(*) as 'zong' ,
+					count(case when ALTPID is NULL THEN 1 end ) as 'wjian',
+					count(case when ALTPID=0 THEN 1 end ) as 'zchang',
+					count(case when ALTPID=1 THEN 1 end ) as 'bjing',
+					count(case when ALTPID=2 THEN 1 end ) as 'wxian'
+
+			        from dxj_spot_result WHERE
+
+                     TASKSTART_TM>="${startTime}"
+                     and  "${endTime}">=TASKSTART_TM
+                    <if test="workshop=='磨浮工段'">
+                        AND    (DEPT_NAME = '磨浮设备' OR DEPT_NAME='磨浮生产')
+                    </if>
+                    <if test="workshop=='碎矿工段'">
+                        AND   (DEPT_NAME = '碎矿设备' OR DEPT_NAME='碎矿生产')
+                    </if>
+                    <if test="workshop=='精尾工段'">
+                        AND    (DEPT_NAME = '精尾设备' OR DEPT_NAME='精尾生产')
+                    </if>
+                    <if test="workshop=='电仪工段'">
+                        AND   DEPT_NAME = '电仪工段'
+                    </if>
+                    <if test="workshop=='全厂'">
+
+                    </if>
+    </select>
+    <select id="workShop_report_spot_fen_list" resultType="com.demo.model.report.Report">
+
+
+        SELECT
+        <if test="workshop=='电仪工段'">
+
+            (CASE WHEN ROUTE_NAME = "碎矿系统" OR ROUTE_NAME = "石灰输送" THEN "碎矿"
+            WHEN ROUTE_NAME LIKE "浮选%" OR ROUTE_NAME = "鼓风机" OR ROUTE_NAME = "磨机线路" OR ROUTE_NAME = "中板皮带" THEN "磨浮"
+            ELSE "精尾" END) as zoneName,
+        </if>
+        <if test="workshop=='碎矿工段' || workshop =='磨浮工段'|| workshop=='精尾工段'">
+            DEPT_NAME as zoneName,
+        </if>
+        <if test="workshop=='全厂'">
+            (CASE WHEN DEPT_NAME LIKE "磨浮%" THEN "磨浮工段"
+            WHEN DEPT_NAME LIKE "碎矿%" THEN "碎矿工段"
+            WHEN DEPT_NAME LIKE "精尾%" THEN "精尾工段"
+            ELSE DEPT_NAME END) as zoneName,
+        </if>
+        COUNT(*) as 'zong' ,
+        count(case when ALTPID is NULL THEN 1 end ) as 'wjian',
+        count(case when ALTPID=0 THEN 1 end ) as 'zchang',
+        count(case when ALTPID=1 THEN 1 end ) as 'bjing',
+        count(case when ALTPID=2 THEN 1 end ) as 'wxian'
+
+        from dxj_spot_result WHERE
+
+        TASKSTART_TM>="${startTime}"
+        and  "${endTime}">=TASKSTART_TM
+        <if test="workshop=='磨浮工段'">
+            AND    (DEPT_NAME = '磨浮设备' OR DEPT_NAME='磨浮生产')
+        </if>
+        <if test="workshop=='碎矿工段'">
+            AND   (DEPT_NAME = '碎矿设备' OR DEPT_NAME='碎矿生产')
+        </if>
+        <if test="workshop=='精尾工段'">
+            AND    (DEPT_NAME = '精尾设备' OR DEPT_NAME='精尾生产')
+        </if>
+        <if test="workshop=='电仪工段'">
+            AND   DEPT_NAME = '电仪工段'
+        </if>
+        <if test="workshop=='全厂'">
+
+        </if>
+        GROUP BY zoneName
+        <if test="workshop=='电仪工段'">
+            ORDER BY zoneName
+        </if>
+        <if test="workshop=='碎矿工段' || workshop =='磨浮工段'|| workshop=='精尾工段'">
+            ORDER BY zoneName DESC
+        </if>
+
+    </select>
+    <select id="workShop_report_deal_list" resultType="com.demo.model.report.Report">
+
+        SELECT
+        DEPT_NAME as teamName,
+            CONCAT(devName,'--',SC_PART,'--',SC_CONTENT,'--结果为：',RESULT,'--备注：',
+            (case WHEN REMARK is NULL THEN '无' ELSE REMARK END ) ) as 'content'
+            ,COMPLETE_TM as 'uploadTime'
+            ,alarm_flag as 'deal'
+            ,alarm_remark as 'dealResult'
+            ,alarm_manage_name as 'dealName'
+            ,alarm_manage_time as 'dealTime'
+        from
+            dxj_spot_result
+        WHERE
+              TASKSTART_TM>="${startTime}"
+          and  "${endTime}">=TASKSTART_TM
+        <if test="workshop=='磨浮工段'">
+            and  (DEPT_NAME = '磨浮设备' OR DEPT_NAME='磨浮生产')
+        </if>
+        <if test="workshop=='碎矿工段'">
+            and   (DEPT_NAME = '碎矿设备' OR DEPT_NAME='碎矿生产')
+        </if>
+        <if test="workshop=='精尾工段'">
+            and   (DEPT_NAME = '精尾设备' OR DEPT_NAME='精尾生产')
+        </if>
+        <if test="workshop=='电仪工段'">
+            and   DEPT_NAME = '电仪工段'
+        </if>
+        <if test="workshop=='选厂'">
+
+        </if>
+
+        AND (ALTPID=1 OR ALTPID=2)
+        ORDER BY teamName desc ,uploadTime
+
+    </select>
+
+</mapper>

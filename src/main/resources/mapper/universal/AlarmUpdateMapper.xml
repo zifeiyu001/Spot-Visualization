@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.universal.AlarmUpdateMapper">
+    <update id="CURRENCY_ALARM_UPDATE">
+        UPDATE dxj_spot_result
+        SET
+        alarm_flag='Y'
+
+            ,alarm_remark="${remark}"
+
+            ,alarm_manage_name="${name}"
+
+         ,alarm_manage_time=NOW()
+
+            WHERE ID="${id}"
+    </update>
+    <select id="get_login_name" resultType="com.demo.model.universal.LoginUser">
+            SELECT user_name from cfg_user WHERE user_id="${name}"
+
+    </select>
+    <select id="search_alarm_id" resultType="com.demo.model.universal.WebDxjBj">
+        SELECT b.ID as alarm_id from dxj_spot_result a,dxj_spot_alarm b
+            WHERE a.ID="{id}"
+            AND a.DEPT_NAME=b.DEPT_NAME
+            AND a.ROUTE_NAME=b.ROUTE_NAME
+            AND a.ZONE_NAME = b.ZONE_NAME
+            AND a.devName= b.devName
+            AND a.SC_PART=b.SC_PART
+            AND a.SC_CONTENT =b.SC_CONTENT
+    </select>
+
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.report.equip.sk.ReportSBSKSHMapper">
+
+    <select id="REPORT_SB_SK_SH_LSLC_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT "立式料仓" as equipName,(
+CASE
+			WHEN devName='1#石灰立式料仓' AND SC_PART='破拱机'  THEN '1#破拱机'
+		 WHEN devName='1#石灰立式料仓' AND SC_PART='入料管'  THEN '1#入料管'
+		 WHEN devName='1#石灰立式料仓' AND SC_PART='震动料斗'  THEN '1#震动料斗'
+		 WHEN devName='1#石灰立式料仓' AND SC_PART='其它'  THEN '1#其它'
+		 WHEN devName='2#石灰立式料仓' AND SC_PART='破拱机'  THEN '2#破拱机'
+		 WHEN devName='2#石灰立式料仓' AND SC_PART='入料管'  THEN '2#入料管'
+		 WHEN devName='2#石灰立式料仓' AND SC_PART='震动料斗'  THEN '2#震动料斗'
+		 WHEN devName='2#石灰立式料仓' AND SC_PART='其它'  THEN '2#其它'
+END
+) as part,
+
+RESULT as result,ALTPID as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND ZONE_NAME='石灰制乳'
+						AND (devName='1#石灰立式料仓' OR devName='2#石灰立式料仓')
+
+            and TASKSTART_TM="${time}"
+GROUP BY part
+    ORDER BY part
+    </select>
+    <select id="REPORT_SB_SK_SH_GLJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT "螺旋给料机" as equipName,(
+CASE
+			WHEN devName='1#螺旋给料机' AND SC_PART='驱动装置'  THEN '1#驱动装置'
+		 WHEN devName='1#螺旋给料机' AND SC_PART='供料区'  THEN '1#供料装置'
+		 WHEN devName='1#螺旋给料机' AND SC_PART='其它'  THEN '1#其它'
+		 WHEN devName='2#螺旋给料机' AND SC_PART='驱动装置'  THEN '2#驱动装置'
+		 WHEN devName='2#螺旋给料机' AND SC_PART='供料区'  THEN '2#供料装置'
+		 WHEN devName='2#螺旋给料机' AND SC_PART='其它'  THEN '2#其它'
+END
+) as part,
+
+RESULT as result,ALTPID as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND ZONE_NAME='石灰制乳'
+						AND (devName='1#螺旋给料机' OR devName='2#螺旋给料机')
+
+       and TASKSTART_TM="${time}"
+GROUP BY part
+    ORDER BY part
+
+    </select>
+    <select id="REPORT_SB_SK_SH_3M_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT "3米石灰搅拌桶" as equipName,(
+CASE
+			WHEN devName='1#石灰输送搅拌桶' AND SC_PART='三角皮带'  THEN '1#传动三角皮带'
+		 WHEN devName='1#石灰输送搅拌桶' AND SC_PART='搅拌器'  THEN '1#搅拌器'
+		 WHEN devName='1#石灰输送搅拌桶' AND SC_PART='其它'  THEN '1#其它'
+		 WHEN devName='2#石灰输送搅拌桶' AND SC_PART='三角皮带'  THEN '2#传动三角皮带'
+		 WHEN devName='2#石灰输送搅拌桶' AND SC_PART='搅拌器'  THEN '2#搅拌器'
+		 WHEN devName='2#石灰输送搅拌桶' AND SC_PART='其它'  THEN '2#其它'
+END
+) as part,
+
+RESULT as result,ALTPID as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND ZONE_NAME='石灰输送'
+						AND (devName='1#石灰输送搅拌桶' OR devName='2#石灰输送搅拌桶')
+
+       and TASKSTART_TM="${time}"
+GROUP BY part
+    ORDER BY part
+    </select>
+    <select id="REPORT_SB_SK_SH_4M_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT "4米石灰搅拌桶" as equipName,(
+CASE
+			WHEN devName='1#石灰制乳搅拌桶' AND SC_PART='减速机'  THEN '1#减速机'
+		 WHEN devName='1#石灰制乳搅拌桶' AND SC_PART='管道'  THEN '1#料管'
+		 WHEN devName='1#石灰制乳搅拌桶' AND SC_PART='其它'  THEN '1#其它'
+		 WHEN devName='2#石灰制乳搅拌桶' AND SC_PART='减速机'  THEN '2#减速机'
+		 WHEN devName='2#石灰制乳搅拌桶' AND SC_PART='管道'  THEN '2#料管'
+		 WHEN devName='2#石灰制乳搅拌桶' AND SC_PART='其它'  THEN '2#其它'
+END
+) as part,
+
+RESULT as result,ALTPID as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND ZONE_NAME='石灰制乳'
+						AND (devName='1#石灰制乳搅拌桶' OR devName='2#石灰制乳搅拌桶')
+
+         and TASKSTART_TM="${time}"
+GROUP BY part
+    ORDER BY part
+    </select>
+    <select id="REPORT_SB_SK_SH_ZJB_RUN_LIST" resultType="com.demo.model.report.Report">
+SELECT
+(CASE
+		WHEN devName='1#离心式渣浆泵' THEN '1#石灰渣浆泵'
+		WHEN devName='2#离心式渣浆泵' THEN '2#石灰渣浆泵'
+		WHEN devName='3#离心式渣浆泵' THEN '3#石灰渣浆泵' end )as equipName,
+(CASE
+			WHEN SC_CONTENT='三角皮带是否磨损失效打滑'  THEN '传动三角皮带'
+		WHEN SC_CONTENT='皮带轮是否磨损失效'  THEN '皮带轮'
+		WHEN SC_CONTENT='轴承箱油位是否正常' OR SC_CONTENT='轴承箱轴承运行有无异响' THEN '轴承箱'
+		WHEN SC_CONTENT='填料处是否有漏浆'  THEN '填料部'
+		WHEN SC_CONTENT='泵体是否有漏浆'  THEN '泵体'
+		WHEN SC_CONTENT='泵的固定螺栓是否有松动'  THEN '泵的紧固螺栓'
+ELSE SC_PART
+END
+) as part,
+
+RESULT as result,ALTPID as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND ZONE_NAME='石灰输送'
+
+            AND (devName='1#离心式渣浆泵' or devName='2#离心式渣浆泵' or devName='3#离心式渣浆泵' )
+
+         and TASKSTART_TM="${time}"
+GROUP BY equipName,part
+    ORDER BY equipName,part
+
+    </select>
+</mapper>

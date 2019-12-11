@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.index.IndexShowMapper">
+    <select id="INDEX_SHOW_LIST" resultType="com.demo.model.index.IndexShow">
+        SELECT
+            COUNT(1) as total,
+            COUNT(ALTPID=1 or NULL) as danger,
+            COUNT(ALTPID=2 or NULL) as alarm
+        FROM
+            dxj_spot_result
+        WHERE
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 当月数据（测试用）
+    </select>
+    <select id="INDEX_SHOW1_LIST" resultType="com.demo.model.index.IndexShow">
+            SELECT
+                (
+                    SELECT
+                        round(R0P1,0)
+                    FROM
+                        dl_data_bm
+                    WHERE
+                        MEASUREPOINTID = '20000407'
+                    ORDER BY
+                        DATADATETIME DESC
+                    LIMIT 1
+                ) - (
+                    SELECT
+                        ROUND(R0P1,0)
+                    FROM
+                        dl_data_bm
+                    WHERE
+                        MEASUREPOINTID = '20000407'
+            -- 		AND YEAR (DATADATETIME) = YEAR (CURDATE())
+               and DATE_FORMAT(DATADATETIME, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 当月数据（测试用）
+                    ORDER BY
+                        DATADATETIME
+                    LIMIT 1
+                ) as kw
+    </select>
+</mapper>

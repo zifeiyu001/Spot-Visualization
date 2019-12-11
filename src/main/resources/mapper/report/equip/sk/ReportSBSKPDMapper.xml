@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.report.equip.sk.ReportSBSKPDMapper">
+
+
+    <select id="REPORT_SB_SK_PD2_RUN_LIST" resultType="com.demo.model.report.Report">
+                         SELECT
+                SC_PART  as equipName,
+(CASE
+
+-- 驱动单元
+			WHEN SC_CONTENT = '电机与减速机联轴器是否完好无损伤' THEN '电机联轴器'
+			WHEN SC_CONTENT = '减速机内润滑油油质是否符合要求' THEN '减速机油质'
+			WHEN SC_CONTENT = '减速机内润滑油位是否在标准范围内' THEN '减速机油位'
+			WHEN SC_CONTENT = '制动器运转是否正常' THEN '制动器'
+			WHEN SC_CONTENT = '电机、减速机座紧固螺栓有无松动' THEN '紧固螺栓'
+
+
+-- 清扫器
+			WHEN SC_CONTENT = '第一组清扫器是否完好无损坏' THEN '第一组清扫器'
+			WHEN SC_CONTENT = '第二组清扫器是否完好无损坏'THEN '第二组清扫器'
+			WHEN SC_CONTENT = '第三组清扫器是否完好无损坏' THEN '第三组清扫器'
+			WHEN SC_CONTENT = '张紧轮刮矿器是否完好无损坏' THEN '张紧轮刮矿器'
+			WHEN SC_CONTENT = '三角回程清扫器是否完好无损坏' THEN '三角回程清扫器'
+
+-- 皮带
+			WHEN SC_CONTENT = '皮带有无破损、跑偏' THEN '输送带'
+			WHEN SC_CONTENT = '上、下托辊运转灵活有无异响' THEN '上下托辊'
+			WHEN SC_CONTENT = '托辊支架有无损伤' THEN '托辊支架'
+			WHEN SC_CONTENT = '缓冲床是否损坏' THEN '缓冲床'
+
+-- 挡矿箱
+			WHEN SC_CONTENT = '挡矿皮是否磨损' THEN '挡矿皮'
+			WHEN SC_CONTENT = '挡矿皮上则护板是否磨损' THEN '挡矿皮上则护板'
+			WHEN SC_CONTENT = '受料斗衬板固定螺栓是否磨损' THEN '受料斗衬板固定螺栓'
+			WHEN SC_CONTENT = '受料斗衬板是否磨损' THEN '受料斗衬板'
+			WHEN SC_CONTENT = '挡矿箱基础钢板是否磨损' THEN '挡矿箱钢板'
+
+
+-- 滚筒
+			WHEN SC_CONTENT = '尾轮改向滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '尾轮改向滚筒轴承座螺栓是否松动' THEN '尾轮改向滚筒'
+			WHEN SC_CONTENT = '尾轮小车装置是否完好' THEN '尾轮小车装置'
+
+			WHEN SC_CONTENT = '首轮驱动滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '首轮驱动滚筒轴承座螺栓是否松动' THEN '首轮驱动滚筒'
+
+			WHEN SC_CONTENT = '张紧滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '张紧滚筒轴承座螺栓是否松动' THEN '张紧轮滚筒'
+
+			WHEN SC_CONTENT = '压紧滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '压紧滚筒轴承座螺栓是否松动' THEN '压紧轮滚筒'
+
+
+	-- 供矿箱
+			WHEN SC_CONTENT = '供矿箱衬板是否磨损失效' THEN '供矿箱衬板'
+			WHEN SC_CONTENT = '提升闸板是否磨损失效' THEN '供矿箱提升闸板'
+			WHEN SC_CONTENT = '提升闸板执行装置是否完好' THEN '提升闸板执行装置'
+
+ELSE  SC_CONTENT END)as part,
+
+RESULT as result,MAX(ALTPID) as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND  (ZONE_NAME='2#皮带'  AND devName='2#皮带运输机')
+
+          and TASKSTART_TM="${time}"
+GROUP BY equipName ,part
+        ORDER BY equipName  DESC
+    </select>
+    <select id="REPORT_SB_SK_PD4_RUN_LIST" resultType="com.demo.model.report.Report">
+         SELECT
+                SC_PART  as equipName,
+(CASE
+
+-- 驱动单元
+			WHEN SC_CONTENT = '电机与减速机联轴器是否完好无损伤' THEN '电机联轴器'
+			WHEN SC_CONTENT = '减速机与驱动滚筒联轴器是否完好无损伤' THEN '减速机联轴器'
+			WHEN SC_CONTENT = '减速机内润滑油油质是否符合要求' THEN '减速机油质'
+			WHEN SC_CONTENT = '减速机内润滑油位是否在标准范围内' THEN '减速机油位'
+			WHEN SC_CONTENT = '制动器运转是否正常' THEN '制动器'
+			WHEN SC_CONTENT = '电机、减速机座紧固螺栓有无松动' THEN '紧固螺栓'
+
+
+-- 清扫器
+			WHEN SC_CONTENT = '第一组清扫器是否完好无损坏' THEN '第一组清扫器'
+			WHEN SC_CONTENT = '第二组清扫器是否完好无损坏'THEN '第二组清扫器'
+			WHEN SC_CONTENT = '张紧轮刮矿器是否完好无损坏' THEN '张紧轮刮矿器'
+			WHEN SC_CONTENT = '三角回程清扫器是否完好无损坏' THEN '三角回程清扫器'
+
+-- 皮带
+			WHEN SC_CONTENT = '皮带有无破损、跑偏' THEN '输送带'
+			WHEN SC_CONTENT = '上、下托辊运转灵活有无异响' THEN '上下托辊'
+			WHEN SC_CONTENT = '托辊支架有无损伤' THEN '托辊支架'
+			WHEN SC_CONTENT = '衬胶长上托辊是否受损失效' THEN '衬胶长上托辊'
+
+-- 挡矿箱
+			WHEN SC_CONTENT = '挡矿皮是否磨损' THEN '挡矿皮'
+			WHEN SC_CONTENT = '挡矿皮上则护板是否磨损' THEN '挡矿皮上侧护板'
+
+
+
+-- 滚筒
+			WHEN SC_CONTENT = '尾轮改向滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '尾轮改向滚筒轴承座螺栓是否松动' THEN '尾轮改向滚筒'
+
+			WHEN SC_CONTENT = '首轮驱动滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '首轮驱动滚筒轴承座螺栓是否松动' THEN '首轮驱动滚筒'
+
+			WHEN SC_CONTENT = '张紧滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '张紧滚筒轴承座螺栓是否松动' THEN '张紧轮滚筒'
+
+			WHEN SC_CONTENT = '压紧滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '压紧滚筒轴承座螺栓是否松动' THEN '压紧轮滚筒'
+
+			WHEN SC_CONTENT = '重锤滚筒轴承润滑是否充分'
+				OR SC_CONTENT = '重锤滚筒轴承座螺栓是否松动' THEN '重锤轮滚筒'
+
+			WHEN SC_CONTENT = '重锤处改向滚筒润滑是否充分'
+				OR SC_CONTENT = '重锤处改向滚筒座螺栓是否松动' THEN '重锤改向轮滚筒'
+
+	-- 供矿箱
+			WHEN SC_CONTENT = '挡矿板是否磨损失效' THEN '供矿箱护板'
+
+-- 小车装置
+			WHEN SC_CONTENT = '卷扬机钢丝绳是否断股受损' THEN '钢丝绳'
+			WHEN SC_CONTENT = '卷扬机减速机齿轮是否磨损失效' THEN '卷扬机减速机'
+			WHEN SC_CONTENT = '卷扬机制动器是否磨损失效' THEN '卷扬机制动器'
+			WHEN SC_CONTENT = '钢丝绳定滑轮是否完好' THEN '钢丝绳定滑轮'
+			WHEN SC_CONTENT = '小车车轮是否完好' THEN '小轮车轮'
+			WHEN SC_CONTENT = '小车卸矿板是否完好' THEN '小轮卸矿板'
+
+
+ELSE  SC_CONTENT END)as part,
+
+RESULT as result,MAX(ALTPID) as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND  (ZONE_NAME='4#皮带'  AND devName='4#皮带运输机')
+
+        and TASKSTART_TM="${time}"
+GROUP BY equipName ,part
+        ORDER BY equipName  DESC
+
+    </select>
+
+</mapper>

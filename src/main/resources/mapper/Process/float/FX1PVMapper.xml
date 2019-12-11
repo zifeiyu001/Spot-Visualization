@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.process.fx.FX1PVMapper">
+        <select id="FX_1_PV_LIST" resultType="com.demo.model.index.IndexFlowChartData">
+SELECT   ROUND(MAX(Cus),2) as Cus, ROUND(MAX(CuCu) ,2) CuCu, ROUND(MAX(SS),2) SS, ROUND(MAX(SCu),2) SCu, ROUND(MAX(WCu),2) WCu,ROUND( MAX(WS),2) WS
+FROM
+(SELECT
+	CASE WHEN TagName='XFenXiYi_001.PV08_1' THEN DocValue END AS  'CuS',
+	CASE WHEN TagName='XFenXiYi_001.PV08_2' THEN DocValue END AS  'CuCu',
+	CASE WHEN TagName='XFenXiYi_001.PV09_1' THEN DocValue END AS  'SS',
+	CASE WHEN TagName='XFenXiYi_001.PV09_2' THEN DocValue END AS  'SCu',
+	CASE WHEN TagName='XFenXiYi_001.PV07_1' THEN DocValue END AS  'WCu',
+	CASE WHEN TagName='XFenXiYi_001.PV07_2' THEN DocValue END AS  'WS'
+FROM
+	rcd_hour
+WHERE
+	(
+			 TagName = 'XFenXiYi_001.PV08_1' -- 铜精矿硫品位
+		OR TagName = 'XFenXiYi_001.PV08_2' -- 铜精矿铜品位
+		OR TagName = 'XFenXiYi_001.PV09_1' -- 硫精矿硫品位
+		OR TagName = 'XFenXiYi_001.PV09_2' -- 硫精矿铜品位
+		OR TagName = 'XFenXiYi_001.PV07_2' -- 总尾矿铜品位
+		OR TagName = 'XFenXiYi_001.PV07_1' -- 总尾矿硫品位
+	)
+AND DataTime > DATE_ADD(NOW(), INTERVAL - 80 MINUTE)) a
+</select>
+
+</mapper>

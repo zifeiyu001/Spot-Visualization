@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.process.ts.TS1AlarmMapper">
+
+    <select id="TS_1_ALARM_LIST" resultType="com.demo.model.equip.SpotAlarm">
+      SELECT
+						devName as equip,
+						SC_PART as part,
+						SC_CONTENT AS spot,
+            RESULT AS value,
+            ID as id,
+            std_value as standard,
+            uploadResultTime as time,
+            (
+                CASE
+                WHEN ALTPID = 1 THEN
+                    "二级"
+                WHEN ALTPID = 2 THEN
+                    "一级"
+                END
+            ) level
+        FROM
+            dxj_spot_result
+        WHERE
+
+                            ( ROUTE_NAME='尾砂泵' OR ROUTE_NAME='2系统压滤、过滤机' OR ROUTE_NAME='压滤、过滤机'
+                            OR ROUTE_NAME='压滤机岗' OR ROUTE_NAME='过滤机岗')
+
+								and   ALTPID !=0
+								and  alarm_flag='N'
+								AND date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        ORDER BY
+            COMPLETE_TM DESC
+   </select>
+</mapper>

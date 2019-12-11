@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.equip.SpotSkDetailedMapper">
+        <select id="SPOT_SK_EP_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+            SELECT
+
+                (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+                WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+                WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+                END) as section,
+                SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+            FROM
+                    dxj_spot_result
+            WHERE
+                TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+                <if test="param=='param1'">
+
+                    AND	((DEPT_NAME="碎矿设备"			AND devName="简摆颚式破碎机" AND SC_PART='驱动装置')
+                    OR (DEPT_NAME="电仪工段" AND devName="简摆颚式破碎机电机")
+
+                    OR (DEPT_NAME='碎矿生产' AND devName='简摆颚式破碎机' AND (SC_PART='轴承' OR SC_PART='三角皮带'))
+                    )
+                </if>
+                <if test="param=='param2'">
+                    AND	(
+                    (DEPT_NAME="碎矿设备"		AND devName="简摆颚式破碎机" AND
+                    SC_PART in('动颚装置','肘板装置' ,'干油润滑装置','偏心轴装置','连杆装置','拉杆弹簧部'))
+                    OR (
+                    DEPT_NAME='碎矿生产' AND devName='简摆颚式破碎机' AND  SC_PART NOT in('轴承', '三角皮带')
+                    )
+                    )
+                </if>
+                <if test="param=='param3'">
+                    AND	DEPT_NAME="碎矿设备"		AND devName="简摆颚式破碎机" AND
+                    SC_PART ='低压稀油润滑系统' AND SC_CONTENT in('回油磁网过滤装置有无堵塞','供回油管、阀、接头是否漏油' ,'冷却器是否正常（无堵塞，排出水无油、矿浆）'
+                    ,'油泵运转是否正常、给油量是否稳定、连续','油泵供油压力')
+
+                </if>
+                <if test="param=='param4'">
+
+                    AND DEPT_NAME="电仪工段" AND devName="颚破稀油站1号油泵电机"
+                </if>
+                <if test="param=='param5'">
+
+                    AND DEPT_NAME="电仪工段" AND devName="颚破稀油站2号油泵电机"
+                </if>
+                <if test="param=='param6'">
+                    AND	DEPT_NAME="碎矿设备"		AND devName="简摆颚式破碎机" AND
+                    SC_PART ='低压稀油润滑系统' AND SC_CONTENT in('低压油站油箱温度','油箱油位是否在标准范围内' ,'油箱内油质是否符合要求')
+                </if>
+
+            ORDER BY
+                  FIELD(section,'设备','电仪','生产'),part
+        </select>
+
+    <select id="SPOT_SK_ZB_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND DEPT_NAME='碎矿设备' AND devName='重型板式给料机'
+            and SC_PART in ('链板装置','链轮轴装置')
+        </if>
+        <if test="param=='param2'">
+            AND(( DEPT_NAME='碎矿设备' AND devName='重型板式给料机' and SC_PART='驱动装置')
+            OR (DEPT_NAME='电仪工段' AND devName='重型板式给料机电机')
+            OR
+            ( DEPT_NAME='碎矿生产' AND devName='重型板式给料机' and SC_PART='减速机')
+            )
+        </if>
+        <if test="param=='param3'">
+
+            AND DEPT_NAME='碎矿设备' AND devName='重型板式给料机'
+            and SC_PART in ('护板','拉紧装置','其它')
+
+        </if>
+
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_SK_PD2_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND ((DEPT_NAME='碎矿设备' AND devName='2#皮带运输机'
+            and SC_PART in ('驱动单元'))
+            OR (DEPT_NAME='电仪工段' AND devName='2#皮带运输机电机')
+            OR (DEPT_NAME='碎矿生产' AND devName='2#皮带运输机' AND SC_PART='减速机')
+            )
+        </if>
+        <if test="param=='param2'">
+            AND DEPT_NAME='碎矿设备' AND devName='2#皮带运输机'
+            and SC_PART in ('滚筒')
+        </if>
+        <if test="param=='param3'">
+
+            AND ((DEPT_NAME='碎矿设备' AND devName='2#皮带运输机'
+            and SC_PART in ('皮带','挡矿板','挡矿箱','供矿箱','其它','清扫器'))
+            OR (DEPT_NAME='碎矿设备' AND devName='2#皮带运输机' AND SC_PART !='减速机'))
+
+        </if>
+
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_SK_PD4_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND ((DEPT_NAME='碎矿设备' AND devName='4#皮带运输机'
+            and SC_PART in ('驱动单元'))
+            OR (DEPT_NAME='电仪工段' AND devName='4#皮带运输机电机')
+            OR (DEPT_NAME='碎矿生产' AND devName='4#皮带运输机' AND SC_PART='减速机')
+            )
+        </if>
+        <if test="param=='param2'">
+            AND DEPT_NAME='碎矿设备' AND devName='4#皮带运输机'
+            and SC_PART in ('滚筒')
+        </if>
+        <if test="param=='param3'">
+
+            AND ((DEPT_NAME='碎矿设备' AND devName='4#皮带运输机'
+            and SC_PART in ('皮带','挡矿板','挡矿箱','供矿箱','其它','清扫器'))
+            OR (DEPT_NAME='碎矿设备' AND devName='4#皮带运输机' AND SC_PART !='减速机'))
+
+        </if>
+
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+
+
+</mapper>

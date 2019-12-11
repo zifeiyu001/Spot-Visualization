@@ -1,0 +1,13 @@
+[2019-12-10 17:48:55.200]  INFO  org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer postProcessTemplateLoaders  127 - ClassTemplateLoader for Spring macros added to FreeMarker configuration
+[2019-12-10 17:48:55.784]  INFO  org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer startServer  58 - LiveReload server is running on port 35729
+[2019-12-10 17:48:55.836]  INFO  org.springframework.jmx.export.annotation.AnnotationMBeanExporter afterSingletonsInstantiated  431 - Registering beans for JMX exposure on startup
+[2019-12-10 17:48:55.852]  INFO  org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor finishRegistration  269 - No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+[2019-12-10 17:48:55.859]  INFO  org.apache.coyote.http11.Http11NioProtocol log  180 - Starting ProtocolHandler ["http-nio-8088"]
+[2019-12-10 17:48:55.876]  INFO  org.apache.tomcat.util.net.NioSelectorPool log  180 - Using a shared selector for servlet write/read
+[2019-12-10 17:48:55.889]  INFO  org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer start  216 - Tomcat started on port(s): 8088 (http)
+[2019-12-10 17:48:55.895]  INFO  com.demo.Application logStarted  57 - Started Application in 8.636 seconds (JVM running for 11.214)
+[2019-12-10 17:49:16.146]  INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] log  180 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+[2019-12-10 17:49:16.147]  INFO  org.springframework.web.servlet.DispatcherServlet initServletBean  489 - FrameworkServlet 'dispatcherServlet': initialization started
+[2019-12-10 17:49:16.181]  INFO  org.springframework.web.servlet.DispatcherServlet initServletBean  508 - FrameworkServlet 'dispatcherServlet': initialization completed in 34 ms
+[2019-09-10 18:26:03.211]  INFO  o.s.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext doClose  984 - Closing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@2527ed07: startup date [Tue Dec 10 17:48:48 CST 2019]; root of context hierarchy
+[2019-09-10 18:26:03.217]  INFO  org.springframework.jmx.export.annotation.AnnotationMBeanExporter destroy  449 - Unregistering JMX-exposed beans on shutdown

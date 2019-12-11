@@ -1,0 +1,73 @@
+.menu nav .top_left{
+    width: 33%;     height: 100%;
+    float: left;
+    min-width: 100px;
+}
+.top_left  .level
+{
+    list-style-type: square;type:none;
+    /*height: ;ht: 50%;*/
+}
+.top_left li{
+    position: relative;
+    z-index: 1;
+    width: 21%;
+    height: 70%;
+    text-align: center;
+    float: left;
+    list-style-type:none;
+    margin: 5%;
+    background-image: url("/images/module/bnt.png");
+    background-size: 100% 100%;
+    color: #FFFFFF;
+    transition: .4s;
+    border-radius:5px 0;
+}
+nav .level>li a{color: #FFFFFF;}
+nav .level>li:hover{background: #0166ff;}   /* 设置鼠标滑过后的样式 */
+
+nav .two{display: none;margin-top: 10px;}  /* 先使二级菜单的内容隐藏 */
+nav .level>li:hover .two{display: block;}   /* 鼠标滑过一级菜单后的显示二级菜单 */
+nav .two li{padding: 5px 0;transition: .4s;cursor: pointer;width: 88%; }
+nav .two li:hover{background: #3ab8ee;}
+a{text-decoration-line: none;}   /* 去掉默认a标签的下划线 */
+ul,li{list-style: none;}
+
+nav .menu_dy_level>li a{color: #FFFFFF;}
+nav .menu_dy_level>li:hover{background: #0166ff;}   /* 设置鼠标滑过后的样式 */
+nav .menu_dy_level>li:hover .two{display: block;}   /* 鼠标滑过一级菜单后的显示二级菜单 */
+nav .menu_sb_level>li a{color: #FFFFFF;}
+nav .menu_sb_level>li:hover{background: #0166ff;}   /* 设置鼠标滑过后的样式 */
+nav .menu_sb_level>li:hover .two{display: block;}   /* 鼠标滑过一级菜单后的显示二级菜单 */
+#sc1{
+    width: 100%;
+    height: 80%;
+    min-width: 100px;
+    min-height: 100px;
+    /*background-color: #01AAED;*/
+}
+.menu nav .top_right{
+    width: 33%;     height: 100%;
+    float: left;
+    min-width: 100px;
+}
+.top_right  .level
+{
+    list-style-type:none;
+    height: 50%;
+}
+.top_right li{
+    position: relative;
+    z-index: 1;
+    width: 21%;
+    height: 70%;
+    text-align: center;
+    float: right;
+    list-style-type:none;
+    margin: 5%;
+    background-image: url("/images/module/bnt.png");
+    background-size: 100% 100%;
+    color: #FFFFFF;
+    transition: .4s;
+    border-radius:5px 0
+}

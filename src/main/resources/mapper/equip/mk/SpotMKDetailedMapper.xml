@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.equip.SpotMkDetailedMapper">
+        <select id="SPOT_MK_QMJ_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+            SELECT
+
+                (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+                WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+                WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+                END) as section,
+                SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+            FROM
+                    dxj_spot_result
+            WHERE
+            TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+                <if test="param=='param1'">
+                 and   (
+                        (
+                        devName = '球磨机传动部电机'
+                            AND (
+                            SC_PART = '进料端轴承水平速度'
+                            OR SC_PART = '进料端轴承垂直速度'
+                            OR SC_PART = '进料端轴承座温度'
+                            OR SC_PART = '进料端轴承轴向速度'
+                        )
+                    )
+                    OR (
+                        devName = 'MQY4870球磨机电机'
+                        AND (
+                            SC_PART = '传动部电机有无异响'
+                            OR SC_PART = '传动部电机滑环'
+                            OR SC_PART = '传动部电机轴承油位'
+                            )
+                       )
+                    )
+                </if>
+                <if test="param=='param2'">
+                    AND
+                    (
+                        devName = '球磨机传动部电机'
+                        AND (
+                        SC_PART='出料端轴承轴向速度'
+                        OR	SC_PART='出料端轴承水平速度'
+                        OR	SC_PART='出料端轴承垂直速度'
+                        OR	SC_PART='出料端轴承座温度'
+                        )
+                    )
+                </if>
+                <if test="param=='param3'">
+                    AND   (
+                    devName='球磨机传动齿轮'
+                        AND (
+                        SC_PART='进料端小齿轮轴承轴向速度'
+                        OR	SC_PART='进料端小齿轮轴承水平速度'
+                        OR	SC_PART='进料端小齿轮轴承垂直速度'
+                        OR	SC_PART='进料端小齿轮轴承座温度'
+                    )
+                    )
+
+                </if>
+                <if test="param=='param4'">
+                    AND   	(
+                    devName='球磨机传动齿轮'
+                    AND (
+                    SC_PART='出料端小齿轮轴承轴向速度'
+                    OR		 SC_PART='出料端小齿轮轴承水平速度'
+                    OR		 SC_PART='出料端小齿轮轴承垂直速度'
+                    OR		 SC_PART='出料端小齿轮轴承座温度'
+
+                    )
+                    )
+                </if>
+                <if test="param=='param5'">
+                     AND (
+                    devName = '球磨机结构'
+                    OR (
+                    ROUTE_NAME = '磨矿岗'
+                    AND (
+                    SC_PART = '筒体端面'
+                    OR SC_PART = '流量计'
+                    OR SC_PART = '补加水阀'
+                    OR SC_PART = '补加水管'
+                    )
+                    )
+                    )
+                </if>
+                <if test="param=='param6'">
+                     AND (
+                    devName='球磨机干油润滑站'
+                    OR (
+                    ROUTE_NAME = '磨矿岗'
+                    AND (
+                    SC_PART='甘油喷射系统'
+                    )
+                    )
+                    )
+                </if>
+                <if test="param=='param7'">
+                    AND (
+                    ZONE_NAME='球磨机稀油润滑系统'
+                    OR (
+
+                    devName='MQY4870球磨机高低压稀油站电机'
+                    )
+                    )
+                </if>
+
+            ORDER BY
+                  FIELD(section,'设备','电仪','生产'),part
+        </select>
+    <select id="SPOT_MK_ZMJ_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            and   (
+            (
+            devName = '再磨机传动部电机'
+            AND (
+            SC_PART = '进料端轴承水平速度'
+            OR SC_PART = '进料端轴承垂直速度'
+            OR SC_PART = '进料端轴承座温度'
+            OR SC_PART = '进料端轴承轴向速度'
+            )
+            )
+            OR (
+            devName = 'MQY2745再磨机电机'
+            AND (
+            SC_PART = '传动部电机有无异响'
+            OR SC_PART = '传动部电机滑环'
+            OR SC_PART = '传动部电机轴承油位'
+            )
+            )
+            )
+        </if>
+        <if test="param=='param2'">
+            AND
+            (
+            devName = '再磨机传动部电机'
+            AND (
+            SC_PART='出料端轴承轴向速度'
+            OR	SC_PART='出料端轴承水平速度'
+            OR	SC_PART='出料端轴承垂直速度'
+            OR	SC_PART='出料端轴承座温度'
+            )
+            )
+        </if>
+        <if test="param=='param3'">
+            AND   (
+            devName='再磨机传动齿轮'
+            AND (
+            SC_PART='进料端小齿轮轴承轴向速度'
+            OR	SC_PART='进料端小齿轮轴承水平速度'
+            OR	SC_PART='进料端小齿轮轴承垂直速度'
+            OR	SC_PART='进料端小齿轮轴承座温度'
+            )
+            )
+
+        </if>
+        <if test="param=='param4'">
+            AND   	(
+            devName='再磨机传动齿轮'
+            AND (
+            SC_PART='出料端小齿轮轴承轴向速度'
+            OR		 SC_PART='出料端小齿轮轴承水平速度'
+            OR		 SC_PART='出料端小齿轮轴承垂直速度'
+            OR		 SC_PART='出料端小齿轮轴承座温度'
+
+            )
+            )
+        </if>
+        <if test="param=='param5'">
+            AND (
+            devName = '再磨机结构'
+            OR (
+            ROUTE_NAME = '磨矿岗'
+            AND (
+            SC_PART = '筒体端面'
+            OR SC_PART = '流量计'
+            OR SC_PART = '补加水阀'
+            OR SC_PART = '补加水管'
+            )
+            )
+            )
+        </if>
+        <if test="param=='param6'">
+            AND (
+            devName='再磨机干油润滑站'
+            OR (
+            ROUTE_NAME = '磨矿岗'
+            AND (
+            SC_PART='甘油喷射系统'
+            )
+            )
+            )
+        </if>
+        <if test="param=='param7'">
+            AND (
+            ZONE_NAME='再磨机稀油润滑系统'
+            OR (
+
+            devName='MQY2745再磨机高低压稀油站电机'
+            )
+            )
+        </if>
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+
+    </select>
+    <select id="SPOT_MK_BZMJ_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            and   (
+            (
+            devName = '半自磨机传动部电机'
+            AND (
+            SC_PART = '进料端轴承水平速度'
+            OR SC_PART = '进料端轴承垂直速度'
+            OR SC_PART = '进料端轴承座温度'
+            OR SC_PART = '进料端轴承轴向速度'
+            )
+            )
+            OR (
+            devName = 'MZS6433半自磨机电机'
+            AND (
+            SC_PART = '传动部电机有无异响'
+            OR SC_PART = '传动部电机滑环'
+            OR SC_PART = '传动部电机轴承油位'
+            )
+            )
+            )
+        </if>
+        <if test="param=='param2'">
+            AND
+            (
+            devName = '半自磨机传动部电机'
+            AND (
+            SC_PART='出料端轴承轴向速度'
+            OR	SC_PART='出料端轴承水平速度'
+            OR	SC_PART='出料端轴承垂直速度'
+            OR	SC_PART='出料端轴承座温度'
+            )
+            )
+        </if>
+        <if test="param=='param3'">
+            AND   (
+            devName='半自磨机传动齿轮'
+            AND (
+            SC_PART='进料端小齿轮轴承轴向速度'
+            OR	SC_PART='进料端小齿轮轴承水平速度'
+            OR	SC_PART='进料端小齿轮轴承垂直速度'
+            OR	SC_PART='进料端小齿轮轴承座温度'
+            )
+            )
+
+        </if>
+        <if test="param=='param4'">
+            AND   	(
+            devName='半自磨机传动齿轮'
+            AND (
+            SC_PART='出料端小齿轮轴承轴向速度'
+            OR		 SC_PART='出料端小齿轮轴承水平速度'
+            OR		 SC_PART='出料端小齿轮轴承垂直速度'
+            OR		 SC_PART='出料端小齿轮轴承座温度'
+
+            )
+            )
+        </if>
+        <if test="param=='param5'">
+            AND (
+            devName = '半自磨机结构'
+            OR (
+            ROUTE_NAME = '磨矿岗'
+            AND (
+            SC_PART = '筒体端面'
+            OR SC_PART = '流量计'
+            OR SC_PART = '补加水阀'
+            OR SC_PART = '补加水管'
+            )
+            )
+            )
+        </if>
+        <if test="param=='param6'">
+            AND (
+            devName='半自磨机干油润滑站'
+            OR (
+            ROUTE_NAME = '磨矿岗'
+            AND (
+            SC_PART='甘油喷射系统'
+            )
+            )
+            )
+        </if>
+        <if test="param=='param7'">
+            AND (
+            devName='MZS6433低压稀油润滑系统'
+            OR (
+
+            devName='MZS6433半自磨机低压稀油站电机'
+            )
+            )
+        </if>
+        <if test="param=='param8'">
+            AND (
+            devName ='MZS6433高压稀油润滑系统'
+            OR (
+
+            devName='MZS6433半自磨机高压稀油站电机'
+            )
+            )
+        </if>
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_MK_ZB_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+SELECT
+	(
+		CASE
+		WHEN DEPT_NAME = '电仪工段' THEN
+			'电仪'
+		WHEN DEPT_NAME LIKE '%设备' THEN
+			'设备'
+		WHEN DEPT_NAME LIKE '%生产' THEN
+			'生产'
+		END
+	) AS section,
+	SC_PART AS part,
+	SC_CONTENT AS content,
+	RESULT AS result,
+	ALTPID AS LEVEL
+FROM
+	dxj_spot_result
+WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+        <if test="param=='param1'">
+            AND(DEPT_NAME='磨浮设备' OR DEPT_NAME='磨浮生产') AND
+            devName='1#中重型板式给矿机'
+            AND (
+            SC_CONTENT='轴承润滑是否良好'
+            OR SC_CONTENT='链条啮是否正常'
+            OR SC_PART='下矿仓护板'
+            OR  SC_PART='链条'
+            OR  SC_CONTENT='是否磨损、断裂'
+            OR  SC_CONTENT='是否磨损、脱落'
+            OR  (SC_PART='链条'  AND SC_CONTENT='是否磨损、断裂' )
+            OR  SC_CONTENT='是否跑偏'
+            )
+        </if>
+        <if test="param=='param2'">
+            AND(DEPT_NAME='磨浮设备' OR DEPT_NAME='磨浮生产') AND
+            devName='1#中重型板式给矿机'
+            AND (
+            SC_PART='上矿腔'
+            OR SC_CONTENT='是否有松动'
+            OR SC_PART='槽板'
+            OR SC_PART='槽板链轮及托轮'
+            )
+        </if>
+        <if test="param=='param3'">
+            AND(DEPT_NAME='磨浮设备' OR DEPT_NAME='磨浮生产') AND
+            devName='1#中重型板式给矿机'
+            AND (
+            SC_CONTENT='是否润滑正常'
+            OR SC_CONTENT='油位是否正常'
+            OR SC_CONTENT='是否漏油渗油'
+            OR SC_CONTENT='轴承温度'
+            OR SC_CONTENT='油质是否符合要求'
+            OR SC_CONTENT='油位是否在标准范围内'
+            OR SC_PART='各紧固螺栓'
+            )
+        </if>
+        <if test="param=='param4'">
+            AND (
+            (
+            DEPT_NAME = '磨浮生产'
+            AND devName = '1#中重型板式给矿机'
+            AND (
+            SC_CONTENT = '是否有异响'
+            OR SC_CONTENT = '是否有振动'
+            )
+            )
+            OR (
+            DEPT_NAME = '电仪工段'
+            AND devName = '2#中重型板式给矿机电机'
+            AND (
+            SC_CONTENT = '测温'
+            OR SC_CONTENT = '测振'
+            OR SC_CONTENT = '有无异响'
+            OR SC_CONTENT = '有无松动'
+            )
+            )
+            )
+        </if>
+	<if test="param=='param5'">
+        AND(DEPT_NAME='磨浮设备' OR DEPT_NAME='磨浮生产') AND
+        devName='2#中重型板式给矿机'
+        AND (
+        SC_CONTENT='轴承润滑是否良好'
+        OR SC_CONTENT='链条啮是否正常'
+        OR SC_PART='下矿仓护板'
+        OR  SC_PART='链条'
+        OR  SC_CONTENT='是否磨损、断裂'
+        OR  SC_CONTENT='是否磨损、脱落'
+        OR  (SC_PART='链条'  AND SC_CONTENT='是否磨损、断裂' )
+        OR  SC_CONTENT='是否跑偏'
+        )
+    </if>
+    <if test="param=='param6'">
+        AND(DEPT_NAME='磨浮设备' OR DEPT_NAME='磨浮生产') AND
+        devName='2#中重型板式给矿机'
+        AND (
+        SC_PART='上矿腔'
+        OR SC_CONTENT='是否有松动'
+        OR SC_PART='槽板'
+        OR SC_PART='槽板链轮及托轮'
+        )
+    </if>
+    <if test="param=='param7'">
+        AND(DEPT_NAME='磨浮设备' OR DEPT_NAME='磨浮生产') AND
+        devName='2#中重型板式给矿机'
+        AND (
+        SC_CONTENT='是否润滑正常'
+        OR SC_CONTENT='油位是否正常'
+        OR SC_CONTENT='是否漏油渗油'
+        OR SC_CONTENT='轴承温度'
+        OR SC_CONTENT='油质是否符合要求'
+        OR SC_CONTENT='油位是否在标准范围内'
+        OR SC_PART='各紧固螺栓'
+        )
+    </if>
+    <if test="param=='param8'">
+        AND (
+        (
+        DEPT_NAME = '磨浮生产'
+        AND devName = '2#中重型板式给矿机'
+        AND (
+        SC_CONTENT = '是否有异响'
+        OR SC_CONTENT = '是否有振动'
+        )
+        )
+        OR (
+        DEPT_NAME = '电仪工段'
+        AND devName = '2#中重型板式给矿机电机'
+        AND (
+        SC_CONTENT = '测温'
+        OR SC_CONTENT = '测振'
+        OR SC_CONTENT = '有无异响'
+        OR SC_CONTENT = '有无松动'
+        )
+        )
+        )
+    </if>
+
+	ORDER BY   FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_MK_XLQ_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+SELECT
+
+	(
+		CASE
+		WHEN DEPT_NAME = '电仪工段' THEN
+			'电仪'
+		WHEN DEPT_NAME LIKE '%设备' THEN
+			'设备'
+		WHEN DEPT_NAME LIKE '%生产' THEN
+			'生产'
+		END
+	) AS section,
+	SC_PART AS part,
+	SC_CONTENT AS content,
+	RESULT AS result,
+	ALTPID AS LEVEL
+FROM
+	dxj_spot_result
+WHERE
+
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+	<if test="param=='param1'">
+        AND devName='FX350-GT旋流器'
+    </if>
+    <if test="param=='param2'">
+       and  devName='FX660-GT旋流器（A组）'
+    </if>
+    <if test="param=='param3'">
+        and devName='FX660-GT旋流器（B组）'
+    </if>
+
+
+ORDER BY   FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_MK_PD_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+SELECT
+
+	(
+		CASE
+		WHEN DEPT_NAME = '电仪工段' THEN
+			'电仪'
+		WHEN DEPT_NAME LIKE '%设备' THEN
+			'设备'
+		WHEN DEPT_NAME LIKE '%生产' THEN
+			'生产'
+		END
+	) AS section,
+	SC_PART AS part,
+	SC_CONTENT AS content,
+	RESULT AS result,
+	ALTPID AS LEVEL
+FROM
+	dxj_spot_result
+WHERE
+
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+<if test="param=='param1'">
+		AND devName='5#皮带运输机'
+		and (SC_PART='清扫器'  OR  SC_PART='上、下托辊'   OR SC_PART='紧急拉绳装置'  OR SC_PART='皮带'
+				OR SC_PART='尾轮'  OR SC_PART='尾部拉紧装置'  OR SC_PART='其它' OR SC_PART='支架'
+				OR SC_PART='托辊' OR SC_PART='皮带挡矿板')
+</if>
+<if test="param=='param2'">
+		AND (
+		(devName='5#皮带运输机'
+		and (SC_PART='皮带减速机、电机'  OR  SC_PART='减速机'   OR SC_PART='油箱' ))
+		OR devName='5#皮带运输机电机')
+</if>
+<if test="param=='param3'">
+		AND devName='5#皮带运输机'
+		and (SC_PART='首尾轮滚筒'  OR  SC_PART='尾轮'  )
+</if>
+<if test="param=='param4'">
+		AND devName='5#皮带运输机'
+		and (SC_PART='流量计'  OR  SC_PART='给料小车' OR  SC_PART='补加水管' OR  SC_PART='补加水阀' OR  SC_PART='皮带廊'   OR  SC_PART='其它' )
+</if>
+
+ORDER BY   FIELD(section,'设备','电仪','生产'),part
+
+    </select>
+
+</mapper>

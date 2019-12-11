@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.report.equip.mf.ReportSBMFFXJMapper">
+    <select id="REPORT_SB_FX_JBT_RUN_LIST" resultType="com.demo.model.report.Report">
+  select
+			devName as equipName,
+
+			(CASE WHEN SC_PART='轴承（上）'  AND SC_CONTENT='温度' THEN '上轴承温度'
+						WHEN SC_PART='轴承（上）'  AND SC_CONTENT='润滑是否良好' THEN '上轴承润滑'
+						WHEN SC_PART='轴承（下）'  AND SC_CONTENT='温度' THEN '下轴承温度'
+						WHEN SC_PART='轴承（下）'  AND SC_CONTENT='润滑是否良好' THEN '下轴承润滑'
+						WHEN SC_PART='进料管、进料短接、溢流弯管、阀门'  THEN '管道阀门'
+						WHEN SC_PART='轴承体' and SC_CONTENT='润滑油质是否符合要求'  THEN '油质'
+						WHEN SC_PART='轴承体' and SC_CONTENT='润滑油油位是否在标准范围内' THEN '油位'
+						WHEN SC_PART='填料' and SC_CONTENT='密封是否良好，是否损伤'  THEN '填料密封'
+						WHEN SC_PART='填料' and SC_CONTENT='水封水压力是否正常' THEN '水封水'
+			else SC_PART
+			END
+			) as part,
+SC_CONTENT as content ,
+			RESULT as result,
+			ALTPID as altpid
+  from
+     dxj_spot_result
+  WHERE
+					DEPT_NAME='磨浮设备' AND ((ZONE_NAME='浮选底层区域一' AND devName LIKE '%脱泥泵')
+
+OR (ROUTE_NAME='浮选系统' AND (ZONE_NAME='FX150-GT脱泥旋流器' OR devName LIKE '%搅拌桶'))
+)
+		AND TASKSTART_TM="${time}"
+
+ORDER BY FIELD(equipName,'脱泥旋流器','原矿4.5m搅拌桶','再磨4m搅拌桶','1#选硫搅拌桶','2#选硫搅拌桶','1#脱泥泵','2#脱泥泵'),part
+
+    </select>
+    <select id="REPORT_SB_FX_FXJ_RUN_LIST" resultType="com.demo.model.report.Report">
+    select
+
+				'浮选机' as equipName
+
+				,CONCAT(devName,'--',(CASE  WHEN SC_PART='轴承（上）'  AND SC_CONTENT='温度' THEN '上轴承温度'
+						WHEN SC_PART='轴承（上）'  AND SC_CONTENT='润滑是否良好' THEN '上轴承润滑'
+						WHEN SC_PART='轴承（下）'  AND SC_CONTENT='温度' THEN '下轴承温度'
+						WHEN SC_PART='轴承（下）'  AND SC_CONTENT='润滑是否良好' THEN '下轴承润滑'
+
+				ELSE SC_PART END
+				)) as part
+                ,RESULT as result
+                ,ALTPID as altpid
+        from
+                dxj_spot_result
+        WHERE
+                DEPT_NAME='磨浮设备' AND ROUTE_NAME='浮选系统' and  devName like '%浮选机'
+            AND ALTPID>0
+		    AND TASKSTART_TM="${time}"
+        ORDER BY  CAST(TRIM('#' FROM part) AS SIGNED)
+
+    </select>
+
+
+</mapper>

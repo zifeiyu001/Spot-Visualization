@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.equip.ns.sgnm.SpotNSSGNMDetailedMapper">
+    <select id="NS_SGNM_SB_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+
+				'设备' as 'devName',
+				MAX(CASE	WHEN SC_PART='减速机、液压控制泵站' AND SC_CONTENT LIKE '液压%' THEN tempResult END ) as 'a1',
+				MAX(CASE 	WHEN SC_PART='稀油站' AND SC_CONTENT LIKE '油温%' THEN tempResult END ) as 'a2',
+				MAX(CASE 	WHEN SC_PART='稀油站' AND SC_CONTENT LIKE '油箱%'  THEN Result END ) as 'a3',
+				MAX(CASE WHEN  SC_PART='耙架提升油缸' AND SC_CONTENT = '是否正常' THEN tempResult END ) as 'a4',
+				MAX(CASE WHEN  SC_PART='行走轮及链条' AND SC_CONTENT = '是否正常' THEN tempResult END ) as 'a5',
+-- 				MAX(CASE WHEN  SC_PART='浓密机运行阻力' AND SC_CONTENT = '运行阻力数值' THEN Result END ) as 'a6',
+
+				MAX(CASE	WHEN devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '水封水是否正常' THEN tempResult END ) as 'a6',
+				MAX(CASE 	WHEN devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '出口温度数值' THEN tempResult END ) as 'a7',
+				MAX(CASE 	WHEN devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '进口温度数值'  THEN Result END ) as 'a8',
+				MAX(CASE WHEN  devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '出口压力数值' THEN tempResult END ) as 'a9',
+				MAX(CASE WHEN  devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '盘根是否漏浆' THEN tempResult END ) as 'a10',
+				MAX(CASE WHEN  devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '轴承润滑油是否正常' THEN Result END ) as 'a11',
+				MAX(CASE	WHEN devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '进浆短接有无漏浆' THEN tempResult END ) as 'a12',
+				MAX(CASE 	WHEN devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '出口短接是否完好' THEN tempResult END ) as 'a13',
+				MAX(CASE 	WHEN devName='1#离心式渣浆泵（底流）' AND SC_CONTENT = '地脚是否松动'  THEN Result END ) as 'a14',
+
+				MAX(CASE	WHEN devName='2#离心式渣浆泵（底流）' AND SC_CONTENT = '是否正常' THEN tempResult END ) as 'a15',
+				MAX(CASE 	WHEN devName='2#离心式渣浆泵（底流）' AND SC_CONTENT = '盘根是否漏浆' THEN tempResult END ) as 'a16',
+				MAX(CASE 	WHEN devName='2#离心式渣浆泵（底流）' AND SC_CONTENT = '轴承润滑油是否正常'  THEN Result END ) as 'a17',
+				MAX(CASE WHEN  devName='2#离心式渣浆泵（底流）' AND SC_CONTENT = '进浆短接有无漏浆' THEN tempResult END ) as 'a18',
+				MAX(CASE WHEN  devName='2#离心式渣浆泵（底流）' AND SC_CONTENT = '出口短接是否完好' THEN tempResult END ) as 'a19',
+				MAX(CASE WHEN  devName='2#离心式渣浆泵（底流）' AND SC_CONTENT = '水封水是否正常' THEN Result END ) as 'a20',
+				MAX(CASE	WHEN devName='2#离心式渣浆泵（底流）' AND SC_CONTENT = '地脚是否松动' THEN tempResult END ) as 'a21'
+
+
+FROM
+		(SELECT
+					SC_CONTENT,RESULT,SC_PART,devName,
+				(CASE
+				WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+				WHEN 	(ALTPID = 0)  THEN '正常'
+				ELSE RESULT
+				END ) as tempResult
+
+		FROM
+				dxj_spot_result
+		WHERE
+				(DEPT_NAME="精尾设备"			AND ZONE_NAME="浓密机NJG-18")
+				AND to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as tmp
+
+        </select>
+    <select id="NS_SGNM_SC_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+--         SELECT
+--   '生产' as 'devName',
+-- 	MAX(CASE WHEN SC_PART='筒体端面'    THEN temResult  end ) as  'a1',
+-- 	MAX(CASE WHEN SC_PART='流量计'      THEN temResult  end ) as  'a2',
+-- 	MAX(CASE WHEN SC_PART='补加水阀'      THEN temResult  end ) as  'a3',
+-- 	MAX(CASE WHEN SC_PART='补加水管'          THEN temResult  end ) as  'a4',
+-- 	MAX(CASE WHEN SC_PART='甘油喷射系统'      THEN temResult  end ) as  'a5',
+-- 	MAX(CASE WHEN SC_PART='排矿浓度'      THEN temResult  end ) as  'a6',
+-- 	MAX(CASE WHEN devName ='MZS6433低压稀油润滑系统' and SC_CONTENT='油泵是否工作正常'      THEN temResult  end ) as  'a7',
+-- 	MAX(CASE WHEN devName ='MZS6433低压稀油润滑系统' and SC_CONTENT='冷却水是否正常' 		     THEN temResult  end ) as  'a8',
+-- 	MAX(CASE WHEN devName ='MZS6433高压稀油润滑系统' and SC_CONTENT='是否漏油'  			 THEN temResult  end ) as  'a9',
+-- 	MAX(CASE WHEN devName ='MZS6433高压稀油润滑系统' and SC_CONTENT='冷却水是否正常'     THEN temResult  end ) as  'a10'
+-- FROM
+-- (
+-- 			SELECT
+-- 						devName,SC_CONTENT,SC_PART,
+-- 					(	CASE
+-- 										WHEN RESULT='停机不检' THEN RESULT
+-- 										WHEN  (ALTPID = 2 OR ALTPID=1)  THEN '故障'
+-- 										WHEN ALTPID=0 THEN '正常' END
+--
+-- 			)temResult
+-- 			 from dxj_spot_result
+--
+--
+-- 					where  DEPT_NAME = '磨浮生产'
+-- 							AND ROUTE_NAME = '磨矿岗'
+-- 							and (devName='MZS6433半自磨机'
+-- 							OR devName LIKE 'MZS6433%压稀油润滑系统'))as tmp
+
+
+    </select>
+    <select id="NS_SGNM_DY_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+ SELECT
+ '电仪' as 'devName',
+		MAX(CASE WHEN devName='油泵电机1号' AND SC_CONTENT ='测振'       THEN tempResult  end )  as   'a1',
+		MAX(CASE WHEN devName='油泵电机1号' AND SC_CONTENT ='测温'       THEN tempResult  end )  as   'a2',
+		MAX(CASE WHEN devName='油泵电机1号' AND SC_CONTENT ='有无异响'   THEN tempResult  end )  as   'a3',
+		MAX(CASE WHEN devName='油泵电机1号' AND SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a4',
+		MAX(CASE WHEN devName='油泵电机2号' AND SC_CONTENT ='测振'       THEN tempResult  end )  as   'a5',
+		MAX(CASE WHEN devName='油泵电机2号' AND SC_CONTENT ='测温'       THEN tempResult  end )  as   'a6',
+		MAX(CASE WHEN devName='油泵电机2号' AND SC_CONTENT ='有无异响'   THEN tempResult  end )  as   'a7',
+		MAX(CASE WHEN devName='油泵电机2号' AND SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a8',
+
+		MAX(CASE WHEN devName='1#离心式渣浆泵电机' AND SC_CONTENT ='测振'       THEN tempResult  end )  as   'a9',
+		MAX(CASE WHEN devName='1#离心式渣浆泵电机' AND SC_CONTENT ='测温'       THEN tempResult  end )  as   'a10',
+		MAX(CASE WHEN devName='1#离心式渣浆泵电机' AND SC_CONTENT ='有无异响'   THEN tempResult  end )  as   'a11',
+		MAX(CASE WHEN devName='1#离心式渣浆泵电机' AND SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a12',
+		MAX(CASE WHEN devName='2#离心式渣浆泵电机' AND SC_CONTENT ='测振'       THEN tempResult  end )  as   'a13',
+		MAX(CASE WHEN devName='2#离心式渣浆泵电机' AND SC_CONTENT ='测温'       THEN tempResult  end )  as   'a14',
+		MAX(CASE WHEN devName='2#离心式渣浆泵电机' AND SC_CONTENT ='有无异响'   THEN tempResult  end )  as   'a15',
+		MAX(CASE WHEN devName='2#离心式渣浆泵电机' AND SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a16'
+FROM
+		(
+			SELECT
+						SC_CONTENT,devName,
+						(CASE
+						WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+						WHEN 	(ALTPID = 0)  THEN '正常'
+						ELSE RESULT
+						END  ) as tempResult
+
+
+			FROM
+					dxj_spot_result
+			WHERE
+					(DEPT_NAME="电仪工段" AND ZONE_NAME="浓密机NJG-18")
+			AND
+							to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as temp
+    </select>
+
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X6 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1000mm" height="800mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 100000 80000"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+
+ <defs>
+
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#332C2B;stroke-width:20}
+    .fil1 {fill:#4B8D7F}
+    .fil6 {fill:#A79CCB}
+    .fil0 {fill:#D2CDE6}
+    .fil3 {fill:#E62129}
+    .fil4 {fill:#4B8D7F;fill-rule:nonzero}
+    .fil5 {fill:#D2CDE6;fill-rule:nonzero}
+    .fil2 {fill:#E62129;fill-rule:nonzero}
+   ]]>
+  </style>
+ </defs>
+ <g id="图层_x0020_1" onclick="mm(ts)" style="width: 100%;cursor: pointer;">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0 str0" x="10647" y="17166" width="67763" height="45247"/>
+  <rect class="fil1 str0" x="7035" y="6434" width="3593" height="65675"/>
+  <path class="fil2 str0" d="M2995 24878l0 29006 4040 14503 0 -58013 -4040 14503zm0 14503m2020 21755m2020 -21755m-2020 -21755z"/>
+  <rect class="fil1 str0" x="204" y="33045" width="2791" height="12227"/>
+  <rect class="fil3 str0" x="78407" y="16457" width="2092" height="46580"/>
+  <path class="fil4 str0" d="M83578 51354l0 -23251 -3080 -11625 0 46501 3080 -11625zm0 -11625m-1540 -17438m-1540 17438m1540 17438z"/>
+  <rect class="fil1 str0" x="83578" y="26413" width="2288" height="26582"/>
+  <rect class="fil1 str0" x="85866" y="25564" width="1577" height="28470"/>
+  <rect class="fil0 str0" x="87443" y="38124" width="2969" height="2858"/>
+  <path class="fil5 str0" d="M90435 40937l9493 -20805 -9493 0 0 20805zm4747 -10402m0 -10402m-4747 10402z"/>
+  <ellipse class="fil6 str0" cx="15651" cy="39487" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="39830" cy="39487" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="62445" cy="39487" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="26838" cy="39487" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="73271" cy="39487" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="50836" cy="39334" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="15530" cy="57369" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="39709" cy="57369" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="62324" cy="57369" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="26718" cy="57369" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="73151" cy="57369" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="50717" cy="57217" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="16313" cy="21910" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="40491" cy="21910" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="63107" cy="21910" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="27500" cy="21910" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="73933" cy="21910" rx="2346" ry="2904"/>
+  <ellipse class="fil6 str0" cx="51498" cy="21757" rx="2346" ry="2904"/>
+ </g>
+</svg>

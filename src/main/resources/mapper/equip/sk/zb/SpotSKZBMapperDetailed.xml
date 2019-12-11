@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.equip.sk.zb.SpotSKZBDetailedMapper">
+    <select id="SK_ZB_SB_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+
+				'碎矿' as 'devName',
+				MAX(CASE	WHEN  SC_CONTENT LIKE '电机与减速机%' THEN tempResult END ) as 'a1',
+				MAX(CASE WHEN  SC_CONTENT LIKE '减速机与%' THEN tempResult END ) as 'a2',
+				MAX(CASE WHEN  SC_CONTENT = '电机固定螺栓有无松动' THEN tempResult END ) as 'a3',
+				MAX(CASE WHEN  SC_CONTENT = '减速机油位是否正常' THEN tempResult END ) as 'a4',
+				MAX(CASE WHEN  SC_CONTENT = '减速机轴承温度' THEN tempResult END ) as 'a5',
+				MAX(CASE WHEN  SC_CONTENT = '减速机轴承和齿轮运行有无异响' THEN tempResult END ) as 'a6',
+				MAX(CASE WHEN  SC_CONTENT = '链轮轴承有无异响' THEN tempResult END ) as 'a7',
+				MAX(CASE WHEN  SC_CONTENT = '链轮轴基座固定螺栓有无松动' THEN tempResult END ) as 'a8',
+				MAX(CASE WHEN  SC_CONTENT = '链轮齿磨损情况及有无断裂现象' THEN tempResult END ) as 'a9',
+				MAX(CASE WHEN  SC_CONTENT LIKE '槽板运行%' THEN tempResult END ) as 'a10',
+				MAX(CASE WHEN  SC_CONTENT LIKE '槽板有无%' THEN tempResult END ) as 'a11',
+				MAX(CASE WHEN  SC_CONTENT LIKE '槽板固定%' THEN tempResult END ) as 'a12',
+				MAX(CASE WHEN  SC_CONTENT LIKE '链节轴销%' THEN tempResult END ) as 'a13',
+				MAX(CASE WHEN  SC_CONTENT = '链节无明显跑偏' THEN tempResult END ) as 'a14',
+				MAX(CASE WHEN  SC_CONTENT LIKE '链节和链轮%' THEN tempResult END ) as 'a15',
+				MAX(CASE WHEN  SC_CONTENT LIKE '支重%' THEN tempResult END ) as 'a16',
+				MAX(CASE WHEN  SC_CONTENT LIKE '中间支重%' THEN tempResult END ) as 'a17',
+				MAX(CASE WHEN  SC_CONTENT LIKE '下托轮%' THEN tempResult END ) as 'a18',
+				MAX(CASE WHEN  SC_CONTENT LIKE '尾轮轴承%' THEN tempResult END ) as 'a19',
+				MAX(CASE WHEN  SC_CONTENT LIKE '尾轮轴基座%' THEN tempResult END ) as 'a20',
+				MAX(CASE WHEN  SC_CONTENT LIKE '护板螺栓%' THEN tempResult END ) as 'a21',
+				MAX(CASE WHEN  SC_CONTENT LIKE '护板磨损%' THEN tempResult END ) as 'a22'
+FROM
+		(SELECT
+					SC_CONTENT,
+				(CASE
+               WHEN RESULT='停机不检' THEN RESULT
+				WHEN		SC_CONTENT="减速机轴承温度"  THEN RESULT
+				WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+				WHEN 	(ALTPID = 0)  THEN '正常'
+				WHEN  (ALTPID=1 OR ALTPID=2) THEN   CONCAT(RESULT,'故障')
+				ELSE RESULT
+				END ) as tempResult
+
+		FROM
+				dxj_spot_result
+		WHERE
+					(DEPT_NAME="碎矿设备"			AND devName="重型板式给料机")
+				AND to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as tmp
+
+        </select>
+    <select id="SK_ZB_SC_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+
+				'生产' as 'devName',
+				MAX(CASE WHEN  SC_CONTENT = '地脚螺杆是否松动' THEN tempResult END ) as 'a1',
+				MAX(CASE WHEN  SC_CONTENT LIKE '机台周边%' THEN tempResult END ) as 'a2',
+				MAX(CASE WHEN  SC_CONTENT LIKE '重板减速机%' THEN tempResult END ) as 'a3',
+				MAX(CASE WHEN  SC_CONTENT LIKE '减速机润滑油%' THEN tempResult END ) as 'a4',
+				MAX(CASE WHEN  SC_CONTENT LIKE '减速机轴承%' THEN tempResult END ) as 'a5',
+				MAX(CASE WHEN  SC_CONTENT LIKE '重板减速机%' THEN tempResult END ) as 'a6',
+				MAX(CASE WHEN  SC_CONTENT LIKE '链条%' THEN tempResult END ) as 'a7',
+				MAX(CASE WHEN  SC_CONTENT LIKE '槽板%' THEN tempResult END ) as 'a8',
+        MAX(CASE WHEN  SC_CONTENT LIKE '下矿%' THEN tempResult END ) as 'a9'
+FROM
+(
+			SELECT
+						devName,SC_CONTENT,SC_PART,
+					(	CASE
+										WHEN  (ALTPID = 2 OR ALTPID=1)  THEN '故障'
+										WHEN ALTPID=0 THEN '正常' else  RESULT END
+				)tempResult
+				 from dxj_spot_result
+					where  DEPT_NAME = '碎矿生产'
+							and devName='重型板式给料机'
+					AND TO_DAYS(TASKSTART_TM)=TO_DAYS(NOW())
+							)as tmp
+
+
+    </select>
+    <select id="SK_ZB_DY_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+        SELECT
+ '电仪' as 'devName',
+		MAX(CASE WHEN SC_CONTENT ='测振'         THEN tempResult  end )  as   'a1',
+		MAX(CASE WHEN SC_CONTENT ='测温'            THEN tempResult  end )  as   'a2',
+		MAX(CASE WHEN SC_CONTENT ='有无异响'          THEN tempResult  end )  as   'a3',
+		MAX(CASE WHEN SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a4'
+FROM
+		(
+			SELECT
+						SC_CONTENT,
+						(CASE
+						WHEN RESULT='停机不检' THEN RESULT
+						WHEN 	(SC_CONTENT="测振" OR SC_CONTENT="测温") THEN RESULT
+						WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+						WHEN 	(ALTPID = 0)  THEN '正常'
+						ELSE RESULT
+						END  ) as tempResult,
+						RESULT
+
+			FROM
+					dxj_spot_result
+			WHERE
+					(DEPT_NAME="电仪工段" AND devName="重型板式给料机电机")
+			AND
+							to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as temp
+    </select>
+
+
+</mapper>

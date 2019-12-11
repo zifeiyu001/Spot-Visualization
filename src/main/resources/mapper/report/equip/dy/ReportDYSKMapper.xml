@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.report.equip.dy.ReportDYSKMapper">
+    <select id="REPORT_DY_SK_ZBEP_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT devName as equipName,
+(CASE WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+WHEN SC_PART='本体' AND SC_CONTENT='有无异常' THEN '电机有无异响'
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='本体' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result
+ WHERE DEPT_NAME='电仪工段'
+        AND TASKSTART_TM="${time}"
+            AND ROUTE_NAME='碎矿系统'
+            AND (ZONE_NAME='重板' OR  ZONE_NAME='颚破')
+
+        GROUP BY equipName,SC_CONTENT
+        ORDER BY FIELD(equipName,'简摆颚式破碎机电机','颚破稀油站1号油泵电机','颚破稀油站2号油泵电机','重型板式给料机电机','湿式除尘风机电机')
+                ,FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+    </select>
+    <select id="REPORT_DY_SK_24PD_RUN_LIST" resultType="com.demo.model.report.Report">
+                SELECT devName as equipName,
+                    (CASE WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+                    WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+                    WHEN SC_PART='本体' AND SC_CONTENT='有无异常' THEN '电机有无异响'
+                    WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+                    WHEN SC_PART='本体' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+                    END
+                    )as part,
+                    RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+                     from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND ROUTE_NAME='碎矿系统'
+                    AND (ZONE_NAME='2#皮带' OR  ZONE_NAME='4#皮带')
+                     AND TASKSTART_TM="${time}"
+                            GROUP BY equipName,SC_CONTENT
+
+                            ORDER BY FIELD(equipName,'2#皮带运输机电机','4#皮带运输机电机')
+                    , FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+    </select>
+    <select id="REPORT_DY_SK_SHSS_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT devName as equipName,
+            (CASE WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+            WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+            WHEN SC_PART='本体' AND SC_CONTENT='有无异常' THEN '电机有无异响'
+            WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+            WHEN SC_PART='本体' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+            END
+            )as part,
+            RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+             from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND ROUTE_NAME='石灰输送'
+                  AND TASKSTART_TM="${time}"
+                    GROUP BY equipName,SC_CONTENT
+
+                    ORDER BY FIELD(equipName,'1#石灰制乳搅拌桶电机','2#石灰制乳搅拌桶电机','1#石灰送浆泵电机'
+            ,'2#石灰送浆泵电机','3#石灰送浆泵电机','1#石灰输送搅拌桶电机','2#石灰输送搅拌桶电机')
+            , FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+    </select>
+    <select id="REPORT_DY_JW_NMJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+(CASE WHEN devName='油泵电机1号' THEN '18m浓密池油泵（行走）'
+WHEN devName='油泵电机2号' THEN '18m浓密池油泵（提耙）'
+WHEN devName='1#离心式渣浆泵电机' THEN '1#离心式渣浆泵电机（18m底流）'
+WHEN devName='2#离心式渣浆泵电机' THEN '2#离心式渣浆泵电机（18m底流）'
+ELSE devName
+END
+) AS equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+
+ELSE SC_PART
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND (ROUTE_NAME='浓密机' OR ROUTE_NAME='厂前回水泵')
+           AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY FIELD(equipName,'铜30m浓密油泵电机1号（行走）','铜30m浓密油泵电机2号（提耙）','硫45m浓密油泵电机1号（行走）'
+,'硫45m浓密油泵电机2号（提耙）','尾矿45m浓密池油泵电机1号（行走）','尾矿45m浓密池油泵电机2号（提耙）'
+,'油泵电机1号','油泵电机2号','18m浓密池油泵（行走）','18m浓密池油泵（提耙）','1#离心式渣浆泵电机（18m底流）','2#离心式渣浆泵电机（18m底流）','1#离心式渣浆泵电机','2#离心式渣浆泵电机'
+,'新回水泵电机1号电机','新回水泵电机2号电机','新回水泵电机3号电机')
+, FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+
+
+    </select>
+    <select id="REPORT_DY_JW_YLGL_RUN_LIST" resultType="com.demo.model.report.Report">
+
+        SELECT
+(CASE WHEN devName='油泵电机1号' THEN '18m浓密池油泵（行走）'
+WHEN devName='油泵电机2号' THEN '18m浓密池油泵（提耙）'
+WHEN devName='1#离心式渣浆泵电机' THEN '1#离心式渣浆泵电机（18m底流）'
+WHEN devName='2#离心式渣浆泵电机' THEN '2#离心式渣浆泵电机（18m底流）'
+ELSE devName
+END
+) AS equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+
+ELSE SC_PART
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND (ROUTE_NAME='压滤、过滤机' OR ROUTE_NAME='尾砂泵')
+        AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY FIELD(equipName,'3号压滤电机','压滤3m搅拌桶电机','1#铜精矿上浆泵电机'
+,'2#铜精矿上浆泵电机','1#铜回矿泵池电机','2#铜回矿泵池电机'
+,'1号过滤搅拌电机','1号过滤主轴电机','2号过滤搅拌电机','2号过滤主轴电机'
+,'1号过滤机1号水循环泵电机','1号过滤机2号水循环泵电机','2号过滤机1号水循环泵电机','2号过滤机2号水循环泵电机'
+,'1#硫回矿泵池电机','2#硫回矿泵池电机','1号尾砂泵电机','2号尾砂泵电机','3号尾砂泵电机'
+)
+-- ORDER BY equipName
+, FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+
+    </select>
+    <select id="REPORT_DY_MF_GFJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+(CASE WHEN devName='油泵电机1号' THEN '18m浓密池油泵（行走）'
+WHEN devName='油泵电机2号' THEN '18m浓密池油泵（提耙）'
+WHEN devName='1#离心式渣浆泵电机' THEN '1#离心式渣浆泵电机（18m底流）'
+WHEN devName='2#离心式渣浆泵电机' THEN '2#离心式渣浆泵电机（18m底流）'
+ELSE devName
+END
+) AS equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+ELSE SC_PART
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND (ROUTE_NAME='鼓风机')
+       AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY FIELD(equipName,'1#鼓风机电机','2#鼓风机电机','3#鼓风机电机',''
+,'1#鼓风机1#稀油站电机','1#鼓风机2#稀油站电机','2#鼓风机1#稀油站电机'
+,'2#鼓风机2#稀油站电机','3#鼓风机1#稀油站电机','3#鼓风机2#稀油站电机'
+)
+
+, FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+
+    </select>
+    <select id="REPORT_DY_JW_KYJ_RUN_LIST" resultType="com.demo.model.report.Report">
+                SELECT
+(CASE WHEN devName='油泵电机1号' THEN '18m浓密池油泵（行走）'
+WHEN devName='油泵电机2号' THEN '18m浓密池油泵（提耙）'
+WHEN devName='1#离心式渣浆泵电机' THEN '1#离心式渣浆泵电机（18m底流）'
+WHEN devName='2#离心式渣浆泵电机' THEN '2#离心式渣浆泵电机（18m底流）'
+ELSE devName
+END
+) AS equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+ELSE SC_PART
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND (ROUTE_NAME='空气压缩机组')
+       AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY equipName
+
+, FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+    </select>
+    <select id="REPORT_DY_MF_PDZB_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+ devName as equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+ELSE SC_PART
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND (ROUTE_NAME='中板皮带' AND (devName='1#中重型板式给矿机电机'
+    OR devName='2#中重型板式给矿机电机' OR devName='5#皮带运输机电机'))
+       AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY equipName
+
+, FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+
+    </select>
+    <select id="REPORT_DY_MF_3MSH_RUN_LIST" resultType="com.demo.model.report.Report">
+
+                SELECT
+ devName as equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+ELSE SC_PART
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND (ROUTE_NAME='中板皮带' AND (devName='1#石灰搅拌桶加压电机'
+ OR devName='2#石灰搅拌桶加压电机' OR devName='3米石灰搅拌桶电机'
+))
+       AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY equipName
+
+, FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+    </select>
+    <select id="REPORT_DY_MF_FXB_RUN_LIST" resultType="com.demo.model.report.Report">
+                SELECT
+ devName as equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+ELSE SC_PART
+END
+)as part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND (ROUTE_NAME='浮选柱' OR ROUTE_NAME='浮选底层')
+       AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY FIELD(equipName,'1#铜精选一给矿泵电机','2#铜精选一给矿泵电机','1#铜精选二给矿泵电机','2#铜精选二给矿泵电机',
+'1#离心式渣浆泵电机（再磨砂）','2#离心式渣浆泵电机（再磨砂）','1#精扫一精矿泵','2#精扫一精矿泵','1#精扫二尾矿泵','2#精扫二尾矿泵'
+,'1#硫粗选泡沫泵电机','2#硫粗选泡沫泵电机','1#硫精一泡沫泵电机','2#硫精一泡沫泵电机','1#硫粗选给矿泵电机','2#硫粗选给矿泵电机'
+,'1#脱泥泵电机','2#脱泥泵电机','1#扫Ⅰ泡沫泵电机','2#扫Ⅰ泡沫泵电机','1#扫Ⅱ泡沫泵电机','2#扫Ⅱ泡沫泵电机'
+)
+
+, FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+    </select>
+    <select id="REPORT_DY_MF_ZMJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+            (CASE WHEN devName='MQY2745再磨机电机' THEN '传动部电机'
+WHEN devName='MQY2745再磨机高低压稀油站电机' THEN '高低压稀油站电机'
+END
+)as equipName,
+(CASE  WHEN SC_PART='传动部电机滑环' THEN '电机滑环'
+WHEN SC_PART='传动部电机有无异响' THEN '电机有无异响'
+WHEN SC_PART='传动部电机轴承油位' THEN '电机轴承油位'
+WHEN SC_PART='MQY2745高低压稀油站电机振动' THEN '电机振动'
+WHEN SC_PART='MQY2745高低压稀油站电机温度' THEN '电机温度'
+
+END) as  part,
+            RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+             from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND ((ZONE_NAME='磨机区域' AND devName='MQY2745再磨机电机')
+            OR (ZONE_NAME='磨机底层' AND devName='MQY2745再磨机高低压稀油站电机'))
+       AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY  equipName
+    </select>
+    <select id="REPORT_DY_MF_QMJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+ (CASE WHEN devName='MQY4870球磨机电机' THEN '传动部电机'
+WHEN devName='MQY4870球磨机高低压稀油站电机' THEN '高低压稀油站电机'
+END
+)equipName,
+(CASE  WHEN SC_PART='传动部电机滑环' THEN '电机滑环'
+WHEN SC_PART='传动部电机有无异响' THEN '电机有无异响'
+WHEN SC_PART='传动部电机轴承油位' THEN '电机轴承油位'
+WHEN SC_PART='MQY4870高低压稀油站电机振动' THEN '电机振动'
+WHEN SC_PART='MQY4870高低压稀油站电机温度' THEN '电机温度'
+
+END) as  part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND ((ZONE_NAME='磨机区域' AND devName='MQY4870球磨机电机')
+OR (ZONE_NAME='磨机底层' AND devName='MQY4870球磨机高低压稀油站电机'))
+       AND TASKSTART_TM="${time}"
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY  equipName
+    </select>
+    <select id="REPORT_DY_MF_BZMJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+ (case  WHEN devName='MZS6433半自磨机电机' THEN '传动部电机'
+WHEN devName='MZS6433半自磨机高压稀油站电机' THEN '高压稀油站电机'
+WHEN devName='MZS6433半自磨机低压稀油站电机' THEN '低压稀油站电机'
+ELSE devName END
+)equipName,
+(CASE
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='各紧固螺栓' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+
+WHEN SC_PART='传动部电机有无异响' THEN '电机有无异响'
+WHEN SC_PART='传动部电机滑环' THEN '电机滑环'
+WHEN SC_PART='传动部电机轴承油位' THEN '轴承油位'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+--
+WHEN SC_PART like 'MZS6433%压稀油站电机温度' THEN '电机温度'
+WHEN SC_PART like 'MZS6433%压稀油站电机振动' THEN '电机振动'
+ELSE SC_PART
+END
+)as part,
+-- SC_PART as  part,
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND ((ZONE_NAME='磨机区域' AND devName='MZS6433半自磨机电机')
+OR (ZONE_NAME='磨机底层' AND (devName='MZS6433半自磨机高压稀油站电机' OR devName='MZS6433半自磨机低压稀油站电机'
+OR devName='1#离心式渣浆泵电机（粗砂）' OR devName='2#离心式渣浆泵电机（粗砂）'
+)))
+       AND TASKSTART_TM="${time}"
+
+        GROUP BY equipName,SC_CONTENT
+
+        ORDER BY  FIELD(devName,'MZS6433半自磨机电机','MZS6433半自磨机高压稀油站电机','MZS6433半自磨机低压稀油站电机'
+,'1#离心式渣浆泵电机（粗砂）','2#离心式渣浆泵电机（粗砂）')
+
+
+
+    </select>
+    <select id="REPORT_DY_MF_FXJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+(case WHEN devName='二厂浮选电机1#' THEN '1#浮选电机'
+WHEN devName='二厂浮选电机2#' THEN '2#浮选电机'
+WHEN devName='二厂浮选电机3#' THEN '3#浮选电机'
+WHEN devName='二厂浮选电机4#' THEN '4#浮选电机'
+WHEN devName='二厂浮选电机5#' THEN '5#浮选电机'
+WHEN devName='二厂浮选电机6#' THEN '6#浮选电机'
+WHEN devName='二厂浮选电机7#' THEN '7#浮选电机'
+WHEN devName='二厂浮选电机8#' THEN '8#浮选电机'
+WHEN devName='二厂浮选电机9#' THEN '9#浮选电机'
+WHEN devName='二厂浮选电机10#' THEN '10#浮选电机'
+WHEN devName='二厂浮选电机11#' THEN '11#浮选电机'
+WHEN devName='二厂浮选电机12#' THEN '12#浮选电机'
+WHEN devName='二厂浮选电机13#' THEN '13#浮选电机'
+WHEN devName='二厂浮选电机14#' THEN '14#浮选电机'
+WHEN devName='二厂浮选电机15#' THEN '15#浮选电机'
+WHEN devName='二厂浮选电机16#' THEN '16#浮选电机'
+WHEN devName='二厂浮选电机17#' THEN '17#浮选电机'
+WHEN devName='二厂浮选电机18#' THEN '18#浮选电机'
+WHEN devName='二厂浮选电机19#' THEN '19#浮选电机'
+WHEN devName='二厂浮选电机20#' THEN '20#浮选电机'
+WHEN devName='二厂浮选电机21#' THEN '21#浮选电机'
+WHEN devName='二厂浮选电机22#' THEN '22#浮选电机'
+WHEN devName='二厂浮选电机23#' THEN '23#浮选电机'
+WHEN devName='二厂浮选电机24#' THEN '24#浮选电机'
+WHEN devName='二厂浮选电机25#' THEN '25#浮选电机'
+WHEN devName='二厂浮选电机26#' THEN '26#浮选电机'
+WHEN devName='二厂浮选电机27#' THEN '27#浮选电机'
+WHEN devName='二厂浮选电机28#' THEN '28#浮选电机'
+WHEN devName='二厂浮选电机29#' THEN '29#浮选电机'
+WHEN devName='二厂浮选电机30#' THEN '30#浮选电机'
+WHEN devName='二厂浮选电机31#' THEN '31#浮选电机'
+WHEN devName='二厂浮选电机32#' THEN '32#浮选电机'
+WHEN devName='二厂浮选电机33#' THEN '33#浮选电机'
+WHEN devName='二厂浮选电机34#' THEN '34#浮选电机'
+WHEN devName='二厂浮选电机35#' THEN '35#浮选电机'
+WHEN devName='二厂浮选电机36#' THEN '36#浮选电机'
+WHEN devName='二厂浮选电机37#' THEN '37#浮选电机'
+WHEN devName='二厂浮选电机38#' THEN '38#浮选电机'
+WHEN devName='二厂浮选电机39#' THEN '39#浮选电机'
+WHEN devName='二厂浮选电机40#' THEN '40#浮选电机'
+WHEN devName='二厂浮选电机41#' THEN '41#浮选电机'
+ELSE devName
+END
+)equipName,
+(CASE WHEN SC_PART='轴承' AND SC_CONTENT='测温' THEN '轴承温度'
+WHEN SC_PART='轴承' AND SC_CONTENT='测振' THEN '轴承振动'
+WHEN SC_PART='本体' AND SC_CONTENT='有无异常' THEN '电机有无异响'
+WHEN SC_PART='本体' AND SC_CONTENT='有无异响' THEN '电机有无异响'
+WHEN SC_PART='本体' AND SC_CONTENT='有无松动' THEN '紧固螺栓有无松动'
+END
+)as part,
+
+RESULT as result,ALTPID as altpid ,uploadResultTime
+
+
+ from dxj_spot_result WHERE DEPT_NAME='电仪工段' AND ROUTE_NAME='浮选系统'
+      AND TASKSTART_TM="${time}"
+        GROUP BY equipName,part
+        ORDER BY  FIELD(devName,'原矿4.5m搅拌桶电机','二厂浮选电机1#','二厂浮选电机2#','二厂浮选电机3#'
+,'二厂浮选电机4#','二厂浮选电机5#','二厂浮选电机6#','二厂浮选电机7#','二厂浮选电机8#','二厂浮选电机9#'
+,'再磨4m搅拌桶电机','二厂浮选电机10#','二厂浮选电机11#','二厂浮选电机12#','二厂浮选电机13#'
+,'二厂浮选电机14#','二厂浮选电机15#','1#选硫搅拌桶电机','2#选硫搅拌桶电机'
+,'二厂浮选电机16#','二厂浮选电机17#','二厂浮选电机18#','二厂浮选电机19#','二厂浮选电机20#'
+,'二厂浮选电机21#','二厂浮选电机22#','二厂浮选电机23#','二厂浮选电机24#','二厂浮选电机25#','二厂浮选电机26#'
+,'二厂浮选电机27#','二厂浮选电机28#','二厂浮选电机29#','二厂浮选电机30#'
+,'二厂浮选电机31#','二厂浮选电机32#','二厂浮选电机33#','二厂浮选电机34#','二厂浮选电机35#','二厂浮选电机36#'
+,'二厂浮选电机37#','二厂浮选电机38#','二厂浮选电机39#','二厂浮选电机40#','二厂浮选电机41#'
+),FIELD(part,'轴承温度','轴承振动','电机有无异响','紧固螺栓有无松动')
+
+
+
+
+    </select>
+    <select id="REPORT_DY_MF_MJ_DCS_RUN_LIST" resultType="com.demo.model.report.Report">
+
+        SELECT
+          '传动部电机' as equipName,
+            (CASE WHEN DocTagName LIKE '%MnMtrBearTemp_1' THEN '主电机轴承1温度'
+            WHEN DocTagName LIKE '%MnMtrBearTemp_2' THEN '主电机轴承2温度'
+            WHEN DocTagName LIKE '%MnMtrPhsATemp' THEN '主电机A相绕组温度'
+            WHEN DocTagName LIKE '%MnMtrPhsBTemp' THEN '主电机B相绕组温度'
+            WHEN DocTagName LIKE '%MnMtrPhsCTemp' THEN '主电机C相绕组温度'
+            END) as part,
+            round(AVG(DocValue)/10,2) as result from docdata
+        WHERE
+        DATE_FORMAT(DataTime,'%Y-%m-%d')="${time}"
+        <if test="team='球磨机'">
+            AND  ( DocTagName='MQY4870.MnMtrBearTemp_1'
+            OR DocTagName='MQY4870.MnMtrBearTemp_2'  OR DocTagName='MQY4870.MnMtrPhsATemp'
+            OR DocTagName='MQY4870.MnMtrPhsBTemp'  OR DocTagName='MQY4870.MnMtrPhsCTemp'
+            )
+        </if>
+        <if test="team='再磨机'">
+            AND   ( DocTagName='MQY2745.MnMtrBearTemp_1'
+            OR DocTagName='MQY2745.MnMtrBearTemp_2'  OR DocTagName='MQY2745.MnMtrPhsATemp'
+            OR DocTagName='MQY2745.MnMtrPhsBTemp'  OR DocTagName='MQY2745.MnMtrPhsCTemp'
+            )
+        </if>
+        <if test="team='半自磨机'">
+            AND  ( DocTagName='MZS6433.MnMtrBearTemp_1'
+            OR DocTagName='MZS6433.MnMtrBearTemp_2'  OR DocTagName='MZS6433.MnMtrPhsATemp'
+            OR DocTagName='MZS6433.MnMtrPhsBTemp'  OR DocTagName='MZS6433.MnMtrPhsCTemp'
+            )
+        </if>
+
+        GROUP BY DocTagName
+
+
+
+
+    </select>
+
+
+</mapper>

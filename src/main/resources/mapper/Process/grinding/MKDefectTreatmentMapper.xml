@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.process.mk.MF1DefectTreatmentMapper">
+        <select id="SBMK_DEFECT_TREATMENT_LIST" resultType="com.demo.model.equip.DefectTreatment">
+           SELECT
+                (CASE WHEN DEPT_NAME='磨浮设备' THEN '设备'
+                WHEN DEPT_NAME='电仪工段' THEN '电仪'
+                WHEN DEPT_NAME='磨浮生产' THEN '生产'
+                END ) as section,
+                COUNT(alarm_flag) AS total,
+                COUNT(alarm_flag = 'Y' OR NULL) AS processed,
+                COUNT(alarm_flag = 'N' OR NULL) AS untreated
+            FROM
+                dxj_spot_result
+            WHERE
+
+                (
+                        ROUTE_NAME = '磨机线路'
+                OR
+                        devName = 'MQY2745再磨机'
+                OR
+                        devName = 'MQY4870球磨机'
+                OR
+                        devName = 'MZS6433半自磨机'
+				OR
+                        ROUTE_NAME = 'MQY2745再磨机'
+                OR
+                        ROUTE_NAME = 'MQY4870球磨机'
+                OR
+                        ROUTE_NAME = 'MZS6433半自磨机'
+                OR
+                        ROUTE_NAME = '磨机底层设备'
+								OR
+                        ROUTE_NAME = '磨机底层'
+
+                )
+                and  ALTPID !=0
+								and  alarm_flag='N'
+								AND
+                YEARWEEK(date_format(TASKSTART_TM, '%Y-%m-%d'),1) = YEARWEEK(now(), 1)-- 一周数据（测试用）
+-- 										to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+            GROUP BY
+                section;
+        </select>
+
+</mapper>
