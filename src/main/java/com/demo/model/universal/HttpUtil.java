@@ -23,8 +23,8 @@ import java.io.IOException;
 
 public class HttpUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
-    @SuppressWarnings("unused")
-    private static final String DEFAULT_CHARSET = "UTF-8";
+//    @SuppressWarnings("unused")
+//    private static final String DEFAULT_CHARSET = "UTF-8";
 
     public static String sendJsonWithPost(String url, JSONObject jsonObject, String encoding){
 
@@ -64,6 +64,7 @@ public class HttpUtil {
             logger.error("sendJsonWithPost请求提交失败，IOException:" , e1);
         }
         //获取结果实体
+        assert response != null;
         HttpEntity entity = response.getEntity();
         if (entity != null) {
             //按指定编码转换结果实体为String类型

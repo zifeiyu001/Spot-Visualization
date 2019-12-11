@@ -165,7 +165,9 @@ public class IndexController {
         webDxjBj.setUser_name(username);
         webDxjBj.setCj("bj_xk_up");
         JSONObject parseObject = JSON.parseObject(JSON.toJSONString(webDxjBj));
+
         String str = sendJsonWithPost("http://localhost:8080/bkzyCMS/webservice/upDxjBj", parseObject, "utf-8");
+        System.out.println(id+"======================="+str);
         return JSON.parseObject(str);
     }
 

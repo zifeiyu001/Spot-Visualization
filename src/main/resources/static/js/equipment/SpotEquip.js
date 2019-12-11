@@ -124,7 +124,8 @@ function dealWith(id,section) {
             async: false,
             dataType: "json",
             success : function(result) {
-                alert(result.data)
+                alert(result.data);
+                if (result.flag==='succ') getAlarmData();
             },
             error : function() {
                 alert("处理失败，请重试！");

@@ -463,14 +463,13 @@ function dealWith(id,section) {
                 "remark":remark
             }),
 
-            // data: id+"#=#"+remark,
             type: "post",
             cache: false,
             async: false,
             dataType: "json",
             success : function(result) {
-                getAlarmData(section);
-                alert("处理成功！");
+                alert(result.data);
+                if (result.flag==='succ') getAlarmData();
             },
             error : function() {
                 alert("处理失败，请重试！");

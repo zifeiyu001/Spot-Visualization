@@ -84,7 +84,6 @@ function dealWith(id,section) {
         //判断报警内容并操作
         if (remark.length<1){alert("故障原因及处理结果");dealWith(id,section)}
         else {
-
             $.ajax({
                 url: "/spot/Universal/alarm/update",
                 contentType: "application/json",
@@ -97,7 +96,12 @@ function dealWith(id,section) {
                 async: false,
                 dataType: "json",
                 success : function(result) {
-                    alert(result.data)
+                    alert(result.data);
+                    if (result.flag==='succ') {
+                        if (section !=="") {getAlarmData(section);alert("1----"+section)}
+                        else { getAlarmData();alert("2---"+section)}
+
+                    }
                 },
                 error : function() {
                     alert("处理失败，请重试！");
