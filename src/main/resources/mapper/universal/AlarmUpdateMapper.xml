@@ -22,7 +22,7 @@
     </select>
     <select id="search_alarm_id" resultType="com.demo.model.universal.WebDxjBj">
         SELECT b.ID as alarm_id from dxj_spot_result a,dxj_spot_alarm b
-            WHERE a.ID="{id}"
+            WHERE a.ID="${id}"
             AND a.DEPT_NAME=b.DEPT_NAME
             AND a.ROUTE_NAME=b.ROUTE_NAME
             AND a.ZONE_NAME = b.ZONE_NAME

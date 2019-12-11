@@ -1,5 +1,9 @@
 package com.demo.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.demo.model.equip.SpotAlarm;
 import com.demo.model.equip.SpotStatistics;
 import com.demo.model.equip.detailedData;
@@ -8,9 +12,7 @@ import com.demo.model.universal.LoginUser;
 import com.demo.model.universal.WebDxjBj;
 import com.demo.service.IndexService;
 import org.apache.ibatis.annotations.Param;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+
+import static com.demo.model.universal.HttpUtil.sendJsonWithPost;
 
 /**
  */
@@ -87,7 +91,8 @@ public class IndexController {
             jsonObject.put("danger",indexShow.getDanger());
             jsonObject.put("alarm",indexShow.getAlarm());
             jsonObject.put("kw",kw);
-            jsonArray.put(jsonObject);
+            jsonArray.add(jsonObject);
+//            jsonArray.put(jsonObject);
         }
         JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("msg","ok");
@@ -131,7 +136,8 @@ public class IndexController {
                 else jsonObject.put("NDJ1ND", 0);
 
             }
-            jsonArray.put(jsonObject);
+            jsonArray.add(jsonObject);
+//            jsonArray.put(jsonObject);
         }
         JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("msg","");
@@ -146,22 +152,26 @@ public class IndexController {
 // ======================通用报警处理=============================
     @PostMapping("/spot/Universal/alarm/update")
     @ResponseBody
-    public HashMap<String,Object>  getIndex(@RequestBody Map<String, String> params, HttpServletRequest request) throws UnsupportedEncodingException {
+    public JSONObject  getIndex(@RequestBody Map<String, String> params, HttpServletRequest request) throws UnsupportedEncodingException {
         String id = params.get("id");
         String remark = params.get("remark");
         List<WebDxjBj> webDxjBjs = indexService.search_alarm_id(id);//获取报警表中报警数据id
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("username");
         String userId = (String)session.getAttribute("userId");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("username",username);
-        map.put("userId",userId);
-        map.put("cj","bj_xk_up");
-        map.put("alarm_id",webDxjBjs);
-
-
-        return map;
+        WebDxjBj webDxjBj = webDxjBjs.get(0);
+        webDxjBj.setAlarm_remark(remark);
+        webDxjBj.setUser_id(userId);
+        webDxjBj.setUser_name(username);
+        webDxjBj.setCj("bj_xk_up");
+        JSONObject parseObject = JSON.parseObject(JSON.toJSONString(webDxjBj));
+        String str = sendJsonWithPost("http://localhost:8080/bkzyCMS/webservice/upDxjBj", parseObject, "utf-8");
+        return JSON.parseObject(str);
     }
+
+
+
+
 
 // =====================通用判断用户是否存在=================================
     @PostMapping("/spot/user")
@@ -172,9 +182,11 @@ public class IndexController {
         String user_name = indexService.get_login_name(name).getUser_name();
             //创建session对象
             HttpSession session = request.getSession();
+
             //把用户数据保存在session域对象中,用户账号
             session.setAttribute("username", user_name );
             session.setAttribute("userId", name );
+            session.setMaxInactiveInterval(3600);
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.get_login_name(name));

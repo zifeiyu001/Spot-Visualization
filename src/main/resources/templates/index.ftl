@@ -16,7 +16,7 @@
     <script type="text/javascript" src="/plugins/jQuery/jquery-3.2.1.js"></script>
     <script src="/js/echarts.min.js"></script>
     <link href="/css/test.css" rel="stylesheet" type="text/css" />
-    <#--<link href="/css/index.css" rel="stylesheet" type="text/css" />-->
+    <link href="/images/micloud.ico" rel="shortcut icon" type="image/x-icon" />
     <link href="/css/table.css" rel="stylesheet" type="text/css" />
     <link href="/css/menu.css" rel="stylesheet" type="text/css" />
      <style>
@@ -138,7 +138,7 @@
                         <#--<li><a href="/spot/ns">浓缩</a> </li>-->
                         <#--<li><a href="/spot/ts">脱水</a> </li>-->
                     <#--</ul>-->
-                </li>
+
                 <li>
                     <p>报表</p>
                     <ul class="two">

@@ -124,32 +124,7 @@ function dealWith(id,section) {
             async: false,
             dataType: "json",
             success : function(result) {
-                var username=result.username;
-                var userId=result.userId;
-                var cj=result.cj;
-                var alarm_id=result.alarm_id;
-                alert("处理成功！");
-
-                $.ajax({
-                    url: "http://172.16.5.4/bkzyCMS/webservice/upDxjBj",
-                    contentType: "application/json",
-                    data:JSON.stringify({
-                        "user_name":username,
-                        "user_id":userId,
-                        "cj":cj,
-                        "alarm_id":alarm_id,
-                        "alarm_remark":remark
-                    }),
-                    type: "post",
-                    cache: false,
-                    async: false,
-                    dataType: "json",
-                    success : function(result) {
-                        alert(result.data)
-                    }
-                })
-
-
+                alert(result.data)
             },
             error : function() {
                 alert("处理失败，请重试！");
