@@ -1624,8 +1624,8 @@ public class IndexServiceImpl implements IndexService {
     }
 
     @Override
-    public Integer delete_liable_user(String department, String userId,String team) {
-        return configUserMapper.delete_liable_user(department,userId,team);
+    public Integer delete_liable_user(String department, String userId,String alarmType) {
+        return configUserMapper.delete_liable_user(department,userId,alarmType);
 
     }
 

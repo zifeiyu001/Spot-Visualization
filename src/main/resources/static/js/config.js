@@ -153,7 +153,7 @@ function getDeptName(){
 }
 
 
-// ---获取说有的责任人
+// ---获取所有的责任人
 function getLiable(){
     var str='';
     var workshopId=$("#workshopUser1 option:selected").val();
@@ -174,7 +174,7 @@ function getLiable(){
                     + data[a].user+  '</td><td>'
                     + data[a].department+  '</td><td>'
                     + judgeAlarmType(data[a].alarmType)+  '</td><td>'
-                    +'<input type="button" value="删除" style="cursor: pointer;" onclick="deleteLiableUser(\''+data[a].userId+'\',\''+data[a].department+'\',\''+data[a].team+'\')">'
+                    +'<input type="button" value="删除" style="cursor: pointer;" onclick="deleteLiableUser(\''+data[a].userId+'\',\''+data[a].department+'\',\''+data[a].alarmType+'\')">'
                     +'</td></tr>';
             }
 
@@ -185,7 +185,7 @@ function deleteLiableUser(a,b,c) {
     // alert(a+"=="+b+"=="+c);
     $.ajax({
         url: "/pc/config/deleteLiableUser",
-        data:JSON.stringify({"userId":a,"department":b,"team":c}),
+        data:JSON.stringify({"userId":a,"department":b,"alarmType":c}),
         contentType: "application/json",
         type: "post",
         cache: true,

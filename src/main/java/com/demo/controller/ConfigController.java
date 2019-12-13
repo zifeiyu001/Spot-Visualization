@@ -189,9 +189,9 @@ public class ConfigController {
         HashMap<String, Object> hashMap = new HashMap<>();
         String userId = params.get("userId");
         String department = params.get("department");
-        String team = params.get("team");
-        System.out.println(team);
-        Integer configUsers = indexService.delete_liable_user(department,userId,team);
+        String alarmType = params.get("alarmType");
+//        System.out.println(team);
+        Integer configUsers = indexService.delete_liable_user(department,userId,alarmType);
         hashMap.put("data",configUsers);
         return hashMap;
     }

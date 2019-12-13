@@ -23,8 +23,8 @@
 
     <nav class="navbar navbar-default">
         <ul class="nav nav-tabs nav-justified">
-            <li id="li1"><a onclick="chooseItem('duty')">报警责任人配置</a></li>
-            <li id="li2"><a onclick="chooseItem('manage')">报警分类管理人员配置</a></li>
+            <li id="li1" style="cursor: pointer"><a onclick="chooseItem('duty')">报警责任人配置</a></li>
+            <li id="li2" style="cursor: pointer"><a onclick="chooseItem('manage')">报警分类管理人员配置</a></li>
             <li id="li3 "><a href="/spot">返回上层</a></li>
         </ul>
     </nav><!-- /导航区域 -->
@@ -148,7 +148,7 @@
                             <label id="sksc"  class="part">碎矿生产<input type="checkbox"  class="gdxz"  value="碎矿生产"></label>
                             <label id="mfsc"  class="part">磨浮生产<input type="checkbox"  class="gdxz"  value="磨浮生产"></label>
                             <label id="jwsc"  class="part">精尾生产<input type="checkbox"  class="gdxz"  value="精尾生产"></label>
-                            <label  class="part">全     选<input type="checkbox"  class="allChoose2"  value="精尾生产"></label>
+                            <label  class="part" style="white-space: pre">全       选<input type="checkbox"  class="allChoose2"  value="精尾生产"></label>
                         </div>
                         <label type="button" class="btn btn-primary" style = "width:8%;    margin-left: 1%;" onclick="addUser()">添加用户</label>
                     </div>

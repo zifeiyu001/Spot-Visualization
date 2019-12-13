@@ -3,7 +3,7 @@ function IsFull(){
     var b="";
     a= window.document.body.clientHeight;
     b=window.screen.height;
-    if( a-b==0){
+    if( a-b===0){
         tableHeight();
         tableAlarmColor();
     }else{
@@ -33,6 +33,7 @@ function tableHeight() {
     myDiv2.style.height = (s*0.85) + "px";
 }
 
+
 // //------------报警表格等级设置背景色----------------------------
 function tableAlarmColor(){
     var table = document.getElementById("tab");
@@ -44,11 +45,11 @@ function tableAlarmColor(){
 
         var a="一级";
         var b="二级";
-        if(d==a){
+        if(d===a){
             table.rows[i].cells.item(4).style.color = "#eef4e8";
 
         }
-        if(d==b){
+        if(d===b){
             table.rows[i].cells.item(4).style.color = "#FFC107";
 
         }
@@ -62,9 +63,9 @@ function flashit(){
         var _cell = _row[i].cells;
         var d=_cell[4].innerHTML;
 
-        if(d=="一级"){
+        if(d==="一级"){
 
-            if (table.rows[i].style.backgroundColor  =="transparent"){
+            if (table.rows[i].style.backgroundColor  ==="transparent"){
                 table.rows[i].style.backgroundColor ="darkred";
             }
             else{

@@ -148,12 +148,12 @@ public class InterlockingController {
         String userName = params.get("name");
         String selectDepart = params.get("selectDepart");
         String part = params.get("part");
-        System.out.println(part);
+//        System.out.println(part);
 //        System.out.println(part);
         List<ConfigUser> configUsers1 = indexService.search_config_alarm_manage_user(userName,part); //判断操作人是否有权限
         if (configUsers1.size()>0){
             Integer configUsers = indexService.Interlocking_changeAlarmType(resultId,alarmType,configUsers1.get(0).getUser(),selectDepart);
-            System.out.println(configUsers);
+//            System.out.println(configUsers);
             if(configUsers>0){
                 List<Interlocking> resultByResult=indexService.Interlocking_get_byId_result(resultId);//点检结果表数据
                 String deptName = resultByResult.get(0).getDeptName();

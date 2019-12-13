@@ -524,7 +524,7 @@ List<AppDCS> app_jjb_getRunTimeField( String equip, String meta);
     Integer update_config_partment_user(String deptName,String deptId, String user,String userId,String department,String alarmType,String team);
     List<ConfigUser> search_config_liable_user( String workshopId);
 //    删除管理的报警类型
-    Integer delete_liable_user(String department, String userId,String team);
+    Integer delete_liable_user(String department, String userId,String alarmType);
 //  管理人员配置
     // 判断是否存在
     List<ConfigUser> search_config_alarm_manage( String userId);

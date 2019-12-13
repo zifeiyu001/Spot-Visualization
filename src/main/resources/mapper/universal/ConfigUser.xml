@@ -23,7 +23,7 @@
     </delete>
     <delete id="delete_liable_user">
          DELETE  FROM dxj_config_liable WHERE userId ="${userId}" and  department="${department}"
---          and team="${team}";
+         and alarmType="${alarmType}";
     </delete>
     <insert id="set_config_alarm_manage">
                 INSERT INTO dxj_config_manage (userId,user,deptId,deptName, manageDepart)
@@ -58,6 +58,7 @@
     </select>
     <select id="search_config_alarm_manage_exist" resultType="com.demo.model.universal.ConfigUser">
          SELECT user,userId,deptName,deptId,manageDepart from dxj_config_manage
+         ORDER BY FIELD(deptName,'选矿厂','机动能源室','生产技术室','碎矿设备','碎矿生产','磨浮设备','磨浮生产','精尾设备','精尾生产','电仪工段')
     </select>
     <select id="search_config_alarm_manage_user" resultType="com.demo.model.universal.ConfigUser">
          SELECT user from dxj_config_manage where userId="${userName}" and
@@ -68,5 +69,7 @@
         <if test="workshopId!='test'">
             WHERE  deptId="${workshopId}"
         </if>
+        ORDER BY FIELD(deptName,'碎矿设备','碎矿生产','磨浮设备','磨浮生产','精尾设备','精尾生产','电仪工段','机动能源室','生产技术室'),userId,alarmType
+
     </select>
 </mapper>

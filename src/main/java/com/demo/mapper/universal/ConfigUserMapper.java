@@ -34,7 +34,7 @@ public interface ConfigUserMapper {
 // 获取当前部门下的责任人
     List<ConfigUser> search_config_liable_user(@Param("workshopId") String workshopId);
 // 获取当前部门下的责任人
-    Integer delete_liable_user(@Param("department") String department,@Param("userId") String userId,@Param("team") String team);
+    Integer delete_liable_user(@Param("department") String department,@Param("userId") String userId,@Param("alarmType") String alarmType);
 // ==========================管理人员配置===========================
     // 存储人员管理部门数据
     Integer set_config_alarm_manage(@Param("deptName") String deptName,@Param("deptId") String deptId,

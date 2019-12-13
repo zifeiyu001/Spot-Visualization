@@ -295,7 +295,7 @@ function changeType() {
             if (elementsByName[k].checked)
                 chk_value.push(elementsByName[k].value);
         }
-        alert(chk_value.toString());
+        // alert(chk_value.toString());
         $.ajax({
             url: "/interlocking/changeAlarmType",
             contentType: "application/json",
