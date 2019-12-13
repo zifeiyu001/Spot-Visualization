@@ -165,8 +165,8 @@ function search(c) {
                     + ((json[i].deal_remark==null||json[i].deal_remark=='')?'-':json[i].deal_remark)+ '</td><td>'
                     + (alpid<1?'-': '<input type="button" class="btn btn-warning" value="修改" style="cursor: pointer;"onclick="openModal(\''+json[i].resultId+'\'\,\''+json[i].deptName+'\')">')+'</td><td>'
                     + judgeAlarm(json[i].abnormalHandleAdminType)+ '</td><td>'
-                    + (json[i].abnormalHandleDealDepart==null?'-':json[i].abnormalHandleDealDepart) + '</td><td>'
-                    + (json[i].abnormalHandleUser==null?'-':json[i].abnormalHandleUser)+'</td></tr>';
+                    + (json[i].abnormalHandleDealDepart==null?'-':json[i].abnormalHandleDealDepart) + '</td><tr>';
+                    // + (json[i].abnormalHandleUser==null?'-':json[i].abnormalHandleUser)+'</td></tr>';
 
             }
 

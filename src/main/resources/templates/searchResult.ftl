@@ -222,7 +222,7 @@
                 <td>修改报警类型</td>
                 <td>报警类别（管理）</td>
                 <td>报警处理部门</td>
-                <td>报警类型确定人</td>
+                <#--<td>报警类型确定人</td>-->
 			</tr>
 		</thead>
 		<tbody id="groupTable-tbody" align="center" class="tbody">
