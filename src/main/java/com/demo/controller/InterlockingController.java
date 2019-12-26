@@ -121,7 +121,7 @@ public class InterlockingController {
 
         List<ConfigUser> configUsers = indexService.search_config_alarm_liable_all();
 
-
+        //查询结果数量
         Integer integer = indexService.Interlocking_get_result_total(deptName, route, zone, equip, part, content, startTime, endTime, zcCheck, bjCheck, bjType1, bjType2, bjType3, wjCheck);
 
         if (startTime.equals("")) {
@@ -133,11 +133,22 @@ public class InterlockingController {
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
         List<Interlocking> spotResults = indexService.Interlocking_get_result(deptName, route, zone, equip, part, content, startTime, endTime, zcCheck, bjCheck, bjType1, bjType2, bjType3, wjCheck,
                 startPage, numPerPage);
+//        aa(spotResults,configUsers);
+//        for (Interlocking i:spotResults){
+//            if ((i.getAltpid().equals("1")||i.getAltpid().equals("2"))
+//                    &&i.getAbnormalHandleDealDepart()!=null) {
+//                for (ConfigUser c : configUsers) {
+//                    if (i.getAbnormalHandleDealDepart().equals(c.getDepartment()) && i.getAbnormalHandleAdminType().equals(c.getAlarmType())) {
+//                        i.setAbnormalHandleUser(c.getUser());
+//                    }
+//                }
+//            }
+//        }
         objectObjectHashMap.put("total", integer);
         objectObjectHashMap.put("data", spotResults);
         return objectObjectHashMap;
     }
-    //  修改报警类型
+//  修改报警类型
     @RequestMapping(value = "/interlocking/changeAlarmType", method = RequestMethod.POST)
     @ResponseBody
     public  HashMap<String, Object> changeAlarmType(@RequestBody  Map<String, String> params){
@@ -186,7 +197,7 @@ public class InterlockingController {
         return hashMap;
     }
 
-//
+// 报警类型根据之前选择自动执行
     private void alarmData(){
         /*
          * 找出当日已经点检，并且为报警的数据
@@ -226,15 +237,18 @@ public class InterlockingController {
                     for (String s2 : split1) { //获取所有的责任部门
 //                        System.out.println(s1+"======"+s2+"==="+spotResult.getAbnormalHandleAdminType()+"==="+liableUser.getAlarmType());
                         if (spotResult.getAbnormalHandleAdminType() != null && s1.equals(s2) && spotResult.getAbnormalHandleAdminType().equals(liableUser.getAlarmType())) { // 当责任部门和管理部门相同时，拼接用户
-                            if (s1.indexOf("生产") > 0 && liableUser.getAlarmType().equals("1")) { //判断是否是生产部门需当班处理的
-//                                System.out.println(spotResult.getTeam()+"====="+liableUser.getTeam());
-                                if (spotResult.getTeam() != null && spotResult.getTeam().equals(liableUser.getTeam())) {
-
-                                    s.append(liableUser.getUser()).append(",");
-                                }
-                            } else {
+//                            if (s1.indexOf("生产") > 0 && liableUser.getAlarmType().equals("1")) { //判断是否是生产部门需当班处理的
+////                                System.out.println(spotResult.getTeam()+"====="+liableUser.getTeam());
+//                                if (spotResult.getTeam() != null && spotResult.getTeam().equals(liableUser.getTeam())) {
+//                                    s.append(liableUser.getUser()).append(",");
+//                                }
+//                            } else {
                                 s.append(liableUser.getUser()).append(",");
-                            }
+//                            }
+
+////                          更新报警处理责任人
+//                            indexService.Interlocking_update_alarm_liable(spotResult.getResultId(),s.toString());
+
                         }
                     }
                 }
@@ -244,14 +258,29 @@ public class InterlockingController {
     }
 
 
-//定时操作
+//定时操作 （报警类型）
     @Component
     public class ScheduledTask {
-        @Scheduled(fixedRate = 50000) //每半小时执行一次
+        @Scheduled(fixedRate = 1800000) //每半小时执行一次
         public void reportCurrentTime() throws InterruptedException {
             alarmData();
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public  List<Interlocking> aa(List<Interlocking> spotResults,List<ConfigUser> configUsers){
         if (spotResults.size() > 0) {
             for (Interlocking spotResult : spotResults) { //所有的点检结果
@@ -263,13 +292,17 @@ public class InterlockingController {
                             String[] split1 = liableUser.getDepartment().split(","); //切分责任人管理的部门
                             for (String s2 : split1) { //获取所有的责任部门
                                 if (spotResult.getAbnormalHandleAdminType() != null && s1.equals(s2) && spotResult.getAbnormalHandleAdminType().equals(liableUser.getAlarmType())) { // 当责任部门和管理部门相同时，拼接用户
-                                    if (s1.indexOf("生产") > 0 && liableUser.getAlarmType().equals("1")) { //判断是否是生产部门需当班处理的
-                                        if (spotResult.getTeam().equals(liableUser.getTeam())) {
-                                            s.append(liableUser.getUser()).append(",");
-                                        }
-                                    } else {
+//                                    if (s1.indexOf("生产") > 0 && liableUser.getAlarmType().equals("1")) { //判断是否是生产部门需当班处理的
+//                                        if (spotResult.getTeam().equals(liableUser.getTeam())) {
+//                                            s.append(liableUser.getUser()).append(",");
+//                                        }
+//                                    } else {
                                         s.append(liableUser.getUser()).append(",");
-                                    }
+//                                        spotResult.getResultId()
+//                                    }
+//                                    更新报警处理责任人
+                                    indexService.Interlocking_update_alarm_liable(spotResult.getResultId(),s.toString());
+
                                 }
                             }
                         }

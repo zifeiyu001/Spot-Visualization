@@ -1486,6 +1486,11 @@ public class IndexServiceImpl implements IndexService {
     public Integer Interlocking_update_alarm_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String alarm_manage) {
         return interlockingMapper.Interlocking_update_alarm_result(deptName,routeName,zoneName,devName,scPart,scContent,alarm_manage);
     }
+//更新报警处理责任人
+    @Override
+    public Integer Interlocking_update_alarm_liable(String resultId, String liable) {
+        return interlockingMapper.Interlocking_update_alarm_liable(resultId,liable);
+    }
 
     //    =======================app测试==================================
     @Resource

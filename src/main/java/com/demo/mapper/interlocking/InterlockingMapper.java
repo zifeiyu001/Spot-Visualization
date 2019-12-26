@@ -67,4 +67,7 @@ public interface InterlockingMapper {
     Integer Interlocking_update_alarm_result(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
                                             @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,
                                             @Param("alarm_manage") String alarm_manage);
+
+//    更新报警处理责任人
+    Integer Interlocking_update_alarm_liable(@Param("resultId") String resultId,@Param("liable") String liable);
 }

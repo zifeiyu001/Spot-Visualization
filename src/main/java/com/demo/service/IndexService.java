@@ -450,6 +450,8 @@ public interface IndexService {
     Integer Interlocking_update_alarm_result( String deptName, String routeName, String zoneName,
                                              String devName, String scPart, String scContent,
                                              String alarm_manage);
+    Integer Interlocking_update_alarm_liable(String resultId,String liable);
+
 //===================app接口测试===================================
 //   点检结果
     List<AppReport> App_Spot_Result(String deptName,String job,String dateTime);

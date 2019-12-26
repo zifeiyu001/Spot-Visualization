@@ -9,6 +9,8 @@ import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -82,7 +84,7 @@ public class ConfigController {
 //责任人的配置 修改、保存
     @RequestMapping(value = "/pc/config/chargePerson", method = RequestMethod.POST)
     @ResponseBody
-    public  HashMap<String, Object> configChargePerson(@RequestBody  Map<String, String> params){
+    public  HashMap<String, Object> configChargePerson(@RequestBody  Map<String, String> params , HttpServletRequest request){
         HashMap<String, Object> hashMap = new HashMap<>();
         String deptName = params.get("deptName");
         String deptId = params.get("deptId");
@@ -92,14 +94,22 @@ public class ConfigController {
         String alarmType = params.get("alarmType");
         String team = params.get("team");
         List<ConfigUser> configUsers = indexService.search_config_partment_user(userId,alarmType,team);
-        if (configUsers.size()>0){
-            Integer integer = indexService.update_config_partment_user(deptName, deptId, user, userId, department,alarmType,team);
-            if (integer>=0){ hashMap.put("data","更新成功！");hashMap.put("data1","ok");
-            } else { hashMap.put("data","更新失败！");hashMap.put("data1","no"); }
-        }else {
-            Integer integer = indexService.set_config_partment_user(deptName, deptId, user, userId, department,alarmType,team);
-            if (integer>=0){ hashMap.put("data","保存成功！"); hashMap.put("data1","ok");}
-            else { hashMap.put("data","保存失败！");hashMap.put("data1","no"); } }
+        HttpSession session = request.getSession();
+        String username = (String)session.getAttribute("userId");
+       if(username.equals("cmstk")){
+           if (configUsers.size()>0){
+               Integer integer = indexService.update_config_partment_user(deptName, deptId, user, userId, department,alarmType,team);
+               if (integer>=0){ hashMap.put("data","更新成功！");hashMap.put("data1","ok");
+               } else { hashMap.put("data","更新失败！");hashMap.put("data1","no"); }
+           }else {
+               Integer integer = indexService.set_config_partment_user(deptName, deptId, user, userId, department,alarmType,team);
+               if (integer>=0){ hashMap.put("data","保存成功！"); hashMap.put("data1","ok");}
+               else { hashMap.put("data","保存失败！");hashMap.put("data1","no"); } }
+       }
+       else {
+           hashMap.put("data","无权限！");hashMap.put("data1","no");
+       }
+
 
             return hashMap;
     }
@@ -137,23 +147,29 @@ public class ConfigController {
 //    管理员配置页面
     @RequestMapping(value = "/pc/config/manage", method = RequestMethod.POST)
     @ResponseBody
-    public  HashMap<String, Object> configManage(@RequestBody  Map<String, String> params){
+    public  HashMap<String, Object> configManage(@RequestBody  Map<String, String> params , HttpServletRequest request){
         HashMap<String, Object> hashMap = new HashMap<>();
         String deptName = params.get("deptName");
         String deptId = params.get("deptId");
         String user = params.get("user");
         String userId = params.get("userId");
         String manageDepart = params.get("manageDepart");
-//        System.out.println(manageDepart);
-        List<ConfigUser> configUsers = indexService.search_config_alarm_manage(userId);
-        if (configUsers.size()>0){
-            Integer integer = indexService.update_config_alarm_manage(deptName, deptId, user, userId,manageDepart);
-            if (integer>=0){ hashMap.put("data","更新成功！");hashMap.put("status","success");
-            } else { hashMap.put("data","更新失败！");hashMap.put("status","failure"); }
-        }else {
-            Integer integer = indexService.set_config_alarm_manage(deptName, deptId, user, userId,manageDepart);
-            if (integer>=0){ hashMap.put("data","保存成功！"); hashMap.put("status","success");}
-            else { hashMap.put("data","保存失败！"); hashMap.put("status","failure");} }
+        HttpSession session = request.getSession();
+        String username = (String)session.getAttribute("userId");
+        if(username.equals("cmstk")){
+            List<ConfigUser> configUsers = indexService.search_config_alarm_manage(userId);
+            if (configUsers.size()>0){
+                Integer integer = indexService.update_config_alarm_manage(deptName, deptId, user, userId,manageDepart);
+                if (integer>=0){ hashMap.put("data","更新成功！");hashMap.put("status","success");
+                } else { hashMap.put("data","更新失败！");hashMap.put("status","failure"); }
+            }else {
+                Integer integer = indexService.set_config_alarm_manage(deptName, deptId, user, userId,manageDepart);
+                if (integer>=0){ hashMap.put("data","保存成功！"); hashMap.put("status","success");}
+                else { hashMap.put("data","保存失败！"); hashMap.put("status","failure");} }
+        }
+        else {
+            hashMap.put("data","无权限！"); hashMap.put("status","failure");
+        }
 
         return hashMap;
     }
@@ -174,25 +190,35 @@ public class ConfigController {
     //  删除用户
     @RequestMapping(value = "/pc/config/deleteUser", method = RequestMethod.POST)
     @ResponseBody
-    public  HashMap<String, Object> deleteUser(@RequestBody  Map<String, String> params){
+    public  HashMap<String, Object> deleteUser(@RequestBody  Map<String, String> params , HttpServletRequest request){
         HashMap<String, Object> hashMap = new HashMap<>();
         String userId = params.get("userId");
-        Integer configUsers = indexService.delete_user(userId);
-        hashMap.put("data",configUsers);
+        HttpSession session = request.getSession();
+        String username = (String)session.getAttribute("userId");
+        if(username.equals("cmstk")) {
+            Integer configUsers = indexService.delete_user(userId);
+            if (configUsers>0){ hashMap.put("data","删除成功");}
+            else {hashMap.put("data","删除失败");}
+        }else { hashMap.put("data","无权限");}
         return hashMap;
     }
 
     //  删除责任人用户
     @RequestMapping(value = "/pc/config/deleteLiableUser", method = RequestMethod.POST)
     @ResponseBody
-    public  HashMap<String, Object> deleteLiableUser(@RequestBody  Map<String, String> params){
+    public  HashMap<String, Object> deleteLiableUser(@RequestBody  Map<String, String> params , HttpServletRequest request){
         HashMap<String, Object> hashMap = new HashMap<>();
         String userId = params.get("userId");
         String department = params.get("department");
         String alarmType = params.get("alarmType");
-//        System.out.println(team);
-        Integer configUsers = indexService.delete_liable_user(department,userId,alarmType);
-        hashMap.put("data",configUsers);
+        HttpSession session = request.getSession();
+        String username = (String)session.getAttribute("userId");
+//        System.out.println(username);
+        if(username.equals("cmstk")){
+            Integer configUsers = indexService.delete_liable_user(department,userId,alarmType);
+            if (configUsers>0){ hashMap.put("data","删除成功");}
+            else {hashMap.put("data","删除失败");}
+        }else { hashMap.put("data","无权限");}
         return hashMap;
     }
 

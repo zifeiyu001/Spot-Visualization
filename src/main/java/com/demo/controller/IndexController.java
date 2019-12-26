@@ -167,7 +167,7 @@ public class IndexController {
         JSONObject parseObject = JSON.parseObject(JSON.toJSONString(webDxjBj));
 
         String str = sendJsonWithPost("http://localhost:8080/bkzyCMS/webservice/upDxjBj", parseObject, "utf-8");
-        System.out.println(id+"======================="+str);
+//        System.out.println(id+"======================="+str);
         return JSON.parseObject(str);
     }
 
@@ -1330,7 +1330,6 @@ public class IndexController {
 
     @GetMapping("/spot/index1")
     public String toConfig1(){ return "/index1";  }
-
 /*测试使用*/
     @GetMapping("first")
     public String tofirst(Model model){ return "/first";  }
@@ -1578,9 +1577,9 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getSpot_deFxFxj1_Url(@RequestBody Map<String, String> params) {
         String param = params.get("param");
-        System.out.println(param);
+//        System.out.println(param);
         String equip = params.get("equip");
-        System.out.println(equip);
+//        System.out.println(equip);
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.SPOT_FX_FXJ1_DETAILED_LIST(param,equip));
@@ -1590,9 +1589,9 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getSpot_deFxFxj2_Url(@RequestBody Map<String, String> params) {
         String param = params.get("param");
-        System.out.println(param);
+//        System.out.println(param);
         String equip = params.get("equip");
-        System.out.println(equip);
+//        System.out.println(equip);
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.SPOT_FX_FXJ2_DETAILED_LIST(param,equip));
@@ -1611,9 +1610,9 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getSpot_deFxJbt_Url(@RequestBody Map<String, String> params) {
         String param = params.get("param");
-        System.out.println(param);
+//        System.out.println(param);
         String equip = params.get("equip");
-        System.out.println(equip);
+//        System.out.println(equip);
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.SPOT_FX_JBT_DETAILED_LIST(param,equip));

@@ -6,7 +6,7 @@
 	<groupId>com</groupId>
 	<!--<artifactId>spring-boot-echarts</artifactId>-->
 	<artifactId>Spot-Visualization</artifactId>
-	<version>V0.5.4</version>
+	<version>V0.5.6</version>
 	<packaging>jar</packaging>
 
 	<name>demo</name>
