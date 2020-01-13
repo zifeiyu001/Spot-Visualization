@@ -1,3 +1,4 @@
+
 var deptLength='';
 var str1='生产';
 var alarmType='';
@@ -192,8 +193,8 @@ function deleteLiableUser(a,b,c) {
         dataType: "json",
         success: function (result) {
             var data=result.data;
-            if (data>0) {getLiable();alert("删除成功");}
-            else {alert("删除失败")}
+            alert(data);
+            getLiable()
         }
     })
 
@@ -352,8 +353,8 @@ function deleteUser(id) {
         dataType: "json",
         success: function (result) {
             var data=result.data;
-            if (data>0) {alert("删除成功");defaultShow();}
-            else {alert("删除失败")}
+            alert(data);
+            defaultShow();
         }
     })
 }

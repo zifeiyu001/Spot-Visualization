@@ -1,25 +1,48 @@
 
-
-//==================判断session中是否保存用户=================
-if(username ==null || username ==undefined || username ==''|| username =='null') {
-    //获取来源用户名，并在系统中保存
-    function GetQueryString(name){
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
-        if(r!=null)return  unescape(r[2]); return null;
+//
+// //==================判断session中是否保存用户=================
+// if(username ==null || username ==undefined || username ==''|| username =='null') {
+//     //获取来源用户名，并在系统中保存
+//     function GetQueryString(name){
+//         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+//         var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+//         if(r!=null)return  unescape(r[2]); return null;
+//     }
+//     var name = GetQueryString("user");
+//
+//
+//     if (name ==null || name ==undefined || name ==''|| name =='null') {
+//         alert("请进行登录");
+//         window.location.href='http://172.16.5.4/bkzyCMS/login';
+//     }
+//     else {
+//         getUser(name);
+//     }
+//
+// }
+//==================判断登录用户=================
+// 获取登录用户id
+function GetQueryString(name){
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+    if(r!=null)return  unescape(r[2]); return null;
+}
+var name = GetQueryString("user");
+//登录用户不为空，session不为空；判断存储的session和登录用户不同时更新session
+if(username !=null && username !==undefined && username !==''&& username !=='null') {
+    if (name !==null && name !==undefined && name !==''&& name !=='null') {
+        if (username===name) {}
+        else {getUser(name);}
     }
-    var name = GetQueryString("user");
-
-
-    if (name ==null || name ==undefined || name ==''|| name =='null') {
+}
+//session为空；登录用户为空，重新登录；登录用户不为空时，更新session
+else {
+    if (name ===null || name === undefined || name ===''|| name ==='null') {
         alert("请进行登录");
         window.location.href='http://172.16.5.4/bkzyCMS/login';
-    }
-    else {
-        getUser(name);
-    }
-
+    } else {  getUser(name)}
 }
+
 // 将用户保存到后台，session
 function getUser(name){
 

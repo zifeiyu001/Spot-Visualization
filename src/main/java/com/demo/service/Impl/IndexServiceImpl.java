@@ -1,4 +1,5 @@
 package com.demo.service.Impl;
+import com.demo.mapper.app.AppConfigMapper;
 import com.demo.mapper.app.AppMapper;
 import com.demo.mapper.equip.*;
 import com.demo.mapper.equip.fxj.SpotFxFxjMapper;
@@ -1497,7 +1498,7 @@ public class IndexServiceImpl implements IndexService {
     private AppMapper appMapper;
 //    点检结果获取
     @Override
-    public List<AppReport> App_Spot_Result(String deptName,String job,String dateTime) { return appMapper.App_Spot_Result(deptName,job,dateTime); }
+    public List<AppReport> App_Spot_Result(String deptName,String job,String startTime,String endTime) { return appMapper.App_Spot_Result(deptName,job,startTime, endTime); }
 
     @Override
     public List<Interlocking> app_get_dxjSearchResult(String deptName, String route, String zone, String startTime, String endTime) {
@@ -1566,13 +1567,82 @@ public class IndexServiceImpl implements IndexService {
     public Integer app_shift_duty_succession(String dataTime, String id,  String succeedTeam, String succeedDuty, String succeedName, String succeedContent) { return appMapper.app_shift_duty_succession(dataTime,id, succeedTeam, succeedDuty,succeedName,succeedContent); }
 
     @Override
+    public List<AppReport> app_get_jjb_deptRoute(String deptName, String job) {
+        return appMapper.app_get_jjb_deptRoute(deptName,job);
+    }
+
+
+//    --------------------APP配置--------------------
+
+    @Resource
+    private AppConfigMapper appConfigMapper;
+    @Override
+    public Integer app_config_set_station(String deptName, String station, String routeName) {
+        System.out.println("tianjia ::"+deptName+"=="+routeName+"=="+station);
+        return appConfigMapper.app_config_set_station(deptName,station,routeName);
+    }
+
+    @Override
+    public Integer app_config_update_station(String deptName, String station, String routeName) {
+        System.out.println("xiugai ++++"+deptName+"=="+routeName+"=="+station);
+        return appConfigMapper.app_config_update_station(deptName,station,routeName);
+    }
+
+    @Override
+    public Integer app_config_delete_station(String deptName, String station, String routeName) {
+        return appConfigMapper.app_config_delete_station(deptName,station,routeName);
+    }
+
+    @Override
+    public List<APPUserConfig> app_config_select_station(String deptName, String station, String routeName) {
+
+        return appConfigMapper.app_config_select_station(deptName,station,routeName);
+    }
+
+    @Override
+    public List<APPUserConfig> app_config_getJob_user(String deptName) {
+        return appConfigMapper.app_config_getJob_user(deptName);
+    }
+
+    @Override
+    public Integer app_config_set_station_user(String deptName, String station, String team, String userName, String userId) {
+        return appConfigMapper.app_config_set_station_user(deptName,station,team,userName,userId);
+    }
+
+    @Override
+    public Integer app_config_update_station_user(String deptName, String station, String team, String userName, String userId) {
+        return appConfigMapper.app_config_update_station_user(deptName,station,team,userName,userId);
+    }
+
+    @Override
+    public Integer app_config_delete_station_user(String deptName, String station, String team, String userId) {
+        return appConfigMapper.app_config_delete_station_user(deptName,station,team,userId);
+    }
+
+    @Override
+    public List<APPUserConfig> app_config_select_station_user(String deptName, String station, String team,  String userId) {
+        System.out.println(deptName+"=="+team+"=="+station+"==="+userId);
+        return appConfigMapper.app_config_select_station_user(deptName,station,team,userId);
+    }
+
+    @Override
+    public List<AppScheduling> app_get_team_scheduling() {
+        return appMapper.app_get_team_scheduling();
+    }
+
+    @Override
+    public List<APPUserConfig> app_get_jjb_team_byUserId(String userId) {
+        return appMapper.app_get_jjb_team_byUserId(userId);
+    }
+
+    @Override
     public Integer app_set_maintenance(String deptName, String routeName, String zoneName, String devName, String description, String pic, String discoverer, String phone) {
         return appMapper.app_set_maintenance(deptName,routeName,zoneName,devName,description,pic,discoverer,phone);
     }
 
     // 获取状态量的值
     @Override
-    public List<AppDCS> app_jjb_getRunTime(String field, String startTime) { return appMapper.app_jjb_getRunTime(field,startTime); }
+    public List<AppDCS> app_jjb_getRunTime(String field, String startTime,String endTime) { return appMapper.app_jjb_getRunTime(field,startTime,endTime); }
 
     @Override
     public List<AppDCS> app_jjb_getLastRunTime(String field, String startTime) { return appMapper.app_jjb_getLastRunTime(field,startTime); }
@@ -1583,7 +1653,7 @@ public class IndexServiceImpl implements IndexService {
 //    }
 //     获取设备运行时间的字段
     @Override
-    public List<AppDCS> app_jjb_getRunTimeField(String equip, String meta) { return appMapper.app_jjb_getRunTimeField(equip,meta); }
+    public List<AppDCS> app_jjb_getRunTimeField(String equip) { return appMapper.app_jjb_getRunTimeField(equip); }
 
 
     @Resource
@@ -1606,6 +1676,7 @@ public class IndexServiceImpl implements IndexService {
     public List<ConfigUser> get_dept_user_ll_list(String equipId) {
         return configUserMapper.get_dept_user_ll_list(equipId);
     }
+
 
     // 存储人员管理部门数据
     @Override
@@ -1667,6 +1738,11 @@ public class IndexServiceImpl implements IndexService {
     @Override
     public List<Interlocking> Interlocking_get_all_alarmType() {
         return interlockingMapper.Interlocking_get_all_alarmType();
+    }
+
+    @Override
+    public List<Interlocking> search_config_userChange_permission(String userId) {
+        return interlockingMapper.search_config_userChange_permission(userId);
     }
 
 }

@@ -12,24 +12,10 @@
 </head>
 
 <body>
-		<table style='    width: 80%; margin-left: 10%;'>
-			<thead>
-				<tr>
-                    <th style='text-align:center ;font-size:18px;' colspan="2">常用功能</th>
-                </tr>
-			</thead>
-			<tbody>
-				<tr>
-                    <td>代码</td>
-					<td><a href='toJson.html'>将数据变为json格式</a></td>
-				</tr>
-                <tr>
-                    <td>mysql</td>
-                    <td><a href='mysql.html'>将数据变为json格式</a></td>
-                </tr>
-			</tbody>
-		</table>
-	
+<div>
+
+</div>
+    <embed src="/images/app/PAMS4V4.2.0.7_BKZY.svg" style="display:block;width:330px;height:240px" />
 </body>
 <script>
 

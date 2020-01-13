@@ -96,7 +96,11 @@ public class ConfigController {
         List<ConfigUser> configUsers = indexService.search_config_partment_user(userId,alarmType,team);
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("userId");
-       if(username.equals("cmstk")){
+        //获取登录用户的权限
+        List<Interlocking> interlockings = indexService.search_config_userChange_permission(username);
+        boolean xk_bj_type = interlockings.contains("xk_bj_type"); //判断是否存在需要的权限
+        //当满足条件时执行需要操作
+        if(xk_bj_type=true||username.equals("cmstk")){
            if (configUsers.size()>0){
                Integer integer = indexService.update_config_partment_user(deptName, deptId, user, userId, department,alarmType,team);
                if (integer>=0){ hashMap.put("data","更新成功！");hashMap.put("data1","ok");
@@ -156,7 +160,11 @@ public class ConfigController {
         String manageDepart = params.get("manageDepart");
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("userId");
-        if(username.equals("cmstk")){
+        //获取登录用户的权限
+        List<Interlocking> interlockings = indexService.search_config_userChange_permission(username);
+        boolean xk_bj_type = interlockings.contains("xk_bj_type"); //判断是否存在需要的权限
+        //当满足条件时执行需要操作
+        if(xk_bj_type=true||username.equals("cmstk")){
             List<ConfigUser> configUsers = indexService.search_config_alarm_manage(userId);
             if (configUsers.size()>0){
                 Integer integer = indexService.update_config_alarm_manage(deptName, deptId, user, userId,manageDepart);
@@ -195,7 +203,11 @@ public class ConfigController {
         String userId = params.get("userId");
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("userId");
-        if(username.equals("cmstk")) {
+        //获取登录用户的权限
+        List<Interlocking> interlockings = indexService.search_config_userChange_permission(username);
+        boolean xk_bj_type = interlockings.contains("xk_bj_type"); //判断是否存在需要的权限
+        //当满足条件时执行需要操作
+        if(xk_bj_type=true||username.equals("cmstk")){
             Integer configUsers = indexService.delete_user(userId);
             if (configUsers>0){ hashMap.put("data","删除成功");}
             else {hashMap.put("data","删除失败");}
@@ -213,8 +225,11 @@ public class ConfigController {
         String alarmType = params.get("alarmType");
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("userId");
-//        System.out.println(username);
-        if(username.equals("cmstk")){
+        //获取登录用户的权限
+        List<Interlocking> interlockings = indexService.search_config_userChange_permission(username);
+        boolean xk_bj_type = interlockings.contains("xk_bj_type"); //判断是否存在需要的权限
+        //当满足条件时执行需要操作
+        if(xk_bj_type=true||username.equals("cmstk")){
             Integer configUsers = indexService.delete_liable_user(department,userId,alarmType);
             if (configUsers>0){ hashMap.put("data","删除成功");}
             else {hashMap.put("data","删除失败");}

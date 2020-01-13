@@ -55,6 +55,19 @@ public class Interlocking {
 //    班组
     private  String team;
 
+//    权限
+    private  String permission;
+
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+
 
     public String getDeptName() {
         return deptName;

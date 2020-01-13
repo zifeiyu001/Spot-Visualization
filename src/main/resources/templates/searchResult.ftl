@@ -1,5 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/html">
+<#-------------判断是否保存session---------------->
+<#if Session.username??>
+<script>
+    var username="${Session.username}";
+</script>
+<#else >
+<script>
+    var username="";
+</script>
+</#if>
 <head>
 
 <link rel="stylesheet" href="/css/css/bootstrap.css">
@@ -90,6 +100,7 @@
 	        <nav class="navbar navbar-default">
                <ul class="nav nav-tabs nav-justified">
 				    <li class="active"><a href="#" >点巡检统计</a></li>
+                   <li ><a href="/spot/dxj_config" >人员配置</a></li>
                    <li><a href="javascript:choosePath()">返回上层</a></li>
                 </ul>
             </nav><!-- /导航区域 -->
@@ -148,28 +159,55 @@
 		<button type="button" class="btn btn-primary" style = "width:25%" onclick="search('a')">查询</button>
 	</div>
     <div class="form-group" id="choose" style = "width:auto;margin-left:5%;" >
-        <label id="zcCheck">正常<input type="checkbox" checked> </label>
-        <label id="bjCheck">报警<input type="checkbox"  checked></label>
-        <label id="alarmType1" class="bjType">A类报警<input type="checkbox" ></label>
-        <label id="alarmType2" class="bjType">B类报警<input type="checkbox" ></label>
-        <label id="alarmType3" class="bjType">C类报警<input type="checkbox" ></label>
-        <label id="wjCheck">未检<input type="checkbox"  checked></label>
-        <label id="allChoose">全选<input  id="test" type="checkbox" checked></label>
+        <label id="zcCheck">正常<input type="checkbox" class="sd" checked> </label>
+        <label id="bjCheck">报警<input type="checkbox" class="sd" checked></label>
+        <label id="alarmType1" class="bjType">A类报警<input class="sd"type="checkbox" ></label>
+        <label id="alarmType2" class="bjType">B类报警<input class="sd" type="checkbox" ></label>
+        <label id="alarmType3" class="bjType">C类报警<input class="sd" type="checkbox" ></label>
+        <label id="wjCheck">未检<input type="checkbox"  class="sd" checked></label>
+        <label id="allChoose">全选<input  id="test" class="ad" type="checkbox" checked></label>
         <#--<label type="button" class="btn btn-primary" style = "width:23%;    margin-left: 2%;" id="test">全选</label>-->
-
         <script type="text/javascript">
-            var a=0;
-            $("#test").click(function () {
-                if (a===0){
-                    $("#choose input:checkbox").attr("checked" , false);
-                    a=1
+            $("#test").click(function(){
+                sameCheckedSet1($(this));
+            });
+            function sameCheckedSet1(eleInput){
+                var checkAll = $("#choose .ad");
+                var checkItem = $("#choose .sd");
+                if(eleInput.is(".ad")){
+                    if( !eleInput.is(':checked') ){
+                        checkItem.prop("checked",false);
+                    }else{
+                        checkItem.prop("checked",true);
+                    }
+                }else if(eleInput.is(".sd")){
+                    var count = 0;
+                    checkItem.each(function(){
+                        if( $(this).prop("checked")==false){
+                            count++;
+                        }
+                    });
+                    if(count==0){
+                        checkAll.prop("checked",true);
+                    }else{
+                        checkAll.prop("checked",false);
+                    }
                 }
-                else {
-                    $("#choose input:checkbox").attr("checked" , true);
-                    a=0
-                }
-            })
+            }
         </script>
+        <#--<script type="text/javascript">-->
+            <#--var a=0;-->
+            <#--$("#test").click(function () {-->
+                <#--if (a===0){-->
+                    <#--$("#choose input:checkbox").attr("checked" , false);-->
+                    <#--a=1-->
+                <#--}-->
+                <#--else {-->
+                    <#--$("#choose input:checkbox").attr("checked" , true);-->
+                    <#--a=0-->
+                <#--}-->
+            <#--})-->
+        <#--</script>-->
     </div>
     <div class="form-group" id="datet" style = "width:auto;margin-left:5%">
         <label type="button" class="btn btn-primary" id="reduceNum" style="    margin-left: 3%;

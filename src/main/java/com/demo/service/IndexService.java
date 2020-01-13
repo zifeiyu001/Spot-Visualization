@@ -454,7 +454,7 @@ public interface IndexService {
 
 //===================app接口测试===================================
 //   点检结果
-    List<AppReport> App_Spot_Result(String deptName,String job,String dateTime);
+    List<AppReport> App_Spot_Result(String deptName,String job,String startTime,String endTime);
 
 //   点检结果
     List<Interlocking> app_get_dxjSearchResult(String deptName,String route,String zone,String startTime,String endTime );
@@ -489,6 +489,40 @@ public interface IndexService {
     List<AppLoginUser> app_jjb_getNextUser(String date, String job, String meta);
 //   接班内容填写
     Integer app_shift_duty_succession(String dataTime, String id, String succeedTeam, String succeedDuty, String succeedName, String succeedContent);
+//获取岗位路线
+    List<AppReport> app_get_jjb_deptRoute(String deptName, String job);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //        -------------------APP 人员配置---------------
+//    岗位线路配置的增、删、改、查
+    Integer  app_config_set_station(String deptName,  String station, String routeName);
+    Integer  app_config_update_station(String deptName,  String station, String routeName);
+    Integer  app_config_delete_station(String deptName,  String station, String routeName);
+    List<APPUserConfig>  app_config_select_station(String deptName,  String station, String routeName);
+    List<APPUserConfig>   app_config_getJob_user(String deptName);
+//  岗位人员的增、删、改、查
+    Integer  app_config_set_station_user(String deptName,  String station, String team,String userName,String userId);
+    Integer  app_config_update_station_user(String deptName,  String station, String team,String userName,String userId);
+    Integer  app_config_delete_station_user(String deptName,  String station, String team,String userId);
+    List<APPUserConfig>  app_config_select_station_user(String deptName,  String station, String team,String userId);
+//    排班时间班组获取
+    List<AppScheduling> app_get_team_scheduling();
+//    获取进入人员的班组等信息
+    List<APPUserConfig> app_get_jjb_team_byUserId(String userId);
+
+
 
 //======================设备维修==========================
 
@@ -498,7 +532,7 @@ public interface IndexService {
 
 //    开关量数据获取
 //    获取当前时间段的开关量数据
-    List<AppDCS> app_jjb_getRunTime(String field, String startTime);
+    List<AppDCS> app_jjb_getRunTime(String field, String startTime,String endTime);
 
     //    获取当前时间段前的一个开关量
     List<AppDCS> app_jjb_getLastRunTime( String field, String startTime);
@@ -506,7 +540,7 @@ public interface IndexService {
 //String app_jjb_getDifferenceHour( String meta);
 
 //     获取设备运行时间的字段
-List<AppDCS> app_jjb_getRunTimeField( String equip, String meta);
+List<AppDCS> app_jjb_getRunTimeField( String equip);
 
     List<ConfigUser> get_dept_list();
     List<TreeCode> get_dept_test_list();
@@ -545,5 +579,7 @@ List<AppDCS> app_jjb_getRunTimeField( String equip, String meta);
     List<Interlocking> Interlocking_get_all_alarmType();
 
 
+//    查询登录人员权限
+    List<Interlocking> search_config_userChange_permission(String userId);
 
 }

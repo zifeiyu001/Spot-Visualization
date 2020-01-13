@@ -431,9 +431,9 @@ function flashit(){
         var d=_cell[4].innerHTML;
 
 
-        if(d=="一级"){
+        if(d==="一级"){
 
-            if (table.rows[i].style.backgroundColor  =="transparent"){
+            if (table.rows[i].style.backgroundColor  ==="transparent"){
                 table.rows[i].style.backgroundColor ="darkred";
             }
             else{

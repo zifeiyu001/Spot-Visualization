@@ -27,6 +27,11 @@
          WHERE DEPT_NAME="${deptName}"  and  ROUTE_NAME="${routeName}" AND  ZONE_NAME="${zoneName}"
             AND   devName="${devName}" AND SC_PART="${scPart}" AND SC_CONTENT="${scContent}"
     </update>
+    <update id="Interlocking_update_alarm_liable">
+              UPDATE  dxj_spot_result
+         SET   alarm_personLiable ="${liable}"
+         WHERE ID="${resultId}"
+    </update>
 
 
     <select id="Interlocking_get_deptName" resultType="com.demo.model.interlocking.Interlocking">
@@ -110,32 +115,33 @@
         </if>
         and   DEPT_NAME !='综合工段'
         and(
-        ALTPID =3
-        <if test="zcCheck=='true'">
-            or  ALTPID =0
-        </if>
-        <if test="wjCheck=='true'">
-            or ALTPID is  null
-        </if>
-
-        <if test="bjCheck=='true'">
-            <if test="bjType1=='true' || bjType2=='true'|| bjType3=='true'">
-                or  abnormalHandleType =0
-                <if test="bjType1=='true'">
-                    or  abnormalHandleAdminType =1
-                </if>
-                <if test="bjType2=='true'">
-                    or  abnormalHandleAdminType =2
-                </if>
-                <if test="bjType3=='true'">
-                    or  abnormalHandleAdminType =3
-                </if>
+                  ALTPID =3
+            <if test="zcCheck=='true'">
+                or  ALTPID =0
             </if>
-            <if test="bjType1=='false' and bjType2=='false'and bjType3=='false'">
-                or ALTPID =1 or  ALTPID =2
+            <if test="wjCheck=='true'">
+                or ALTPID is  null
             </if>
 
-        </if>
+            <if test="bjCheck=='true'">
+                <if test="bjType1=='true' or bjType2=='true'or bjType3=='true'">
+--                     or  abnormalHandleType =0
+                    <if test="bjType1=='true'">
+                        or  abnormalHandleAdminType =1
+                    </if>
+                    <if test="bjType2=='true'">
+                        or  abnormalHandleAdminType =2
+                    </if>
+                    <if test="bjType3=='true'">
+                        or  abnormalHandleAdminType =3
+                    </if>
+                </if>
+                <if test="bjType1=='false' and bjType2=='false'and bjType3=='false'">
+                    or ALTPID =1 or  ALTPID =2
+                </if>
+
+            </if>
+
         )
         LIMIT ${startPage},${numPerPage}
 
@@ -269,7 +275,7 @@
         </if>
 
         <if test="bjCheck=='true'">
-            <if test="bjType1=='true' || bjType2=='true'|| bjType3=='true'">
+            <if test="bjType1=='true' or bjType2=='true'or bjType3=='true'">
                 <if test="bjType1=='true'">
                     or abnormalHandleAdminType =1
                 </if>
@@ -321,5 +327,12 @@
     </select>
     <select id="Interlocking_get_all_alarmType" resultType="com.demo.model.interlocking.Interlocking">
         SELECT  * FROM dxj_alarmtype_temp
+    </select>
+    <select id="search_config_userChange_permission" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT d.type as permission from cfg_user a,relational_role_user b,relational_role_auth c,user_authorization d
+        WHERE a.user_id="${userId}"
+        AND a.id=b.userid
+        AND b.roleid=c.role_id
+        AND c.authorization_id=d.Id
     </select>
 </mapper>

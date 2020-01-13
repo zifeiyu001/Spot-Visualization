@@ -1,8 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<#if Session.username??>
+<script>
+    var username="${Session.username}";
+</script>
+<#else >
+    <script>
+        var username="";
+    </script>
+</#if>
 <html>
 <head>
-
-
     <title>配置页面</title>
     <link rel="stylesheet" href="/css/mycss/table.css">
     <link rel="stylesheet" href="/css/css/bootstrap.css">
@@ -18,14 +25,14 @@
     </style>
 </head>
 <body>
-<div class="htmleaf-container">
+<div class="htmleaf-container" style="    padding: 1em 20px 1em;letter-spacing: -1px;">
 	<!------页面主体---------------------------------------------------------------------------------------------->
 
     <nav class="navbar navbar-default">
         <ul class="nav nav-tabs nav-justified">
             <li id="li1" style="cursor: pointer"><a onclick="chooseItem('duty')">报警责任人配置</a></li>
             <li id="li2" style="cursor: pointer"><a onclick="chooseItem('manage')">报警分类管理人员配置</a></li>
-            <li id="li3 "><a href="/spot">返回上层</a></li>
+            <li id="li3 "><a href="/spot/searchResult">返回上层</a></li>
         </ul>
     </nav><!-- /导航区域 -->
     <hr/>

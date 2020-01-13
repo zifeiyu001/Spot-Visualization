@@ -1,14 +1,54 @@
-function GetQueryString(name){
-    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-    var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
-    if(r!=null)return  unescape(r[2]);return null;
+
+
+//==================判断登录用户=================
+// 获取登录用户id
+    function GetQueryString(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+    var name = GetQueryString("user");
+    //登录用户不为空，session不为空；判断存储的session和登录用户不同时更新session
+    if(username !=null && username !==undefined && username !==''&& username !=='null') {
+        if (name !==null && name !==undefined && name !==''&& name !=='null') {
+            if (username===name) {}
+            else {getUser(name);}
+        }
+    }
+    //session为空；登录用户为空，重新登录；登录用户不为空时，更新session
+    else {
+        if (name ===null || name === undefined || name ===''|| name ==='null') {
+            alert("请进行登录");
+            window.location.href='http://172.16.5.4/bkzyCMS/login';
+        } else {  getUser(name)}
+    }
+
+
+
+// 将用户保存到后台，session
+function getUser(name){
+
+    $.ajax({
+        url: "/spot/user",
+
+        contentType: "application/json",
+        data:JSON.stringify({
+            "name":name
+        }),
+        type: "post",
+        cache: false,
+        async: false,
+        dataType: "json",
+        success: function (result) {
+            var data=result.data;
+            if(data.user_name===''){
+
+                alert("账户不存在，请重新登录...");
+                window.location.href='http://172.16.5.4/bkzyCMS/login';
+            }
+        }
+    });
 }
-var name = GetQueryString("user");
-// alert(name);
-
-
-
-
 
 jeDate({
     dateCell:"#dateStart",
@@ -63,14 +103,14 @@ $("#nowPage1").click(function () {
 
 });
 
-//报警是否选择，执行
-$("#bjCheck input").click(function () {
-    var chooseAlarm=$("#bjCheck input[type='checkbox']").is(':checked');
-    //当选择报警后，会显示出报警类别的选择
-    if (chooseAlarm===true) {$(".bjType").css("display","")}
-    //当不选择报警后，会隐藏出报警类别的选择
-    else {$(".bjType").css("display","none")}
-});
+// //报警是否选择，执行
+// $("#bjCheck input").click(function () {
+//     var chooseAlarm=$("#bjCheck input[type='checkbox']").is(':checked');
+//     //当选择报警后，会显示出报警类别的选择
+//     if (chooseAlarm===true) {$(".bjType").css("display","")}
+//     //当不选择报警后，会隐藏出报警类别的选择
+//     else {$(".bjType").css("display","none")}
+// });
 
 
 function search(c) {
@@ -307,6 +347,7 @@ function changeType() {
             },
             success: function (result) {
                var data= result.data;
+                // search("c");
                 alert(data)
             }
         });

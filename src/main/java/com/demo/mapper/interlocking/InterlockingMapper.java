@@ -70,4 +70,7 @@ public interface InterlockingMapper {
 
 //    更新报警处理责任人
     Integer Interlocking_update_alarm_liable(@Param("resultId") String resultId,@Param("liable") String liable);
+
+//    查询登录人员权限
+    List<Interlocking> search_config_userChange_permission(@Param("userId") String userId);
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @Mapper
 public interface AppMapper {
 //返回点检数据
-    List<AppReport> App_Spot_Result(@Param("deptName") String deptName,@Param("job") String job,@Param("dateTime") String dateTime);
+    List<AppReport> App_Spot_Result(@Param("deptName") String deptName,@Param("job") String job,@Param("startTime") String startTime,@Param("endTime") String endTime);
 //用户登录交接班页面
     List<AppLoginUser> app_user_login(@Param("userName") String userName, @Param("cycleContentDate") String cycleContentDate);
 
@@ -66,7 +66,7 @@ public interface AppMapper {
                                       @Param("succeedDuty") String succeedDuty, @Param("succeedName") String succeedName, @Param("succeedContent") String succeedContent);
 
 //    获取当前时间段的开关量数据
-    List<AppDCS> app_jjb_getRunTime(@Param("field") String field,@Param("startTime") String startTime);
+    List<AppDCS> app_jjb_getRunTime(@Param("field") String field,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
 //    获取当前时间段前的一个开关量
     List<AppDCS> app_jjb_getLastRunTime(@Param("field") String field,@Param("startTime") String startTime);
@@ -74,7 +74,7 @@ public interface AppMapper {
 //    String app_jjb_getDifferenceHour(@Param("meta") String meta);
 
 //    获取设备运行时间的字段
-    List<AppDCS> app_jjb_getRunTimeField(@Param("equip") String equip,@Param("meta") String meta);
+    List<AppDCS> app_jjb_getRunTimeField(@Param("equip") String equip);
 
 //=============================维修=================================
     Integer app_set_maintenance(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
@@ -88,5 +88,13 @@ public interface AppMapper {
 
     List<Interlocking> app_get_dxjSearchResult(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
                                                @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+//获取周期信息
+    List<AppScheduling> app_get_team_scheduling();
+    List<APPUserConfig> app_get_jjb_team_byUserId(@Param("userId") String userId);
+
+
+//    获取岗位的路线
+    List<AppReport> app_get_jjb_deptRoute(@Param("deptName") String deptName,@Param("job") String job);
 }
 

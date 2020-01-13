@@ -54,8 +54,8 @@
         WHERE
             DEPT_NAME = "${deptName}"
         AND ROUTE_NAME="${job}"
-        AND	TASKSTART_TM >= "${dateTime}"
-        AND NOW()> TASKSTART_TM
+        AND	TASKSTART_TM >= "${startTime}"
+        AND "${endTime}"> TASKSTART_TM
 
     </select>
     <select id="app_user_login" resultType="com.demo.model.app.AppLoginUser">
@@ -358,6 +358,9 @@ WHERE
                   TagName LIKE 'mk__BzmjCheck%'
               </if>
           </if>
+          <if test="job=='皮带岗'">
+              TagName LIKE 'mk__PdCheck%'
+          </if>
             <if test="meta==1">
                 AND( (substring(TagName, 3, 2)>=0 AND 8>substring(TagName, 3, 2) )
                 or ( substring(TagName, 3, 2)>=20 AND 23>=substring(TagName, 3, 2)))
@@ -506,7 +509,7 @@ WHERE
         SELECT DATE_FORMAT(DataTime,"%Y-%m-%d %T")DataTime,DocTagName as variable,DocValue from docdata
         WHERE DocTagName = "${field}"
             AND	DataTime >= "${startTime}"
-            AND NOW()> DataTime
+            AND "${endTime}"> DataTime
         ORDER BY DataTime
     </select>
     <select id="app_jjb_getLastRunTime" resultType="com.demo.model.app.AppDCS">
@@ -577,6 +580,19 @@ AND b.LAYERCODE not like "00010003%"
         <if test="zoneName != 'test' and zoneName != ''">
             and ZONE_NAME="${zoneName}"
         </if>
+    </select>
+    <select id="app_get_team_scheduling" resultType="com.demo.model.app.AppScheduling">
+				SELECT Dtime dTime ,banzu_nameID teamId,banzu_name teamName,banzu_order teamOrder
+                FROM  cfg_paiban
+                ORDER BY teamOrder
+    </select>
+    <select id="app_get_jjb_team_byUserId" resultType="com.demo.model.app.APPUserConfig">
+        SELECT deptName,station as job,team,userId,userName from dxj_jjb_station_user
+        WHERE
+        userId="${userId}"
+    </select>
+    <select id="app_get_jjb_deptRoute" resultType="com.demo.model.universal.AppReport">
+        SELECT  routeName as  ROUTE_NAME from dxj_jjb_station WHERE deptName="${deptName}" AND station="${job}"
     </select>
 
 </mapper>
