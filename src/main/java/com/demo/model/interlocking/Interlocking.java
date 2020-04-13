@@ -6,6 +6,8 @@ package com.demo.model.interlocking;
 public class Interlocking {
 //结果上传时间
     private  String uploadResultTime;
+//多次报警结束时间
+    private  String uploadResultTimeEnd;
 //    工段
     private String  deptName;
 //    线路
@@ -54,7 +56,41 @@ public class Interlocking {
     private  String abnormalHandleDealDepart;
 //    班组
     private  String team;
+//    报警次数
+    private  String alarm_times;
+//    报警ID
+    private  String alarmId;
+//    合并后对应报警ID
+    private  String pid;
+//    是否为报警清单
+    private  String monthly_alarm_list;
+//    是否合并
+    private  String alarm_merge;
 
+//    是否延期
+    private  String alarm_deal_delay;
+//    延期备注
+    private  String alarm_deal_delay_remark;
+
+    public String getAlarmId() {
+        return alarmId;
+    }
+
+    public void setAlarmId(String alarmId) {
+        this.alarmId = alarmId;
+    }
+
+
+    public String getDealData() {
+        return dealData;
+    }
+
+    public void setDealData(String dealData) {
+        this.dealData = dealData;
+    }
+
+    //    是否处理
+    private  String dealData;
 //    权限
     private  String permission;
 
@@ -267,5 +303,61 @@ public class Interlocking {
 
     public void setTeam(String team) {
         this.team = team;
+    }
+
+    public String getMonthly_alarm_list() {
+        return monthly_alarm_list;
+    }
+
+    public void setMonthly_alarm_list(String monthly_alarm_list) {
+        this.monthly_alarm_list = monthly_alarm_list;
+    }
+
+    public String getAlarm_times() {
+        return alarm_times;
+    }
+
+    public void setAlarm_times(String alarm_times) {
+        this.alarm_times = alarm_times;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public String getAlarm_merge() {
+        return alarm_merge;
+    }
+
+    public void setAlarm_merge(String alarm_merge) {
+        this.alarm_merge = alarm_merge;
+    }
+
+    public String getAlarm_deal_delay() {
+        return alarm_deal_delay;
+    }
+
+    public void setAlarm_deal_delay(String alarm_deal_delay) {
+        this.alarm_deal_delay = alarm_deal_delay;
+    }
+
+    public String getAlarm_deal_delay_remark() {
+        return alarm_deal_delay_remark;
+    }
+
+    public void setAlarm_deal_delay_remark(String alarm_deal_delay_remark) {
+        this.alarm_deal_delay_remark = alarm_deal_delay_remark;
+    }
+
+    public String getUploadResultTimeEnd() {
+        return uploadResultTimeEnd;
+    }
+
+    public void setUploadResultTimeEnd(String uploadResultTimeEnd) {
+        this.uploadResultTimeEnd = uploadResultTimeEnd;
     }
 }

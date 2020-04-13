@@ -201,7 +201,7 @@
                                         <td>处理</td>
                                     </tr>
                                 </thead>
-                                <tbody id="tablebody">
+                                     <tbody id="tablebody">
                                 </tbody>
                             </table>
                         </div>
@@ -224,7 +224,7 @@
         direction: 'vertical'
     });
 </script>
-<script  src="/js/process/mk1.js"></script>
+<script  src="/js/process/mk-1.0.0.js"></script>
 <script src="/js/utils/choosePath.js"></script>
 <script src="/js/utils/alarmTable.js"></script>
 </body>

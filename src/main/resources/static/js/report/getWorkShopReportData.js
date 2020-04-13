@@ -1,29 +1,29 @@
 
-jeDate({
-    dateCell:"#startDate",
-    format:"YYYY-MM-DD",
-    isinitVal:true,
-    // isTime:true,
-    isClear:false,
-    initHour:-192,
-    minDate:"1900-01-01",
-    okfun:function(val){
-        // start=val;
-    }
-});
-jeDate({
-    dateCell:"#endDate",
-    // format:"YYYY-MM-DD hh:mm:ss",
-    format:"YYYY-MM-DD",
-    isinitVal:true,
-    // isTime:true,
-    isClear:false,
-    initHour:-24,
-    minDate:"1900-01-01",
-    okfun:function(val){
-        // end=val;
-    }
-});
+// jeDate({
+//     dateCell:"#startDate",
+//     format:"YYYY-MM-DD",
+//     isinitVal:true,
+//     // isTime:true,
+//     isClear:false,
+//     initHour:-192,
+//     minDate:"1900-01-01",
+//     okfun:function(val){
+//         // start=val;
+//     }
+// });
+// jeDate({
+//     dateCell:"#endDate",
+//     // format:"YYYY-MM-DD hh:mm:ss",
+//     format:"YYYY-MM-DD",
+//     isinitVal:true,
+//     // isTime:true,
+//     isClear:false,
+//     initHour:-24,
+//     minDate:"1900-01-01",
+//     okfun:function(val){
+//         // end=val;
+//     }
+// });
 
 
 //================判断班组是否为生产，显示选项班次========================

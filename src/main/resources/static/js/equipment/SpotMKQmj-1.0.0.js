@@ -4,10 +4,10 @@ var myChart1 = echarts.init(document.getElementById('spotdata'));
 // 指定图表的配置项和数据
 myChart1.setOption({
     tooltip: {},
-
     grid: { top: '20%', left: '3%', right: '4%', bottom: '5%', containLabel: true },
     legend: {
         data:['已检','未检','报警','危险'],
+        backgroundcolor:'#1eff46',
         top:'0%',
         itemWidth: 10,
         itemHeight: 8,
@@ -52,18 +52,22 @@ myChart1.setOption({
         }
     ]
 });
+
 myChart1.showLoading();
 var isLoaded1 = false;
-function reqs() {
+//获取点检情况
+function reqs()
+{
     var sections=[];
     var checkeds=[];
     var uncheckeds=[];
     var alarms=[];
     var dangers=[];
+
     $.ajax({
         type : "get",
         async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
-        url : "/equipment/SpotZmj",    //请求发送到TestServlet处
+        url : "/equipment/SpotQmj",    //请求发送到TestServlet处
         data : {},
         dataType : "json",   //返回数据形式为json
         beforeSend: function () {
@@ -140,8 +144,8 @@ function reqs() {
                 }
             }
             else {
-                    $("#spotdata").text("当日无点检任务").css("text-align","center").css("line-height","1000%").css("color","#FFFFFF").css("font-size","16px");
-                }
+                $("#spotdata").text("无点检数据").css("top","40%").css("text-align","center").css("color","#FFFFFF").css("font-size","16px");
+            }
 
         },
         complete: function () {
@@ -158,20 +162,19 @@ reqs();
 setInterval(function () {
     isLoaded1 && reqs()
 }, 1800000);    //请求时间间隔
-
-
+//获取报警数据
 var isLoaded2 = false;
 function getAlarmData(param) {
     var data = {"value":param};
     $.ajax({
-        url:"/spot/mk/zmj/alarm",
+        url:"/spot/mk/qmj/alarm",
         data:{},
         type:"get",
         cache:false,
         async: false,
         dataType:"json",
         beforeSend: function() {
-            isLoaded2 = false;
+            isLoaded2= false;
         },
         success: function (result) {
             var  json=result.data;
@@ -190,13 +193,13 @@ function getAlarmData(param) {
                 ;}
                 $('#tab').append(s);
             }
-
             else {
                 $(".alarmbody").css("background-image","url(/images/arrow/yes.png)")
                     .css("background-position","center").css("background-repeat","no-repeat")
                     .css("height","100%").css("background-size","70%");
                 $(".thirdColumn").css("overflow","hidden");
             }
+
         },
         complete: function() {
             isLoaded2 = true; }
@@ -207,9 +210,11 @@ setInterval(function () {
     isLoaded2 && getAlarmData()
 }, 1800000);    //请求时间间隔
 
-function getDetailedData1(param) {
+//获取部位的点检情况
+var isLoaded3 = false;
+function getDetailedData(param) {
     $.ajax({
-        url:"/spot/mk/zmj/detailed/test",
+        url:"/spot/mk/qmj/detailed/test",
         type:"post",
         // cache:false,
         // async: false,
@@ -221,37 +226,39 @@ function getDetailedData1(param) {
         },
         success: function (result) {
             var  json=result.data;
-            $("#spotbody").html("");
+            $("#tbody").html("");
             var s='';
-            // alert(json.length)
-            for (var i = 0; i < json.length; i++) {
-
-                s += '<tr><td style="width: 10%">' +
-                    json[i].section + '</td><td style="width: 32%">'
-                    + json[i].part + '</td><td style="width: 32%;">'
-                    + json[i].content + '</td><td style="width: 14%">'
-                    + json[i].result + '</td>';
-                if (json[i].level == "0") {
-                    // alert("1=========="+i);
-                    s += '<td style="width: 14%;">正常 </td></tr>';
-                } else if (json[i].level == "1") {
-                    // alert("2========"+i);
-                    s += '<td style="width: 14%">报警</td></tr>';
-                } else if (json[i].level == "2") {
-                    // alert("3========="+i);
-                    s += '<td style="width: 14%">危险</td></tr>';
-                } else {
-                    // alert("4========="+i);
-                    s += '<td style="width: 14%">-</td></tr>';
-                }
-            }   $('#spotbody').append(s);
+            for (var i = 0; i < json.length; i++){
+                s +='<tr><td style="width: 10%">' +
+                    json[i].section+ '</td><td style="width: 35%">'
+                    + json[i].part + '</td><td style="width: 35%;">'
+                    + json[i].content + '</td><td style="width: 20%">'
+                    + json[i].result + '</td></tr>'
+                ;}
+            $('#informTable').append(s);
         },
         complete: function() {
             isLoaded3 = true; }
     })
 }
 
-getDetailedData();
-setInterval(function () {
-    isLoaded3 && getDetailedData()
-}, 1800000);    //请求时间间隔
+
+function showInform(){
+    document.getElementById("inform").style.display='block';
+
+
+}
+//隐藏悬浮层
+function hiddenInform(event){
+    var informDiv = document.getElementById('inform');
+    var x=event.clientX;
+    var y=event.clientY;
+    var divx1 = informDiv.offsetLeft;
+    var divy1 = informDiv.offsetTop;
+    var divx2 = informDiv.offsetLeft + informDiv.offsetWidth;
+    var divy2 = informDiv.offsetTop + informDiv.offsetHeight;
+    if( x < divx1 || x > divx2 || y < divy1 || y > divy2){
+        document.getElementById('inform').style.display='none';
+    }
+
+}

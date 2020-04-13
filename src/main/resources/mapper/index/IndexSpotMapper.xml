@@ -83,5 +83,22 @@
             DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 当月数据
         </if>)
     </select>
+    <select id="getMonthlysSotStatistics" resultType="com.demo.model.equip.SpotStatistics">
+
+        SELECT
+            RIGHT(DEPT_NAME,2)  as equip,
+            count(COMPLETESTATE='Y' OR null) as complete,
+            count(COMPLETESTATE='Y' and ALTPID='0' OR null) as normal,
+            count(COMPLETESTATE='Y' and ALTPID='1' OR null) as danger,
+            count(COMPLETESTATE='Y' and ALTPID='2' OR null) as alarm,
+            count(COMPLETESTATE='W'  OR null) as incomplete
+        FROM
+            dxj_spot_result
+        WHERE
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 本月数据
+						AND DEPT_NAME !='综合工段'
+				GROUP BY  RIGHT(DEPT_NAME,2)
+
+    </select>
 
 </mapper>

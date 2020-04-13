@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-判断用户是否登录
 <#if !Session.username??>
     <script>
         alert("账号未登陆，请登录...");
@@ -130,7 +129,7 @@
 <#--================报表内容=====================-->
     <div class="report" id="sbReport"  style="    margin-left: 10%;margin-right: 10%;" >
 
-            <table class="table tableStyles" id="tables" style="  border: 2px solid !important;">
+            <table  class="table table-striped table-bordered table-hover" id="tables" style="  border: 2px solid !important;">
 
                 <#--================表格表头=====================-->
                 <thead class="equipParam">
@@ -192,7 +191,7 @@
     </div>
 <script src="/js/report/chooseEquip.js"></script>
 <script src="/js/report/getChooseData.js"></script>
-<script src="/js/report/getWeekReportData.js"></script>
+<script src="/js/report/getWeekReportData-1.0.0.js"></script>
 <script src="/js/report/reportDownload.js"></script>
 </body>
 </html>

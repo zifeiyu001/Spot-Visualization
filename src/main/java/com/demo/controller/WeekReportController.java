@@ -30,7 +30,6 @@ public class WeekReportController {
         String equip = params.get("equip");
         String startTime = params.get("startTime");
         String endTime = params.get("endTime");
-//        System.out.println(workshop+"==="+team+"=="+equip+"==="+startTime+"==="+endTime);
         List<Report> spotData = indexService.REPORT_WEEK_SPOT_LIST(workshop, team, equip, startTime, endTime);    // 点检统计数据
         List<Report> dealData = indexService.REPORT_WEEK_DEAL_LIST(workshop, team, equip, startTime, endTime);      //报警处理数据
         List<Report> runData = indexService.REPORT_WEEK_SK_YS_RUN_LIST(workshop, team, equip, startTime, endTime);  //设备运行情况

@@ -12,7 +12,9 @@ import com.demo.model.process.grindingFloat.*;
 import com.demo.model.report.Report;
 import com.demo.model.universal.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
 
@@ -24,6 +26,8 @@ public interface IndexService {
     List<SpotStatistics> INDEX_SC_LIST(String param);
     List<SpotStatistics> INDEX_DY_LIST(String param);
     List<SpotStatistics> INDEX_SB_LIST(String param);
+    List<SpotStatistics> getMonthlysSotStatistics();
+
     List<IndexShow>  INDEX_SHOW_LIST();
     List<IndexShow>  INDEX_SHOW1_LIST();
     List<IndexFlowChartData> INDEX_FLOW_CHART_DATA_LIST();
@@ -415,26 +419,51 @@ public interface IndexService {
     List<Interlocking> Interlocking_get_scPart();
     List<Interlocking> Interlocking_get_content();
 //    根据条件查询点检结果
-    List<Interlocking> Interlocking_get_result(String deptName, String routeName, String zoneName,
+    List<Interlocking> Interlocking_get_result(String deptName, String routeName, String zoneName, String devName, String scPart,String scContent,
+                                               String startTime, String endTime  ,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,
+                                               String wjCheck, Integer startPage,Integer numPerPage,String dealStatus);
+    //    根据条件查询点检结果test
+    List<Interlocking> Interlocking_get_result1(String deptName, String routeName, String zoneName,
                                                String devName, String scPart,String scContent,
-                                               String startTime, String endTime  ,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,String wjCheck,
+                                               String startTime, String endTime  ,String yjCheck,String wjCheck,String zcCheck,String bjCheck,
+                                                String abjType1,String abjType2,String abjType3,String sbjType1,String sbjType2,String sbjType3,
                                                Integer startPage,Integer numPerPage);
     List<ConfigUser> search_config_alarm_liable_all();
 //    根据条件查询点检结果数量
-   Integer Interlocking_get_result_total(String deptName, String routeName, String zoneName,
-                                               String devName, String scPart,String scContent,
-                                               String startTime, String endTime  ,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,String wjCheck
+   Integer Interlocking_get_result_total(String deptName, String routeName, String zoneName,String devName, String scPart,String scContent,String startTime,
+                                         String endTime ,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,String wjCheck,String dealStatus
    );
+    //    根据条件查询点检结果数量test
+    Integer Interlocking_get_result_total1(String deptName, String routeName, String zoneName,
+                                          String devName, String scPart,String scContent,
+                                          String startTime, String endTime ,String yjCheck,String wjCheck,String zcCheck,String bjCheck,
+                                           String abjType1,String abjType2,String abjType3,String sbjType1,String sbjType2,String sbjType3
+    );
+
 
 
     List<Maintenance> pc_get_MaintenanceResult(String deptName, String routeName, String zoneName,
                                                       String devName,
                                                       String startTime, String endTime  , String dealResult);
 //    改变报警类型
-    Integer Interlocking_changeAlarmType(String resultId, String alarmType, String userName,String selectDepart );
+    Integer Interlocking_changeAlarmType(String resultId, String alarmType, String operationName,String selectDepart ,String responsibleUser);
 
     Integer Interlocking_changeAlarmPersonLiable(String resultId,String alarm_personLiable);
-    List<Interlocking> Interlocking_get_byId_result( String resultId);
+    List<Interlocking> Interlocking_get_byId_result( String resultId);//获取resultid下的内容
+
+//  查询alarmResult表中是否有相同数据
+    List<Interlocking> searchAlarmResultDataByInfo(String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String remark,String alarmType);
+
+//  数据合并，增加次数
+    Integer updateAlarmResultTimes(String alarmId,String alarmTimes,String depart,String user,String alarmType,String startDate,String endDate,String resultIds);
+
+//向alarm_result 添加数据(原无数据)
+    Integer insertBCAlarmDataToAlarmResult(String resultId,String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String remark,
+                                           String spotResult,String userName1,String uploadResultTime,String selectDepart,String alarmType,String user);
+//向alarm_result 添加数据(原有数据)
+    Integer insertBCAlarmDataToAlarmResult1(String resultId,String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String remark,
+                                            String spotResult,String userName1,String uploadResultTime,String selectDepart,String alarmType,String user,String pid);
+
     List<Interlocking> Interlocking_get_temp_result(String deptName,  String routeName, String zoneName,
                                                String devName, String scPart,String scContent,
                                                     String stdValue,String altpid );
@@ -449,8 +478,81 @@ public interface IndexService {
 
     Integer Interlocking_update_alarm_result( String deptName, String routeName, String zoneName,
                                              String devName, String scPart, String scContent,
-                                             String alarm_manage);
+                                             String alarm_manage,String alarm_type);
+
     Integer Interlocking_update_alarm_liable(String resultId,String liable);
+
+    //   根据用户id查询所在工段
+    List<Interlocking> search_dxj_dept_id(String userId);
+
+//    根据resultID查询报警处理内容
+    List<AlarmDealData> get_alarm_deal_data(String resultId);
+//    根据条件查询报警处理内容
+    List<AlarmDealData> get_repair_data(String dateStart,String dateEnd,String depart,String technology);
+
+//    根据resultID查询报警处理单自动填写内容
+    List<AlarmDealData> getWriteDefaultDealData(String resultID);
+//    获取bc类报警数据
+    List<Interlocking> getbcAlarmData(String start_date,String end_date,String deptName,String alarm_type);
+//    添加数据到月度报警清单
+   Integer addAlarmToMonthlyList(String mergeId);
+//    获取月度报警清单
+    List<Interlocking> getbcMonthlyAlarmListData(String deptName);
+//    处理BC类报警
+    Integer dealBCAlarm(String alarmId,String dealRemark,String user);
+//    延期bc类报警
+    Integer delayBCAlarm(String alarmIds,String dealRemark);
+//    修改bc报警类型
+    Integer changeBCAlarmType(String alarmIds,String resultIds, String deptName,String alarmType,String personLiable);
+
+
+    /*手动合并报警数据*/
+//    获取合并项中报警数量
+    Integer mergeBCAlarmNum(String alarmId, String mergeIds);
+//    合并报警数据
+     Integer mergeBCAlarmData(String alarmId,String resultIds,String times,String startTime,String endTime);
+//    删除合并报警其他数据
+    Integer updateDeleteAlarmData(String alarmId, String mergeIds);
+//    更新合并报警后数据
+    Integer updateAlarmData(String alarmId, String deleteAlarmNum);
+
+//    获取处理BC类报警内容
+        List<Interlocking> getbcAlarmContent(String alarmId);
+//     获取处理alarm表中id的resultId
+    List<Interlocking> getbcAlarmDataResultId(String alarmIds);
+//    根据resultId处理result表中BC类报警
+     Integer dealBCAlarmInResult(String resultId,String dealRemark,String user);
+//        获取报警处理责任人
+        List<ConfigUser> getPersonLiableByDepart(String alarm_after_Type,String departs);
+//        修改BC类报警类型
+        Integer updateResultChangeAlarmTypeByDetailed(String deptName,String routeName,String zoneName,String devName,
+                                                             String scPart,String scContent,String uploadResultTime,String user,String departs,String alarmType);
+//      处理result表中BC报警
+    Integer updateResultDealDataByDetailed(String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String uploadResultTime,String user);
+//    报警处理单填写内容
+        Integer writeDealData(String result_id,String service_id,String dev_code,String service_start_date,String service_end_date,
+        String service_hours,String dev_name,String dev_model,String dev_dept,String dev_category,String service_unit_type,
+        String service_unit,String alarm_type,String alarm_name,String alarm_time,String alarm_content,
+        String service_name,String service_acceptor,String service_content,String service_alarm_time,String service_remarks);
+//       修改报警处理单内容
+
+    Integer updateDealData(String result_id,String service_id,String service_start_date,String service_end_date,
+                           String service_hours,String service_unit_type, String service_unit,
+                           String service_name,String service_acceptor,String service_content,String service_alarm_time,String service_remarks);
+
+//根据resultID报警处理result表
+    Integer updateResultDealData(String result_id,String alarm_flag, String alarm_remark, String alarm_manage_name, String alarm_manage_time);
+
+////根据工段、、、、设备、部位等 报警处理result表
+//    Integer updateResultDealDataByDetailed(String result_id,String alarm_flag, String alarm_remark, String alarm_manage_name, String alarm_manage_time);
+
+//     获取报警处理单当天的数量
+    List<AlarmDealData> getDeptSameDayDealData(String dev_name);
+
+//    获取是否有处理报警的权限
+    List<ConfigUser> getAlarmDealJurisdiction(String dev_depart,String userid,String alarm_type);
+
+
 
 //===================app接口测试===================================
 //   点检结果
@@ -581,5 +683,17 @@ List<AppDCS> app_jjb_getRunTimeField( String equip);
 
 //    查询登录人员权限
     List<Interlocking> search_config_userChange_permission(String userId);
+//通过alarmid获取resultid
+    List<Interlocking> get_resultId_alarmid(String alarmId);
+//   删除alarmResult数据
+    Integer delete_alarm_result_by_alarmId(String alarmId);
+
+
+
+//    获取配置参数
+    List<Config> getConfigData();
+
+    Integer setConfigData(String alarm_list_start,String alarm_list_end,String alarm_c_deal_start,String alarm_c_deal_end,String alarm_tips_time);
+
 
 }

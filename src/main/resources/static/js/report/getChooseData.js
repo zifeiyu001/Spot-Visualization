@@ -23,10 +23,8 @@ layui.use('laydate', function(){
         ,type: 'date'
         ,max : getNowFormatDate()
         ,done: function(value, date, endDate){
-
             start=value.split(" - ")[0];
             end=value.split(" - ")[1];
-
         }
     });
     //点我触发时间选择，必须有
@@ -36,20 +34,18 @@ layui.use('laydate', function(){
         ,trigger: 'click'
     });
 });
-jeDate({
-    dateCell:"#dateStart",
-    // format:"YYYY-MM-DD hh:mm:ss",
-    format:"YYYY-MM-DD",
-    isinitVal:true,
-    isTime:true, //isClear:false,
-    // initHour:-24,
-    minDate:"1900-01-01 00:00:00",
-    okfun:function(val){
-        // alert("111111111:::::"+$("#dateStart").val());
-        //
-        // alert(val)
-    }
-});
+// jeDate({
+//     dateCell:"#dateStart",
+//     // format:"YYYY-MM-DD hh:mm:ss",
+//     format:"YYYY-MM-DD",
+//     isinitVal:true,
+//     isTime:true,
+//     //isClear:false,
+//     // initHour:-24,
+//     minDate:"1900-01-01 00:00:00",
+//     okfun:function(val){
+//     }
+// });
 //================时间选择，时间格式确定==========================
 function getNowFormatDate() {
     var date = new Date();

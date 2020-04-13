@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <#--判断用户是否登录-->
-<#--<#if !Session.username??>-->
-    <#--<script>-->
-        <#--alert("账号未登陆，请登录...");-->
-        <#--window.location.href='http://172.16.5.4/bkzyCMS/login';-->
-    <#--</script>-->
-<#--</#if>-->
+<#if !Session.username??>
+    <script>
+        alert("账号未登陆，请登录...");
+        window.location.href='http://172.16.5.4/bkzyCMS/login';
+    </script>
+</#if>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

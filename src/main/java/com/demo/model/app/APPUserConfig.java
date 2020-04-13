@@ -2,7 +2,7 @@ package com.demo.model.app;
 
 public class APPUserConfig {
     private  String deptName;
-//    private  String station;
+    private  String station;
     private  String routeName;
     private  String team;
     private  String userName;

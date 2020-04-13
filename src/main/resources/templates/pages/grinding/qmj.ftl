@@ -175,7 +175,7 @@
         })
     }
 </script>
-<script  src="/js/equipment/SpotMKQmj.js"></script>
+<script  src="/js/equipment/SpotMKQmj-1.0.0.js"></script>
 <script  src="/js/equipment/SpotEquip.js"></script>
 <script src="/js/utils/choosePath.js"></script>
 

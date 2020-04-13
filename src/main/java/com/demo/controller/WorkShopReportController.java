@@ -24,11 +24,9 @@ public class WorkShopReportController {
     @PostMapping("/workShopReport/day")
     @ResponseBody
     public Map<String,Object> report_mk_mj_Url(@RequestBody Map<String, String> params) throws UnsupportedEncodingException {
-        System.out.println(params);
         String workshop = params.get("workshop");
         String startTime = params.get("startTime");
         String endTime = params.get("endTime");
-//        System.out.println(workshop+"=="+startTime+"====="+endTime);
         List<Report> spotData = indexService.workShop_report_spot_zong_list(workshop, startTime,endTime);    // 点检统计数据（总数）
         List<Report> spotData1 = indexService.workShop_report_spot_fen_list(workshop, startTime,endTime);     // 点检统计数据  （各工段总数）
         spotData.addAll(spotData1);

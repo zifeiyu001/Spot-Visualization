@@ -14,6 +14,7 @@ import com.demo.service.IndexService;
 import org.apache.ibatis.annotations.Param;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +61,6 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getINDEX_SB_LIST() {
         List<SpotStatistics> model = indexService.INDEX_SB_LIST("model");
-//        System.out.println("-==================="+model.size());
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.INDEX_SB_LIST("model"));
@@ -68,7 +68,17 @@ public class IndexController {
         return map;
     }
 
+    //    设备数据
+    @RequestMapping(value = "/spot/index/monthlysSotStatistics", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> getMonthlysSotStatistics() {
+        List<SpotStatistics> moonthlysSotStatistics =indexService.getMonthlysSotStatistics();
+        Map<String,Object> map = new HashMap<>();
+        map.put("msg", "ok");
+        map.put("data", moonthlysSotStatistics);
 
+        return map;
+    }
 /*=========================index页面实时展示=============================*/
 
     @RequestMapping(value = "/index/indexShow", method = RequestMethod.GET)
@@ -92,7 +102,6 @@ public class IndexController {
             jsonObject.put("alarm",indexShow.getAlarm());
             jsonObject.put("kw",kw);
             jsonArray.add(jsonObject);
-//            jsonArray.put(jsonObject);
         }
         JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("msg","ok");
@@ -156,9 +165,11 @@ public class IndexController {
         String id = params.get("id");
         String remark = params.get("remark");
         List<WebDxjBj> webDxjBjs = indexService.search_alarm_id(id);//获取报警表中报警数据id
+
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("username");
         String userId = (String)session.getAttribute("userId");
+
         WebDxjBj webDxjBj = webDxjBjs.get(0);
         webDxjBj.setAlarm_remark(remark);
         webDxjBj.setUser_id(userId);
@@ -167,7 +178,6 @@ public class IndexController {
         JSONObject parseObject = JSON.parseObject(JSON.toJSONString(webDxjBj));
 
         String str = sendJsonWithPost("http://localhost:8080/bkzyCMS/webservice/upDxjBj", parseObject, "utf-8");
-//        System.out.println(id+"======================="+str);
         return JSON.parseObject(str);
     }
 
@@ -180,19 +190,23 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object>  getUser(@RequestBody Map<String, String> params, HttpServletRequest request) throws UnsupportedEncodingException {
         String name = params.get("name");
-        System.out.println("username:::::"+name);
-//        LoginUser login_name = indexService.get_login_name(name);
-        String user_name = indexService.get_login_name(name).getUser_name();
+        LoginUser login_name = indexService.get_login_name(name);
+        Map<String,Object> map = new HashMap<>();
+        if (login_name!=null){
             //创建session对象
             HttpSession session = request.getSession();
-
             //把用户数据保存在session域对象中,用户账号
-            session.setAttribute("username", user_name );
-            session.setAttribute("userId", name );
+            session.setAttribute("username", name);//用户账号、ID
+            session.setAttribute("user", login_name.getUsername());// 用户名
+            session.setAttribute("userdept",login_name.getDeptName());//用户部门
             session.setMaxInactiveInterval(3600);
-        Map<String,Object> map = new HashMap<>();
-        map.put("msg", "ok");
-        map.put("data", indexService.get_login_name(name));
+            map.put("msg", "ok");
+            map.put("data", login_name.getUsername());
+            map.put("deptdata", login_name.getDeptName());
+        }
+        else {
+            map.put("data","");
+        }
         return map;
     }
 
@@ -1305,39 +1319,43 @@ public class IndexController {
     public String toygj22(){ return "/pages/ts/glj2_old";  }
 
     //报表
-    @GetMapping("/spot/report")
+    @GetMapping("/spot/report1")
     public String toreport(){ return "/pages/report/report";  }
 
-    @GetMapping("/spot/report1")
+    @GetMapping("/spot/report")
     public String toreport1(){ return "/pages/report/report_old1";  }
 
     //报表
-    @GetMapping("/spot/weekReport")
+    @GetMapping("/spot/weekReport1")
     public String toweekreport(){ return "/pages/report/weekReport";  }
 
-    @GetMapping("/spot/weekReport1")
+    @GetMapping("/spot/weekReport")
     public String toweekreport1(){ return "/pages/report/weekReport_old";  }
 
-    @GetMapping("/spot/workShopReport")
+    @GetMapping("/spot/workShopReport1")
     public String toworkShopReport(){ return "/pages/report/workShopReport";  }
 
-    @GetMapping("/spot/workShopReport1")
+    @GetMapping("/spot/workShopReport")
     public String toworkShopReport1(){ return "/pages/report/workShopReport_old";  }
 
 
 
     @GetMapping("/spot/dxj_config")
-    public String toConfig(){ return "/dxj_config";  }
+    public String toConfig(){ return "/dxjSystem/dxj_config";  }
 
     @GetMapping("/spot/index1")
     public String toConfig1(){ return "/index1";  }
+//   维修单查询
 
+
+    @GetMapping("/spot/dxj_repair_list")
+    public String todxj_repair_list(){ return "/dxjSystem/dxj_repair_list";  }
 //    APP
     @GetMapping("/spot/app")
     public String toAppConfig(Model model){ return "/dxj_app_config";  }
 /*测试使用*/
-    @GetMapping("first")
-    public String tofirst(Model model){ return "/first";  }
+    @GetMapping("/first")
+    public String tofirst(){ return "/first";  }
     @GetMapping("/test")
     public String totest(){ return "/test";  }
     @GetMapping("/test2")
@@ -1357,17 +1375,16 @@ public class IndexController {
 
     @GetMapping("/dateChoose")
     public String todateChoose(){ return "/dateChoose";  }
+    @GetMapping("/spot/searchResult1")
+    public String searchResult1(){ return "/dxjSystem/searchResult1";  }
 
-
-    @GetMapping("/cs")
-    public String tocChoose(){ return "/cs";  }
 
     @GetMapping("/dxj")
     public String tocChoose1(){ return "/dxj";  }
 
 //点检结果查询
     @GetMapping("/spot/searchResult")
-    public String searchResult(){ return "/searchResult";  }
+    public String searchResult(){ return "/dxjSystem/searchResult";  }
 //    交接班查询
     @GetMapping("/spot/searchSuccession")
     public String searchSuccession(){ return "/searchSuccession";  }
@@ -1582,9 +1599,7 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getSpot_deFxFxj1_Url(@RequestBody Map<String, String> params) {
         String param = params.get("param");
-//        System.out.println(param);
         String equip = params.get("equip");
-//        System.out.println(equip);
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.SPOT_FX_FXJ1_DETAILED_LIST(param,equip));
@@ -1594,9 +1609,7 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getSpot_deFxFxj2_Url(@RequestBody Map<String, String> params) {
         String param = params.get("param");
-//        System.out.println(param);
         String equip = params.get("equip");
-//        System.out.println(equip);
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.SPOT_FX_FXJ2_DETAILED_LIST(param,equip));
@@ -1615,12 +1628,13 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getSpot_deFxJbt_Url(@RequestBody Map<String, String> params) {
         String param = params.get("param");
-//        System.out.println(param);
         String equip = params.get("equip");
-//        System.out.println(equip);
         Map<String,Object> map = new HashMap<>();
         map.put("msg", "ok");
         map.put("data", indexService.SPOT_FX_JBT_DETAILED_LIST(param,equip));
         return map;
     }
+
+    @Value("${version}")
+    private String version;
 }

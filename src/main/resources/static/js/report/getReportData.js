@@ -149,9 +149,6 @@ function chaxun(workshop,team,equip,time,duty_name){
 
             //===========================生产报表内容====================
             else {
-
-
-
                 title += '<th colspan="1"  style="background-color: lightcyan ;border: 1px solid ; min-width: 70px;">'
                     + "班别" + '</th><td colspan="2" id="banzu" style="  border: 1px solid ;text-align: center">'
                     + '</td><th colspan="1"   style="background-color: lightcyan ;border: 1px solid ;">'
@@ -171,7 +168,7 @@ function chaxun(workshop,team,equip,time,duty_name){
                 $("#titleName").html(team+" "+ equip+" "+duty_name+"报表");
 
                 if(team=='精尾生产'||(team=='碎矿生产' && equip=='皮带岗')){
-
+                       alert(duty_name);
                     for (var m = 0; m < data.length; m++) {
 
                         sc_content += '<tr style="text-align: center;border: 1px solid ;"><td colspan="2" style="text-align: center;">'

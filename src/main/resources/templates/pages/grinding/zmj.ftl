@@ -131,50 +131,7 @@
         </div>
     </div>
 <script>
-    getDetailedData1('param1');
-    function getDetailedData1(param) {
-        $.ajax({
-            url:"/spot/mk/zmj/detailed/test",
-            type:"post",
-            // cache:false,
-            // async: false,
-            contentType: "application/json",
-            data:JSON.stringify({"param":param}),
-            dataType:"json",
-            beforeSend: function() {
-                isLoaded3= false;
-            },
-            success: function (result) {
-                var  json=result.data;
-                $("#spotbody").html("");
-                var s='';
-                // alert(json.length)
-                for (var i = 0; i < json.length; i++) {
 
-                    s += '<tr><td style="width: 10%">' +
-                        json[i].section + '</td><td style="width: 32%">'
-                        + json[i].part + '</td><td style="width: 32%;">'
-                        + json[i].content + '</td><td style="width: 14%">'
-                        + json[i].result + '</td>';
-                    if (json[i].level == "0") {
-                        // alert("1=========="+i);
-                        s += '<td style="width: 14%;">正常 </td></tr>';
-                    } else if (json[i].level == "1") {
-                        // alert("2========"+i);
-                        s += '<td style="width: 14%">报警</td></tr>';
-                    } else if (json[i].level == "2") {
-                        // alert("3========="+i);
-                        s += '<td style="width: 14%">危险</td></tr>';
-                    } else {
-                        // alert("4========="+i);
-                        s += '<td style="width: 14%">-</td></tr>';
-                    }
-                }   $('#spotbody').append(s);
-            },
-            complete: function() {
-                isLoaded3 = true; }
-        })
-    }
 </script>
 <script  src="/js/equipment/SpotMKZmj.js"></script>
 <script  src="/js/equipment/SpotEquip.js"></script>

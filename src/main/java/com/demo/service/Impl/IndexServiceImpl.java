@@ -93,9 +93,13 @@ import com.demo.model.process.grindingFloat.*;
 import com.demo.model.report.Report;
 import com.demo.model.universal.*;
 import com.demo.service.IndexService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -370,6 +374,8 @@ public class IndexServiceImpl implements IndexService {
     public List<SpotStatistics> INDEX_DY_LIST(String param) { return indexSpotMapper.INDEX_DY_LIST(param); }
     @Override
     public List<SpotStatistics> INDEX_SB_LIST(String param) { return indexSpotMapper.INDEX_SB_LIST(param); }
+    @Override
+    public  List<SpotStatistics>   getMonthlysSotStatistics(){return  indexSpotMapper.getMonthlysSotStatistics();}
 /*index实时数据*/
     @Override
     public List<IndexShow> INDEX_SHOW_LIST() {
@@ -1424,8 +1430,20 @@ public class IndexServiceImpl implements IndexService {
 //查询点检结果
     @Override
     public List<Interlocking> Interlocking_get_result(String deptName, String route, String zone, String equip, String part, String content, String startTime,
-                                                      String endTime,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,String wjCheck,Integer startPage,Integer numPerPage) {
-        return interlockingMapper.Interlocking_get_result(deptName,route,zone,equip,part,content,startTime,endTime ,zcCheck,bjCheck,bjType1, bjType2, bjType3,wjCheck,startPage, numPerPage);
+                                                      String endTime,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,String wjCheck,
+                                                      Integer startPage,Integer numPerPage,String dealStatus) {
+        return interlockingMapper.Interlocking_get_result(deptName,route,zone,equip,part,content,startTime,endTime ,
+                zcCheck,bjCheck,bjType1, bjType2, bjType3,wjCheck,startPage, numPerPage,dealStatus);
+
+    }
+    //查询点检结果test
+    @Override
+    public List<Interlocking> Interlocking_get_result1(String deptName, String route, String zone, String equip, String part, String content, String startTime,
+                                                      String endTime    ,String yjCheck,String wjCheck,String zcCheck,String bjCheck,
+                                                       String abjType1,String abjType2,String abjType3,String sbjType1,String sbjType2,String sbjType3,
+
+                                                       Integer startPage,Integer numPerPage) {
+        return interlockingMapper.Interlocking_get_result1(deptName,route,zone,equip,part,content,startTime,endTime ,yjCheck,wjCheck,zcCheck,bjCheck,abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3,startPage, numPerPage);
 
     }
 
@@ -1437,10 +1455,16 @@ public class IndexServiceImpl implements IndexService {
     //查询结果数量
     @Override
     public Integer Interlocking_get_result_total(String deptName, String route, String zone, String equip, String part, String content, String startTime,
-                                                 String endTime,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,String wjCheck) {
-        return interlockingMapper.Interlocking_get_result1_total(deptName,route,zone,equip,part,content,startTime,endTime ,zcCheck,bjCheck, bjType1, bjType2, bjType3,wjCheck);
+                                                 String endTime,String zcCheck,String bjCheck,String bjType1,String bjType2,String bjType3,String wjCheck,String dealStatus) {
+        return interlockingMapper.Interlocking_get_result1_total(deptName,route,zone,equip,part,content,startTime,endTime ,zcCheck,bjCheck, bjType1, bjType2, bjType3,wjCheck,dealStatus);
     }
-
+    //查询结果数量
+    @Override
+    public Integer Interlocking_get_result_total1(String deptName, String route, String zone, String equip, String part, String content, String startTime,
+                                                 String endTime,String yjCheck,String wjCheck,String zcCheck,String bjCheck,
+                                                  String abjType1,String abjType2,String abjType3,String sbjType1,String sbjType2,String sbjType3) {
+        return interlockingMapper.Interlocking_get_result1_total1(deptName,route,zone,equip,part,content,startTime,endTime ,yjCheck,wjCheck,zcCheck,bjCheck,abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3);
+    }
 
     @Resource
     private MaintenanceMapper maintenanceMapper;
@@ -1458,16 +1482,41 @@ public class IndexServiceImpl implements IndexService {
     }
 
     @Override
-    public Integer Interlocking_changeAlarmType(String resultId, String alarmType, String userName,String selectDepart) {
-//        System.out.println(resultId+"=="+alarmType+"=="+userName+"=="+selectDepart);
-        return interlockingMapper.Interlocking_changeAlarmType(resultId,alarmType,userName,selectDepart);
+    public Integer Interlocking_changeAlarmType(String resultId, String alarmType, String operationName,String selectDepart,String responsibleUser) {
+        return interlockingMapper.Interlocking_changeAlarmType(resultId,alarmType,operationName,selectDepart,responsibleUser);
     }
-
+//获取resultid下的数据
     @Override
     public List<Interlocking> Interlocking_get_byId_result(String resultId) {
         return interlockingMapper.Interlocking_get_byId_result(resultId);
     }
 
+    //  查询alarmResult表中是否有相同数据
+    @Override
+    public List<Interlocking> searchAlarmResultDataByInfo(String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String remark,String alarmType){
+            return interlockingMapper.searchAlarmResultDataByInfo(deptName,routeName,zoneName,devName,scPart,scContent,remark,alarmType);
+    };
+
+    //  数据合并，增加次数
+    @Override
+    public  Integer updateAlarmResultTimes(String alarmId,String alarmTimes,String depart,String user,String alarmType,String startDate,String endDate,String resultIds){
+            return interlockingMapper.updateAlarmResultTimes(alarmId,alarmTimes, depart, user, alarmType, startDate, endDate, resultIds);
+    };
+
+    //向alarm_result 添加数据(原无数据)
+    @Override
+    public  Integer insertBCAlarmDataToAlarmResult(String resultId,String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String remark,
+                                           String spotResult,String userName1,String uploadResultTime,String selectDepart,String alarmType,String user){
+        return interlockingMapper.insertBCAlarmDataToAlarmResult(resultId,deptName,routeName,zoneName,devName,scPart,scContent,remark,
+                spotResult,userName1,uploadResultTime,selectDepart,alarmType,user);
+    };
+    //向alarm_result 添加数据(原有数据)
+    @Override
+    public Integer insertBCAlarmDataToAlarmResult1(String resultId,String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String remark,
+                                            String spotResult,String userName1,String uploadResultTime,String selectDepart,String alarmType,String user,String pid){
+        return interlockingMapper.insertBCAlarmDataToAlarmResult1(resultId,deptName,routeName,zoneName,devName,scPart,scContent,remark,
+                spotResult,userName1,uploadResultTime,selectDepart,alarmType,user,pid);
+    };
     @Override
     public List<Interlocking> Interlocking_get_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String stdValue, String altpid) {
         return interlockingMapper.Interlocking_get_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,stdValue,altpid);
@@ -1484,14 +1533,172 @@ public class IndexServiceImpl implements IndexService {
     }
 
     @Override
-    public Integer Interlocking_update_alarm_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String alarm_manage) {
-        return interlockingMapper.Interlocking_update_alarm_result(deptName,routeName,zoneName,devName,scPart,scContent,alarm_manage);
+    public Integer Interlocking_update_alarm_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String alarm_manage,String alarm_type) {
+        return interlockingMapper.Interlocking_update_alarm_result(deptName,routeName,zoneName,devName,scPart,scContent,alarm_manage,alarm_type);
     }
 //更新报警处理责任人
     @Override
     public Integer Interlocking_update_alarm_liable(String resultId, String liable) {
         return interlockingMapper.Interlocking_update_alarm_liable(resultId,liable);
     }
+    //   根据用户id查询所在工段
+    @Override
+    public List<Interlocking> search_dxj_dept_id(String userId) {
+        return interlockingMapper.search_dxj_dept_id(userId);
+    }
+
+//    根据resultID查询报警处理内容
+    @Override
+    public  List<AlarmDealData> get_alarm_deal_data(String resultId){
+        return interlockingMapper.get_alarm_deal_data(resultId);
+    }
+//    根据条件查询报警处理内容
+    @Override
+    public  List<AlarmDealData> get_repair_data(String dateStart,String dateEnd,String depart,String technology){
+        return interlockingMapper.get_repair_data(dateStart,dateEnd, depart, technology);
+    }
+
+//    根据resultID查询报警处理自动填写内容
+    @Override
+    public  List<AlarmDealData> getWriteDefaultDealData(String resultID){
+        return interlockingMapper.getWriteDefaultDealData(resultID);
+    }
+
+//    获取bc类报警数据
+    @Override
+    public List<Interlocking> getbcAlarmData(String start_date,String end_date,String deptName,String alarm_type){
+        return interlockingMapper.getbcAlarmData( start_date, end_date, deptName, alarm_type);
+    };
+
+//    添加数据到月度报警清单
+    @Override
+    public Integer addAlarmToMonthlyList(String mergeId){
+        return interlockingMapper.addAlarmToMonthlyList( mergeId);
+    };
+
+//    获取月度报警清单
+    @Override
+    public List<Interlocking> getbcMonthlyAlarmListData(String deptName){
+        return interlockingMapper.getbcMonthlyAlarmListData(deptName);
+    };
+
+//    处理BC类报警
+    @Override
+    public Integer dealBCAlarm(String alarmId,String dealRemark,String user){
+        return interlockingMapper.dealBCAlarm( alarmId,dealRemark,user);
+    };
+
+//    延期bc类报警
+    @Override
+    public Integer delayBCAlarm(String alarmIds,String dealRemark){
+        return interlockingMapper.delayBCAlarm(alarmIds,dealRemark);
+    };
+
+
+//    修改bc类报警类型
+    @Override
+    public Integer changeBCAlarmType(String alarmIds,String resultIds,String deptName,String alarmType,String personLiable){
+        Integer integer = interlockingMapper.changeBCAlarmTypeAlarm(alarmIds, deptName, alarmType, personLiable);
+        Integer integer1 = interlockingMapper.changeBCAlarmTypeResult(resultIds, deptName, alarmType, personLiable);
+        int returnResult=0;
+        if (integer>0 &&integer1>0){
+            returnResult=1;
+        }
+        return returnResult;
+
+    };
+
+//    合并报警数据
+    @Override
+    public Integer mergeBCAlarmNum(String alarmId, String mergeIds){
+        return interlockingMapper.mergeBCAlarmNum( alarmId,mergeIds);
+    };
+    //    合并报警数据
+    @Override
+    public Integer mergeBCAlarmData(String alarmId,String resultIds,String times,String startTime,String endTime){
+        return interlockingMapper.mergeBCAlarmData(alarmId,resultIds,times, startTime, endTime);
+    };
+    //    删除合并报警其他数据
+    @Override
+    public Integer updateDeleteAlarmData(String alarmId, String mergeIds){
+        return interlockingMapper.updateDeleteAlarmData( alarmId,mergeIds);
+    };
+    //    更新合并报警后数据
+    @Override
+    public Integer updateAlarmData(String alarmId, String deleteAlarmNum){
+        return interlockingMapper.updateAlarmData( alarmId,deleteAlarmNum);
+    };
+
+
+    //    获取处理BC类报警内容
+    @Override
+    public List<Interlocking> getbcAlarmContent(String alarmId){
+        return interlockingMapper.getbcAlarmContent( alarmId);
+    };
+    //     获取处理alarm表中id的resultId
+    @Override
+    public List<Interlocking> getbcAlarmDataResultId(String alarmIds){
+        return interlockingMapper.getbcAlarmDataResultId(alarmIds);
+    };
+    //    根据resultId处理result表中BC类报警
+    @Override
+    public  Integer dealBCAlarmInResult(String resultId,String dealRemark,String user){
+        return interlockingMapper.dealBCAlarmInResult(resultId, dealRemark, user);
+    };
+    //        获取报警处理责任人
+    @Override
+    public List<ConfigUser> getPersonLiableByDepart(String alarm_after_Type,String departs){
+        return interlockingMapper.getPersonLiableByDepart( alarm_after_Type,departs);
+    };
+//    修改bc类报警类型
+    @Override
+    public  Integer updateResultChangeAlarmTypeByDetailed(String deptName,String routeName,String zoneName,String devName,
+                                                         String scPart,String scContent,String uploadResultTime,String user,String departs,String alarmType){
+        return interlockingMapper.updateResultChangeAlarmTypeByDetailed( deptName, routeName, zoneName, devName, scPart, scContent, uploadResultTime, user,departs,alarmType);
+    };
+//    处理BC类报警
+    @Override
+    public  Integer updateResultDealDataByDetailed(String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String uploadResultTime,String user){
+        return interlockingMapper.updateResultDealDataByDetailed(  deptName, routeName, zoneName, devName, scPart, scContent, uploadResultTime, user);
+    };
+//    报警处理单填写内容
+    @Override
+    public  Integer writeDealData(String result_id,String service_id,String dev_code,String service_start_date,String service_end_date,
+                                              String service_hours,String dev_name,String dev_model,String dev_dept,String dev_category,String service_unit_type,
+                                              String service_unit,String alarm_type,String alarm_name,String alarm_time,String alarm_content,
+                                              String service_name,String service_acceptor,String service_content,String service_alarm_time,String service_remarks){
+        return interlockingMapper.writeDealData(result_id, service_id, dev_code, service_start_date,service_end_date,
+                 service_hours, dev_name, dev_model, dev_dept, dev_category, service_unit_type,
+                 service_unit, alarm_type, alarm_name, alarm_time, alarm_content,
+                 service_name, service_acceptor, service_content, service_alarm_time, service_remarks);
+    }
+//    报警处理单修改内容
+    @Override
+    public  Integer updateDealData(String result_id,String service_id,String service_start_date,String service_end_date,
+                                  String service_hours,String service_unit_type, String service_unit,
+                                  String service_name,String service_acceptor,String service_content,String service_alarm_time,String service_remarks){
+        return interlockingMapper.updateDealData(result_id, service_id, service_start_date,service_end_date, service_hours,service_unit_type, service_unit,
+                service_name, service_acceptor, service_content, service_alarm_time, service_remarks);
+    }
+
+//    报警处理result表数据
+@Override
+    public  Integer updateResultDealData(String result_id,String alarm_flag, String alarm_remark, String alarm_manage_name, String alarm_manage_time){
+        return interlockingMapper.updateResultDealData(result_id, alarm_flag,alarm_remark,alarm_manage_name,alarm_manage_time);
+    }
+
+
+
+    //      获取报警处理单当天的数量
+    @Override
+    public List<AlarmDealData> getDeptSameDayDealData(String dept_name){
+        return  interlockingMapper.getDeptSameDayDealData(dept_name);
+    };
+
+//    获取是否有处理报警的权限
+    public List<ConfigUser> getAlarmDealJurisdiction(String dev_depart,String userid,String alarm_type){
+        return  interlockingMapper.getAlarmDealJurisdiction(dev_depart, userid, alarm_type);
+    };
 
     //    =======================app测试==================================
     @Resource
@@ -1578,13 +1785,11 @@ public class IndexServiceImpl implements IndexService {
     private AppConfigMapper appConfigMapper;
     @Override
     public Integer app_config_set_station(String deptName, String station, String routeName) {
-        System.out.println("tianjia ::"+deptName+"=="+routeName+"=="+station);
         return appConfigMapper.app_config_set_station(deptName,station,routeName);
     }
 
     @Override
     public Integer app_config_update_station(String deptName, String station, String routeName) {
-        System.out.println("xiugai ++++"+deptName+"=="+routeName+"=="+station);
         return appConfigMapper.app_config_update_station(deptName,station,routeName);
     }
 
@@ -1621,7 +1826,6 @@ public class IndexServiceImpl implements IndexService {
 
     @Override
     public List<APPUserConfig> app_config_select_station_user(String deptName, String station, String team,  String userId) {
-        System.out.println(deptName+"=="+team+"=="+station+"==="+userId);
         return appConfigMapper.app_config_select_station_user(deptName,station,team,userId);
     }
 
@@ -1744,5 +1948,28 @@ public class IndexServiceImpl implements IndexService {
     public List<Interlocking> search_config_userChange_permission(String userId) {
         return interlockingMapper.search_config_userChange_permission(userId);
     }
+    //通过alarmid获取resultid
+    @Override
+    public  List<Interlocking> get_resultId_alarmid(String alarmId){
+        return interlockingMapper.get_resultId_alarmid(alarmId);
+    };
+    //   删除alarmResult数据
+    @Override
+    public  Integer delete_alarm_result_by_alarmId(String alarmId){
+        return interlockingMapper.delete_alarm_result_by_alarmId(alarmId);
+    };
+
+//    获取配置参数
+    @Override
+    public  List<Config> getConfigData(){
+        return interlockingMapper.getConfigData();
+    };
+//    修改配置参数
+    @Override
+    public Integer setConfigData(String alarm_list_start,String alarm_list_end,String alarm_c_deal_start,String alarm_c_deal_end,String alarm_tips_time){
+        return interlockingMapper.setConfigData(alarm_list_start, alarm_list_end,alarm_c_deal_start,alarm_c_deal_end,alarm_tips_time);
+    };
+
+
 
 }

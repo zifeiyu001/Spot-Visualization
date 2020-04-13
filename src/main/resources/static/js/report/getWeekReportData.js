@@ -86,11 +86,6 @@ function zhouchaxun(workshop,team,equip,startTime,endTime){
 
                 equipCode(workshop,team,equip);
             }
-
-
-
-
-
             for(var c=0;c<data.length;c++){
                     if((c+1)%9!=0 ){
                        tableData += '<td  style="background-color: lightcyan ;border: 1px solid; text-align: center;width: 10%;">'
@@ -98,8 +93,9 @@ function zhouchaxun(workshop,team,equip,startTime,endTime){
                         tableData1 += '<td  style="border: 1px solid; text-align: center;">'
                             + data[c].altpid + '</td>';
                         if(c==data.length-1){
-                            var alarm_title= '<tr><td style="background-color: lightcyan ;border: 1px solid; text-align: center;">设备名称</td>'+tableData+'</tr>';
 
+
+                            var alarm_title= '<tr><td style="background-color: lightcyan ;border: 1px solid; text-align: center;">设备名称</td>'+tableData+'</tr>';
                             var alarm_content= '<tr><td style="background-color: lightcyan ;border: 1px solid; text-align: center;">报警次数</td>'+tableData1+'</tr>';
                             var alarm_run=alarm_title+alarm_content;
                             $('#run').append(alarm_run);
@@ -107,7 +103,7 @@ function zhouchaxun(workshop,team,equip,startTime,endTime){
                             var tableData1='';
                         }
                     }
-                    else {
+                    else  {
                         tableData += '<td  style="background-color: lightcyan ;border: 1px solid; text-align: center;width: 10%;">'
                             + data[c].equipName + '</td>';
                         tableData1 += '<td  style="border: 1px solid; text-align: center;">'
@@ -119,6 +115,7 @@ function zhouchaxun(workshop,team,equip,startTime,endTime){
                         var tableData='';
                         var tableData1='';
                     }
+
             }
 
 

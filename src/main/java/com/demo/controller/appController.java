@@ -63,7 +63,7 @@ public class appController {
                 resultJson.setMsg("登录成功！！！");
                 resultJson.setCode(StatusCode.SUCCESS.getCode());
                 AppLoginUser appLoginUser = appLoginUsers.get(0);
-                System.out.println(appLoginUser.getUserName() + "" + appLoginUser.getDeptName());
+//                System.out.println(appLoginUser.getUserName() + "" + appLoginUser.getDeptName());
                 resultJson.setData(appLoginUsers);
             } else {
                 resultJson.setMsg("用户不存在或密码错误！");
@@ -77,7 +77,7 @@ public class appController {
     @RequestMapping(value = "/app/accessjjb", method = RequestMethod.POST)
     @ResponseBody
     public ResultJson appLoginwa(@RequestBody Map<String, String> params) throws ParseException {
-        System.out.println("==============================");
+//        System.out.println("==============================");
         ResultJson resultJson = new ResultJson();
         String userId = params.get("userName");
         List<AppScheduling> appSchedulings = indexService.app_get_team_scheduling();   //获取多有的班次信息
@@ -97,7 +97,7 @@ public class appController {
         calendar.add(calendar.DATE,l); //根据相差的天数，在排班时间上添加相应的天数
         Date time = calendar.getTime();
         String format = dateFormat.format(time); // 对照存储时间的日期
-        System.out.println(nowDateRealS+"===="+l+"==="+format);
+//        System.out.println(nowDateRealS+"===="+l+"==="+format);
 //        String nowTimeReal = timeFormat.format(new Date()); //当前时间
 
         Date nowDateTime1=dateTimeFormat.parse(format+" "+nowTime11);// 当前日期时间
@@ -126,7 +126,7 @@ public class appController {
 //               String teamName = appSchedulings.get(a + 1).getTeamName();
                 teamId = appSchedulings.get(a+1).getTeamId();
 
-                System.out.println("teamId====="+teamId+"===--------=="+a);
+//                System.out.println("teamId====="+teamId+"===--------=="+a);
                 Date date = appSchedulings.get(a).getdTime(); //当班开始时间
                 Date date4 = appSchedulings.get(a+1).getdTime(); //当班结束时间
                 String format1 = dateFormat.format(date4); //结束
@@ -156,7 +156,7 @@ public class appController {
         if (appUserConfigs.size()>0){
             String team = appUserConfigs.get(0).getTeam();
             if (teamId.equals(team)){
-                System.out.println("teamId======="+teamId+"==="+team);
+//                System.out.println("teamId======="+teamId+"==="+team);
                 APPUserConfig appUserConfig = appUserConfigs.get(0);
                 appUserConfig.setStartTime(startTime);
                 appUserConfig.setEndTime(endTime);
@@ -195,7 +195,7 @@ public class appController {
         List<AppCycle> loginUsersCycle = indexService.app_user_getCycle(userName);
         // 当前日期与周期开始日期的差值
         int cycleDays = Integer.parseInt(loginUsersCycle.get(0).getCycleDays());
-        System.out.println(cycleDays);
+//        System.out.println(cycleDays);
         // 判断是否为生产人员
         if (cycleDays == 4) {
             startDate = loginUsersCycle.get(0).getStartDate();
@@ -204,16 +204,16 @@ public class appController {
             String[] split = startDate.split("-");
             // 周期开启日期
             LocalDate of = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
-            System.out.println(of);
+//            System.out.println(of);
             int days = (int) ChronoUnit.DAYS.between(of, to);
             int cycleDate = days % cycleDays;
-            System.out.println(days + "=========" + cycleDays + "============" + cycleDate);
+//            System.out.println(days + "=========" + cycleDays + "============" + cycleDate);
             //计算周期内日期
             cycleContentDate = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]) + cycleDate);
-            System.out.println("cycleContentDate：" + cycleContentDate);
+//            System.out.println("cycleContentDate：" + cycleContentDate);
             // 获取人员信息
             List<AppLoginUser> appLoginUsers = indexService.app_user_login(userName, cycleContentDate.toString());
-            System.out.println(appLoginUsers.get(0).getUserName());
+//            System.out.println(appLoginUsers.get(0).getUserName());
 //                System.out.println(appLoginUsers.get(0).getMeta());
             // 设定时间格式
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -285,7 +285,7 @@ public class appController {
     @RequestMapping(value = "/app/handoverData", method = RequestMethod.POST)
     @ResponseBody
     public ResultJson handoverData(@RequestBody JSONArray params) {
-        System.out.println("开始交班");
+//        System.out.println("开始交班");
         ResultJson resultJson = new ResultJson();
 //        获取json第一条数据，交接班内容
         JSONObject jsonObj1 = params.getJSONObject(0);
@@ -503,7 +503,7 @@ public class appController {
         String metaStartTime = params.get("startTime");
         String metaEndTime = params.get("endTime");
 //        int meta = Integer.parseInt(params.get("meta"));//meta值
-        System.out.println(deptName + "==" + job + "==" + metaStartTime + "=="+metaEndTime);
+//        System.out.println(deptName + "==" + job + "==" + metaStartTime + "=="+metaEndTime);
         // 获取当前的 时
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
@@ -513,7 +513,7 @@ public class appController {
         List<AppReport> jobRoute = getJobRoute(deptName, job);
         for (int a=0;a<jobRoute.size();a++){
             String route_name = jobRoute.get(a).getROUTE_NAME();
-            System.out.println(route_name);
+//            System.out.println(route_name);
             appReports=indexService.App_Spot_Result(deptName,route_name,metaStartTime,metaEndTime);
         }
         resultJson.setMsg("正常！！！");
@@ -540,7 +540,7 @@ public class appController {
         String meta="";
         if (hour==8){meta="2";}
         else {meta="1";}
-        System.out.println(job + "====" + meta);
+//        System.out.println(job + "====" + meta);
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
         if (job.equals("磨矿岗")) {
             //获取每个磨机的dcs数据
@@ -614,28 +614,52 @@ public class appController {
         String endTime = params.get("endTime");
         if (job.equals("磨矿岗")) {
             List<AppDCS> bzmj = indexService.app_jjb_getRunTimeField("bzmj");
-            for (int a = 0; a < bzmj.size(); a++) {
-                HashMap<Object, Object> hashMap1 = new HashMap<>();
-                Double equipRunTime = getEquipRunTime(bzmj.get(a).getVariable(), startTime,endTime);
-                hashMap1.put("description", bzmj.get(a).getDescription());
-                hashMap1.put("value", equipRunTime);
-                hashMap1.put("unit", "h");
-                mMenuData1.add(hashMap1);
+//            for (int a = 0; a < bzmj.size(); a++) {
+//                HashMap<Object, Object> hashMap1 = new HashMap<>();
+//                Double equipRunTime = getEquipRunTime(bzmj.get(a).getVariable(), startTime,endTime);
+//                hashMap1.put("description", bzmj.get(a).getDescription());
+//                hashMap1.put("value", equipRunTime);
+//                hashMap1.put("unit", "h");
+//                mMenuData1.add(hashMap1);
+//            }
+            for(AppDCS a:bzmj){
+                HashMap<Object, Object> hashMap2 = new HashMap<>();
+                Double equipRunTime1 = getEquipRunTime(a.getVariable(), startTime,endTime);
+                hashMap2.put("description",a.getDescription());
+                hashMap2.put("value", equipRunTime1);
+                hashMap2.put("unit", "h");
+                mMenuData2.add(hashMap2);
             }
             List<AppDCS> zmj = indexService.app_jjb_getRunTimeField("zmj");
-            for (int b = 0; b < zmj.size(); b++) {
+//            for (int b = 0; b < zmj.size(); b++) {
+//                HashMap<Object, Object> hashMap2 = new HashMap<>();
+//                Double equipRunTime1 = getEquipRunTime(zmj.get(b).getVariable(), startTime,endTime);
+//                hashMap2.put("description", zmj.get(b).getDescription());
+//                hashMap2.put("value", equipRunTime1);
+//                hashMap2.put("unit", "h");
+//                mMenuData2.add(hashMap2);
+//            }
+            for (AppDCS b:zmj){
                 HashMap<Object, Object> hashMap2 = new HashMap<>();
-                Double equipRunTime1 = getEquipRunTime(zmj.get(b).getVariable(), startTime,endTime);
-                hashMap2.put("description", zmj.get(b).getDescription());
+                Double equipRunTime1 = getEquipRunTime(b.getVariable(), startTime,endTime);
+                hashMap2.put("description", b.getDescription());
                 hashMap2.put("value", equipRunTime1);
                 hashMap2.put("unit", "h");
                 mMenuData2.add(hashMap2);
             }
             List<AppDCS> qmj = indexService.app_jjb_getRunTimeField("qmj");
-            for (int c = 0; c < qmj.size(); c++) {
+//            for (int c = 0; c < qmj.size(); c++) {
+//                HashMap<Object, Object> hashMap3 = new HashMap<>();
+//                Double equipRunTime2 = getEquipRunTime(qmj.get(c).getVariable(),startTime,endTime);
+//                hashMap3.put("description", qmj.get(c).getDescription());
+//                hashMap3.put("value", equipRunTime2);
+//                hashMap3.put("unit", "h");
+//                mMenuData3.add(hashMap3);
+//            }
+            for (AppDCS c:qmj){
                 HashMap<Object, Object> hashMap3 = new HashMap<>();
-                Double equipRunTime2 = getEquipRunTime(qmj.get(c).getVariable(),startTime,endTime);
-                hashMap3.put("description", qmj.get(c).getDescription());
+                Double equipRunTime2 = getEquipRunTime(c.getVariable(),startTime,endTime);
+                hashMap3.put("description", c.getDescription());
                 hashMap3.put("value", equipRunTime2);
                 hashMap3.put("unit", "h");
                 mMenuData3.add(hashMap3);
@@ -766,7 +790,6 @@ public class appController {
 
     // 获取设备的运行时长
     double hour = 0.0;
-
     public Double getEquipRunTime(String tagname, String startTime,String endTime) throws ParseException {
         String s = "";
         double lastValue = 0.0;
@@ -985,7 +1008,7 @@ public class appController {
     public ResultJson appConfigGetTeam(@RequestBody Map<String, String> params) {
         ResultJson resultJson = new ResultJson();
         String deptName = params.get("deptName"); // 工段名称
-        System.out.println(deptName);
+//        System.out.println(deptName);
         List<APPUserConfig> appUserConfigs = indexService.app_config_getJob_user(deptName);
         resultJson.setData(appUserConfigs);
         return resultJson;

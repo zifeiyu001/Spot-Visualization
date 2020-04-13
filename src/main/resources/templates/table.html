@@ -4,104 +4,191 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>html2canvas example</title>
-
-	<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script> 
+    <title>test</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <style>
+        .cell1{border: 1px solid; font-size: 16px;width: 16.6%;font-weight:600;line-height: 35px}
+        .cell2{border: 1px solid; font-size: 14px;width: 16.6%;line-height: 35px}
+        #deal_modal_cover{
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #2222226e;
+            min-width: 800px;
+            }
+            #deal_modal{
+                position: absolute;
+                width: 60%;
+                height: 80%;
+                margin-top: 5%;
+                min-width: 800px;
+                min-height: 600px;
+                /* left: 10%; */
+                margin-left: 20%;
+                background: #fff;
+                border: 1px solid #ddd;
+            }
+            #deal_modal_top{
+                width: 50%;
+                height: 0px;
+                margin-top: 1%;
+                margin-left: 49%;
+                position: relative;
+                color: red;
+                font-size: 20px;
+            }
+            #deal_modal_content{
+                position: relative;
+                width: 498px;
+                height: 380px;
+            }
+            #deal_modal_close{
+                position: absolute;
+                right: 0px;
+                top: 6px;
+                display: block;
+                width:40px;
+                height: 19px;
+                cursor: pointer;
+            }
+</style>
 </head>
 <body>
-<div id="table_wrapper">
- <table bordercolor="black" class="tableA">
-    <tr class="title">
-      <th colspan="4">学生信息</th>
-    </tr>
-    <tr>
-      <th>名字</th>
-      <th>性别</th>
-      <th>年龄</th>
-      <th>班级</th>
-    </tr>
-    <tr>
-      <td>张三</td>
-      <td>男</td>
-      <td>19</td>
-      <td>1班</td>
-    </tr>
-    <tr>
-      <td>李四</td>
-      <td>男</td>
-      <td>20</td>
-      <td>2班</td>
-    </tr>
-    <tr>
-      <td>王五</td>
-      <td>男</td>
-      <td>21</td>
-      <td>3班</td>
-    </tr>
-    <tr class="footer">
-      <td colspan="4">总人数：3人</td>
-    </tr>
-  </table>
-</div>
+    <div style="width: 1700px;height: 300px;background-color: #00FFFF ;" onclick="opendeal_modal()"></div>
+    <div style="width: 1700px;height: 300px;background-color: #459cff ;" onclick="closedeal_modal()"></div>
+    <div id="deal_modal_cover" >
+        <div id="deal_modal">
+            <div id="deal_modal_top">
+                <a id="deal_modal_close" onclick="closedeal_modal();">关闭</a>
+            </div>
+            <table cellpadding="0" cellspacing="0"   style="width: 90%; line-height: 20px; border: 2px solid ;    margin-left: 5%;
+                    margin-top: 5%; ;text-align: center">
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<td colspan="6" style="font-size: 25px;line-height: 40px !important;font-weight: 600" onclick="data()">点巡检系统故障报警处理单</td>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <caption style="font-size: 25px;line-height: 40px !important;font-weight: 600" onclick="getDealData()">点巡检系统故障报警处理单</caption>
+                <tbody>
+                <tr>
+                    <td  class="cell1">设备编码</td>
+                    <td  class="cell2" id="equip-cod"></td>
+                    <td  class="cell1">维修日期</td>
+                    <td  class="cell2" id="repair-day" ></td>
+                    <td  class="cell1">维修时间</td>
+                    <td  class="cell2" id="repair-time"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1">设备名称</td>
+                    <td  class="cell2" id="equip-name"></td>
+                    <td  class="cell1">规格型号</td>
+                    <td  class="cell2" id="equip-model"></td>
+                    <td  class="cell1">所属工段</td>
+                    <td  class="cell2" id="deptName"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1">类别</td>
+                    <td  class="cell2" id="technology"></td>
+                    <td  class="cell1">维修单位</td>
+                    <td  class="cell2" id="repair-depart1" ></td>
+                    <td  class="cell2" colspan="2" id="repair-depart2"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1">报警类别</td>
+                    <td  class="cell2" id="repair-type"></td>
+                    <td  class="cell1">点检人</td>
+                    <td  class="cell2" id="spot-name"></td>
+                    <td  class="cell1">点检时间</td>
+                    <td  class="cell2" id="spot-time"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1">报警内容</td>
+                    <td  class="cell2" colspan="5" id="alarm-content"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1">维修人员</td>
+                    <td  class="cell2" colspan="5" id="repair-name"></td>
+                </tr>
+                <tr  >
+                    <td  class="cell1" >维修内容</td>
+                    <td  class="cell2"  colspan="5" id="repair-content" style="line-height: 30px"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1" >处理人</td>
+                    <td  class="cell2" colspan="2" id="deal-name"></td>
+                    <td  class="cell1">处理时间</td>
+                    <td  class="cell2" colspan="2" id="deal-time"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1">材料、备件</td>
+                    <td  class="cell2" colspan="5" id="material"></td>
+                </tr>
+                <tr>
+                    <td  class="cell1">备注</td>
+                    <td  class="cell2" colspan="5" id="remark"></td>
+                </tr>
+                </tbody>
 
-<a id="down-file" href="#">点击下载文件</a>
+            </table>
+        </div>
+    </div>
+<script>
+    function closedeal_modal(){
+        document.getElementById("deal_modal_cover").style.display="none";
+    }
+    function opendeal_modal(){
+        // spotId=param1;
+        // spotPart=param2;
+        // alert(param1+"========="+param2);
+
+        document.getElementById("deal_modal_cover").style.display = "block";
+    }
+    function getDealData(){
+    //     设备编码
+        $("#equip-cod").text("cod-222");
+    //    维修日期
+        $("#repair-day").text("2019-55");
+    //    维修时间
+        $("#repair-time").text("55");
+    //   设备名称
+        $("#equip-name").text("鼓风机");
+    //    规格型号
+        $("#equip-model").text("djjiedc");
+    //    所属工段
+        $("#deptName").text("磨浮工段");
+    //    类别
+        $("#technology").text("设备");
+    //    维修单位1
+        $("#repair-depart1").text("委外");
+    //    维修单位2
+        $("#repair-depart2").text("北矿智云");
+    //     报警类别
+        $("#repair-type").text("A类");
+    //    点检人
+        $("#spot-name").text("周强");
+    //    点检时间
+        $("#spot-time").text("2019-22-15 22::22:22");
+    //  报警内容
+        $("#alarm-content").text("g故障");
+    //    维修人员
+        $("#repair-name").text("桂军");
+    //    维修内容
+        $("#repair-content").text("加油j讲解讲解军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军军");
+    //  处理人
+        $("#deal-name").text("桂军测试");
+    //    处理时间
+        $("#deal-time").text("2019-22-22");
+    //    材料、备件
+        $("#material").text("无");
+    //    备注
+        $("#remark").text("处理完成");
+
+    }
+</script>
 
 
 </body>
-<script type="text/javascript">
-window.onload = function() {
-  var oTable = document.getElementById("table_wrapper").innerHTML;
-  var excelHtml = `
-      <html>
-      <head>
-        <meta charset='utf-8' />
-        <style>
-          .tableA {
-            border-collapse: collapse;
-          }
-          .tableA .title th{
-            height: 50px;
-            font-size: 24px;
-            font-family: '微软雅黑';
-            font-weight: 700;
-          }
-          .tableA tr th {
-            border: 1px #000 solid;
-            height: 40px;
-            background: #efefef;
-          }
-          .tableA tr td {
-            padding: 0 40px;
-            border: 1px #000 solid;
-            height: 40px;
-            text-align: center;
-          }
-          .tableA .footer td {
-            font-size: 20px;
-            font-weight: 700;
-          }
-        </style>
-      </head>
-      <body>
-        ${oTable}
-      </body>
-    </html>
-  `;
-
-  // 创建 Blob 对象
-  var excelBlob = new Blob([excelHtml], { type: "application/vnd.ms-excel" });
-  var oA = document.getElementById("down-file");
-  
-  // 会产生一个类似blob:d3958f5c-0777-0845-9dcf-2cb28783acaf 这样的 URL 字符串
-  // 这里 URL.createObjectURL(excelBlob) 会创建一个URL 的 Blob 对象
-  oA.href = URL.createObjectURL(excelBlob);
-  oA.download = "test.xls";
-
-  oA.click = function() {
-    this.click();
-  };
-};
-
-</script>
-
 </html>

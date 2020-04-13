@@ -33,7 +33,6 @@ public class ReportController {
         String equip = params.get("equip");
         String time = params.get("time");
         String duty = params.get("duty_name");
-//        System.out.println(workshop+"=="+team+"++"+equip+"++"+time+"=="+duty);
         List<Report>    spotData = indexService.REPORT_SB_SPOT_LIST(workshop,team, equip, time,duty);    // 点检统计数据
         List<Report>  dealData= indexService.REPORT_SB_DEAL_LIST(workshop,team, equip, time,duty);      //报警处理数据
 
@@ -179,7 +178,6 @@ public class ReportController {
                     }
                     else {
                         List<Report> equipRun = indexService.REPORT_SC_SK_SHG_RUN_LIST(team, equip, time, duty);//石灰岗运行状况数据
-
                         map.put("equipRun", equipRun);
                     }
                 }

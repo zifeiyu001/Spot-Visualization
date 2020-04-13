@@ -304,7 +304,7 @@
         </div>
     </div>
 </div>
-<script src="/js/process/index.js"></script>
+<script src="/js/process/index-1.0.0.js"></script>
 <script src="/js/utils/choosePath.js"></script>
 <script src="/js/utils/alarmTable.js"></script>
 </body>

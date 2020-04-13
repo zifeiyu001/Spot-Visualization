@@ -46,7 +46,7 @@
 
 </head>
 <body>
-<div class="htmleaf-container">
+<div class="htmleaf-container" style="overflow: auto;height: 100%">
     <header class="htmleaf-header bgcolor-12">
         <!-- h1>城门山铜矿数据中心<span>Bootstrap Tree View</span></h1 -->
         <!-- 网页头部画面 -->
@@ -116,24 +116,21 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<#--================报表内容=====================-->
-    <div class="report" id="sbReport"  style="    margin-left: 10%;margin-right: 10%;" >
+        <#--================报表内容=====================-->
+        <div class="report" id="sbReport"  style="    margin-left: 10%;margin-right: 10%;" >
 
             <table class="table tableStyles" id="tables" >
 
                 <#--================表格表头=====================-->
-                <thead class="equipParam">
+                    <thead class="equipParam">
                     <tr>
                         <th colspan="10" id="titleName" style="font-size: 18px !important;border: 1px solid ;font-size: 16px">设备周期报表</th>
                     </tr>
                     <tr id="biaoti">
                     </tr>
-                </thead>
+                    </thead>
                 <#--================点检统计=====================-->
-                <tbody class="spot">
+                    <tbody class="spot">
                     <tr>
                         <th colspan="10"  style="background-color: #3ab8ee;border: 1px solid ;font-size: 16px">点检统计</th>
                     </tr>
@@ -154,15 +151,15 @@
                         <th   style="background-color: lightcyan ;border: 1px solid ;width: 10%;">数量</th>
                         <th   style="background-color: lightcyan ;border: 1px solid ;width: 10%;">比例（%）</th>
                     </tr>
-                </tbody>
+                    </tbody>
                 <#--================设备运行情况=====================-->
-                <tbody id="run">
+                    <tbody id="run">
                     <tr>
                         <th colspan="10"  style="background-color: #3ab8ee;border: 1px solid ;font-size: 16px">设备运行情况</th>
                     </tr>
-                </tbody >
+                    </tbody >
                 <#--================设备故障处理=====================-->
-                <tbody  id="fault">
+                    <tbody  id="fault">
                     <tr>
                         <th colspan="10"  style="background-color: #3ab8ee;border: 1px solid ;font-size: 16px">设备故障处理</th>
                     </tr>
@@ -175,15 +172,19 @@
                         <th colspan="1"  style="background-color: lightcyan ;border: 1px solid ;">处理人</th>
                         <th colspan="1"  style="background-color: lightcyan ;border: 1px solid ;">处理时间</th>
                     </tr>
-                </tbody>
+                    </tbody>
                 <#--================表格底部=====================-->
                 <tfoot class="conclusion">
-                    <tr style="text-align: center" id="footTable"></tr>
+                <tr style="text-align: center" id="footTable"></tr>
                 </tfoot>
             </table>
+        </div>
     </div>
+</div>
+
+
 <script src="/js/report/chooseEquip.js"></script>
-<script src="/js/report/getWeekReportData1.js"></script>
+<script src="/js/report/getWeekReportData-1.0.0.js"></script>
 <script src="/js/report/reportDownload.js"></script>
 </body>
 </html>

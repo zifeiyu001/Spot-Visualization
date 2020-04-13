@@ -1,5 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/html">
+<#-------------判断是否保存session---------------->
+<#if Session.username??>
+<script>
+    var username="${Session.username}";
+</script>
+<#else >
+<script>
+    var username="";
+</script>
+</#if>
 <head>
 
 <link rel="stylesheet" href="/css/css/bootstrap.css">
@@ -24,32 +34,33 @@
         }
         #modal_cover{
             display: none;
-            width: 30%;
-            height: 40%;
+            width: 100%;
+            height: 100%;
             position: fixed;
-            left: 37%;
-            top: 19%;
-            /*background: #222;*/
+            left: 0;
+            top: 0;
+            background: #2222226e;
             /*opacity: 0.6;*/
         }
         #modal{
             position: absolute;
-            width: 700px;
-            height:300px;
+            width: 500px;
+            height: 200px;
             margin-top: 10%;
             left: 50%;
             margin-left: -200px;
             background: #fff;
             border:1px solid #ddd;
+            border-radius: 1%;
         }
         #modal_top{
-            width: 700px;
+            width: 498px;
             height: 19px;
             position: relative;
         }
         #modal_content{
             position: relative;
-            width: 650px;
+            width: 498px;
             height: 380px;
         }
         #modal_close{
@@ -61,8 +72,6 @@
             height: 19px;
             cursor: pointer;
         }
-        .cell1{border: 1px solid; font-size: 16px;width: 16.6%;font-weight:600;line-height: 35px}
-        .cell2{border: 1px solid; font-size: 14px;width: 16.6%;line-height: 35px}
         #deal_modal_cover{
             display: none;
             width: 100%;
@@ -80,7 +89,7 @@
             margin-top: 5%;
             min-width: 800px;
             min-height: 600px;
-            /* left: 10%; */
+            border-radius: 1%;
             margin-left: 20%;
             background: #fff;
             border: 1px solid #ddd;
@@ -94,23 +103,10 @@
             color: red;
             font-size: 20px;
         }
-        #deal_modal_content{
-            position: relative;
-            width: 498px;
-            height: 380px;
-        }
-        #deal_modal_close{
-            position: absolute;
-            right: 0px;
-            top: 6px;
-            display: block;
-            width:40px;
-            height: 19px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
+
 <div class="htmleaf-container">
 	<!------页面头部---------------------------------------------------------------------------------------------->
 	<header class="htmleaf-header bgcolor-12">
@@ -137,6 +133,7 @@
 	        <nav class="navbar navbar-default">
                <ul class="nav nav-tabs nav-justified">
 				    <li class="active"><a href="#" >点巡检统计</a></li>
+                   <li ><a href="/spot/dxj_config">人员配置</a></li>
                    <li><a href="javascript:choosePath()">返回上层</a></li>
                 </ul>
             </nav><!-- /导航区域 -->
@@ -195,29 +192,79 @@
 		<button type="button" class="btn btn-primary" style = "width:25%" onclick="search('a')">查询</button>
 	</div>
     <div class="form-group" id="choose" style = "width:auto;margin-left:5%;" >
-        <label id="zcCheck">正常<input type="checkbox" > </label>
-        <label id="bjCheck">报警<input type="checkbox"  checked></label>
-        <label id="alarmType1" class="bjType">A类报警<input type="checkbox" ></label>
-        <label id="alarmType2" class="bjType">B类报警<input type="checkbox" ></label>
-        <label id="alarmType3" class="bjType">C类报警<input type="checkbox" ></label>
-        <label id="wjCheck">未检<input type="checkbox"  ></label>
-        <label id="allChoose">全选<input  id="allChoose1" type="checkbox" checked></label>
-        <#--<label type="button" class="btn btn-primary" style = "width:23%;    margin-left: 2%;" id="test">全选</label>-->
-
-        <script type="text/javascript">
-            var a=0;
-            $("#allChoose1").click(function () {
-                if (a===0){
-                    $("#choose input:checkbox").attr("checked" , false);
-                    a=1
-                }
-                else {
-                    $("#choose input:checkbox").attr("checked" , true);
-                    a=0
-                }
-            })
-        </script>
+        <label id="zcCheck">正常<input type="checkbox" class="sd" checked> </label>
+        <label id="bjCheck">报警<input type="checkbox" class="sd" checked></label>
+        <label id="alarmType1" class="bjType">A类报警<input class="sd checkBj"type="checkbox"  ></label>
+        <label id="alarmType2" class="bjType">B类报警<input class="sd checkBj" type="checkbox"  ></label>
+        <label id="alarmType3" class="bjType">C类报警<input class="sd checkBj" type="checkbox"  ></label>
+        <label id="wjCheck">未检<input type="checkbox"  class="sd" checked></label>
+        <label id="allChoose">全选<input  id="test" class="ad" type="checkbox" ></label>
     </div>
+        <#--复选框js-->
+        <script type="text/javascript">
+
+
+        //未全选时，全选不勾；全选时，全选自动勾选
+                    $(".sd").click(function () {
+                        var a=0;
+                        var b=0;
+                        var box = document.getElementsByClassName('sd');
+                        for ( var i = 0; i < box.length; i++) {
+                            if (!box[i].checked) {
+                                $("#choose .ad").prop("checked", false);
+                                b = b + 1;
+                            } else {
+                                a = a + 1;
+                            }
+                        }
+                        if (a==box.length){
+                            // alert("a======="+a+";box===="+(box.length-1));
+                            $("#choose .ad").prop("checked",true);
+                        }
+                    });
+
+            // 全选
+            $("#test").click(function(){
+                sameCheckedSet1($(this));
+            });
+            function sameCheckedSet1(eleInput){
+                var checkAll = $("#choose .ad");
+                var checkItem = $("#choose .sd");
+                if(eleInput.is(".ad")){
+                    if( !eleInput.is(':checked') ){
+                        checkItem.prop("checked",false);
+                    }else{
+                        checkItem.prop("checked",true);
+                    }
+                }else if(eleInput.is(".sd")){
+                    var count = 0;
+                    checkItem.each(function(){
+                        if( $(this).prop("checked")==false){
+                            count++;
+                        }
+                    });
+                    if(count==0){
+                        checkAll.prop("checked",true);
+                    }else{
+                        checkAll.prop("checked",false);
+                    }
+                }
+            }
+        </script>
+        <#--<script type="text/javascript">-->
+            <#--var a=0;-->
+            <#--$("#test").click(function () {-->
+                <#--if (a===0){-->
+                    <#--$("#choose input:checkbox").attr("checked" , false);-->
+                    <#--a=1-->
+                <#--}-->
+                <#--else {-->
+                    <#--$("#choose input:checkbox").attr("checked" , true);-->
+                    <#--a=0-->
+                <#--}-->
+            <#--})-->
+        <#--</script>-->
+
     <div class="form-group" id="datet" style = "width:auto;margin-left:5%">
         <label type="button" class="btn btn-primary" id="reduceNum" style="    margin-left: 3%;
     margin-right: 3%;">上一页</label>
@@ -229,8 +276,6 @@
     margin-right: 3%;display: inherit!important;width: 40% !important;">
                 <option value="1">1</option>
             </select>页</label>
-
-
         <label style="    margin-left: -2%;
     margin-right: -5%;">共<input id="totalData" readonly class="form-control" style=" margin-left: 3%;
     margin-right: 3%;display: inherit!important;width: 40% !important;">条</label>
@@ -269,7 +314,7 @@
                 <td>修改报警类型</td>
                 <td>报警类别（管理）</td>
                 <td>报警处理部门</td>
-                <td>报警类型确定人</td>
+                <td>报警处理单</td>
 			</tr>
 		</thead>
 		<tbody id="groupTable-tbody" align="center" class="tbody">
@@ -296,117 +341,116 @@
                 <#--<tr class="form-group" style = "width:auto;margin-left:5%;">-->
                     <#--<td for="ass_role_id" colspan="3" class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择报警类型</td>-->
                 <#--</tr>-->
-                <tbody>
-                    <tr class="form-group" style = "width:auto;margin-left:5%;">
-                        <td for="ass_role_id" colspan="1" class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择报警类型</td>
-                        <td colspan="5">
-                            <select class="form-control"  id="selectType" name="djnr"	 style = "width:70%;margin-left: 15%">
-                                <option id="alarmType1" class="bjType" value="1">A类报警/立即处理</option>
-                                <option id="alarmType1" class="bjType" value="2">B类报警/检修时处理</option>
-                                <option id="alarmType1" class="bjType" value="3">C类报警/持续观察</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="form-group append-mode" style = "width:auto;margin-left:5%;">
-                        <td for="ass_role_id" colspan="1"  class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择责任部门</td>
 
-                        <td colspan="2" id="demo">
-                            <select class="form-control allDepart1"  id="chooseDepart1" name="djnr"	 style = "width:120px;margin-left: 15%">
-                            </select>
-                        </td>
-                        <td for="ass_role_id" colspan="1"  class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择班组</td>
-                        <td colspan="2">
-                            <select class="form-control"  id="chooseTeam1" name="djnr"	 style = "width:100px;margin-left: 15%">
-                            </select>
-                        </td>
-                        <td><input type="button" value="+" class="appendDepart" style="border: none;background-color: white;font-size: 25px;"></td>
-                    </tr>
-                </tbody>
-                <tfoot>
                 <tr class="form-group" style = "width:auto;margin-left:5%;">
+                    <td for="ass_role_id" colspan="1" class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择报警类型</td>
+                    <td colspan="3">
+                        <select class="form-control"  id="selectType" name="djnr"	 style = "width:70%;margin-left: 15%">
+                            <option id="alarmType1" class="bjType" value="1">A类报警/立即处理</option>
+                            <option id="alarmType1" class="bjType" value="2">B类报警/检修时处理</option>
+                            <option id="alarmType1" class="bjType" value="3">C类报警/持续观察</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="form-group" style = "width:auto;margin-left:5%;">
+                    <td for="ass_role_id" colspan="1" class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择责任部门</td>
+                    <td colspan="4">
+                        <#--<input type="checkbox" value="碎矿设备">-->
+                            <label id="sksb" class="part" >碎矿设备<input type="checkbox" class="test" name="gdxz"  value="碎矿设备"></label>
+                            <label id="mfsb" class="part">磨浮设备<input type="checkbox" class="test"  name="gdxz"  value="磨浮设备"></label>
+                            <label id="jwsb" class="part">精尾设备<input type="checkbox" class="test"  name="gdxz"  value="精尾设备"></label>
+                            <label id="dy"   class="part">电仪工段<input type="checkbox" class="test"  name="gdxz"  value="电仪工段"></label>
+                        <br>
+                            <label id="sksc"  class="part">碎矿生产<input type="checkbox" class="test"  name="gdxz"  value="碎矿生产"></label>
+                            <label id="mfsc"  class="part">磨浮生产<input type="checkbox"  class="test" name="gdxz"  value="磨浮生产"></label>
+                            <label id="jwsc"  class="part">精尾生产<input type="checkbox"  class="test" name="gdxz"  value="精尾生产"></label>
+                        <br>
+                    </td>
+                </tr>
 
-                    <td colspan="6" >
+                <tr class="form-group" style = "width:auto;margin-left:5%;">
+                    <td colspan="3" >
                         <input type="button" class="btn btn-primary" style = "width:24%; margin-left: 0%;"  onclick="closeModal()" value="取消">
                         <input type="button" class="btn btn-primary" style = "width:24%; margin-left: 28%;" onclick="changeType()" value="确定">
                     </td>
                 </tr>
-                </tfoot>
             </table>
-
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(".appendDepart").click(function () {
-var
+<div id="deal_modal_cover">
+    <div id="deal_modal">
+        <div id="deal_modal_top">
+            <a style="margin-left: 90%;cursor:pointer"  onclick="closedeal_modal();">关闭</a>
 
+        </div>
+        <table cellpadding="0" cellspacing="0"   style="width: 90%; line-height: 20px; border: 2px solid ;    margin-left: 5%;
+                    margin-top: 5%; ;text-align: center"
+               class="table table-striped table-bordered table-hover">
+            <caption style="font-size: 25px;line-height: 40px !important;font-weight: 600;text-align: center">故障处理单</caption>
+            <tbody>
+            <tr>
+                <td  class="cell1">设备编码</td>
+                <td  class="cell2" id="equip-cod"></td>
+                <td  class="cell1">维修日期</td>
+                <td  class="cell2" id="repair-day" ></td>
+                <td  class="cell1">维修时间</td>
+                <td  class="cell2" id="repair-time"></td>
+            </tr>
+            <tr>
+                <td  class="cell1">设备名称</td>
+                <td  class="cell2" id="equip-name"></td>
+                <td  class="cell1">规格型号</td>
+                <td  class="cell2" id="equip-model"></td>
+                <td  class="cell1">所属工段</td>
+                <td  class="cell2" id="deptName"></td>
+            </tr>
+            <tr>
+                <td  class="cell1">类别</td>
+                <td  class="cell2" id="technology"></td>
+                <td  class="cell1">维修单位</td>
+                <td  class="cell2" id="repair-depart1" ></td>
+                <td  class="cell2" colspan="2" id="repair-depart2"></td>
+            </tr>
+            <tr>
+                <td  class="cell1">报警类别</td>
+                <td  class="cell2" id="repair-type"></td>
+                <td  class="cell1">点检人</td>
+                <td  class="cell2" id="spot-name"></td>
+                <td  class="cell1">点检时间</td>
+                <td  class="cell2" id="spot-time"></td>
+            </tr>
+            <tr>
+                <td  class="cell1">报警内容</td>
+                <td  class="cell2" colspan="5" id="alarm-content"></td>
+            </tr>
+            <tr>
+                <td  class="cell1">维修人员</td>
+                <td  class="cell2" colspan="5" id="repair-name"></td>
+            </tr>
+            <tr  >
+                <td  class="cell1" >维修内容</td>
+                <td  class="cell2"  colspan="5" id="repair-content" style="line-height: 30px"></td>
+            </tr>
+            <tr>
+                <td  class="cell1" >处理人</td>
+                <td  class="cell2" colspan="2" id="deal-name"></td>
+                <td  class="cell1">处理时间</td>
+                <td  class="cell2" colspan="2" id="deal-time"></td>
+            </tr>
+            <tr>
+                <td  class="cell1">材料、备件</td>
+                <td  class="cell2" colspan="5" id="material"></td>
+            </tr>
+            <tr>
+                <td  class="cell1">备注</td>
+                <td  class="cell2" colspan="5" id="remark"></td>
+            </tr>
+            </tbody>
 
-
- var st=   '<tr class="form-group append-mode" style = "width:auto;margin-left:5%;">'
-           +' <td for="ass_role_id" colspan="1"  class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择责任部门</td>'
-            +'<td colspan="2" id="'+demo+'">'
-            +'<select class="form-control allDepart1"  id="'+'chooseDepart'+1+'+'" name="djnr"	 style = "width:120px;margin-left: 15%">'
-           +' </select>'
-           +' </td>'
-            +'<td for="ass_role_id" colspan="1"  class="col-sm-2 control-label" style = "width:auto;margin-left: 37%;font-size: 18px;" >选择班组</td>'
-            +'<td colspan="2">'
-            +'<select class="form-control"  id="'+chooseTeam2+'" name="djnr"	 style = "width:100px;margin-left: 15%">'
-            +'</select>'
-            +'</td>'
-            // +'<td><input type="button" value="+" class="appendDepart" style="border: none;background-color: white;font-size: 25px;"></td>'
-            +'</tr>';
-
-
-alert(st);
-
-
-        $("#modal_content table tbody").append(st);
-
-        getAllDeptName2();
-
-
-    });
-
-    var  s1='<option>'+'钳工班'+'</option>' +  //设备班组
-        '<option>'+'维保班'+'</option>';
-    var  s2='<option>'+'一班'+'</option>' +  //生产班组
-        '<option>'+'二班'+'</option>'+
-        '<option>'+'三班'+'</option>'+
-        '<option>'+'四班'+'</option>';
-    var  s3='<option>'+'一班'+'</option>' +  //生产班组
-        '<option>'+'二班'+'</option>'+
-        '<option>'+'三班'+'</option>'+
-        '<option>'+'四班'+'</option>'+
-        '<option>'+'深度水处理班'+'</option>';
-    var   s4='<option>'+'电工班'+'</option>' +  //电仪班组
-        '<option>'+'仪表班'+'</option>';
-    var  s5='<option>'+'当班'+'</option>';
-        $("#demo").click(function () {
-            var depart = $("#chooseDepart1 option:selected").text();
-            var alarmType=$("#selectType option:selected").val();
-
-
-                    if (depart.indexOf("工段")!==-1) {
-                        $("#chooseTeam1").empty().append(s4);
-                    }
-                    else if (depart.indexOf("生产")!==-1) {
-                        if (alarmType==='1') $("#chooseTeam1").empty().append(s5);
-                        else{
-                            if(depart.indexOf("精尾")!==-1){
-                                $("#chooseTeam1").empty().append(s3);
-                            }
-                            else {
-                                $("#chooseTeam1").empty().append(s2);
-                            }
-                        }
-                    }
-                    else {
-                        $("#chooseTeam1").empty().append(s1);
-                    }
-                    //生产选择4个班之一、设备选择钳工班/维保班、电仪选择电工班/仪表班
-                });
-       
-</script>
+        </table>
+    </div>
+</div>
 <script type="text/javascript" src="/js/searchResult.js"></script>
 
 </body>

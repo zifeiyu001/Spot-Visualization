@@ -52,6 +52,7 @@ myChart1.setOption({
         }
     ]
 });
+//点检完成情况统计
 myChart1.showLoading();
 var isLoaded1 = false;
 function reqs()
@@ -64,7 +65,7 @@ function reqs()
 
     $.ajax({
         type : "get",
-        async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        // async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
         url : "/equipment/SpotQmj",    //请求发送到TestServlet处
         data : {},
         dataType : "json",   //返回数据形式为json
@@ -281,10 +282,7 @@ setInterval(function () {
 }, 1800000);    //请求时间间隔
 
 
-//测试
-function cccc(){
-    // alert("aaaaaaaaaaaaaaaaaaaaa");
-}
+
 function showInform(){
     document.getElementById("inform").style.display='block';
 

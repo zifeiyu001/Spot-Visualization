@@ -15,4 +15,5 @@ public interface IndexSpotMapper {
     List<SpotStatistics> INDEX_DY_LIST(@Param("param") String param);
     List<SpotStatistics> INDEX_SB_LIST(@Param("param") String param);
     List<SpotStatistics> INDEX_SC_LIST(@Param("param") String param);
+    List<SpotStatistics>   getMonthlysSotStatistics();
 }

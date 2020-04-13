@@ -17,7 +17,12 @@
             WHERE ID="${id}"
     </update>
     <select id="get_login_name" resultType="com.demo.model.universal.LoginUser">
-            SELECT user_name from cfg_user WHERE user_id="${name}"
+            SELECT user_name username from cfg_user WHERE user_id="${name}"
+
+--             SELECT b.CNAME user,b.USERNAME username,a.`NAME` as deptName from dxj_sys_dept a,dxj_sys_user b
+--             WHERE b.USERNAME="${name}"
+--                 AND b.BELONG_DEPT=a.ID
+--             AND a.LAYERCODE not LIKE "00010003%"
 
     </select>
     <select id="search_alarm_id" resultType="com.demo.model.universal.WebDxjBj">

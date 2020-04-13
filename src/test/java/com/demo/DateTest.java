@@ -10,26 +10,35 @@ import org.springframework.stereotype.Controller;
 import java.text.*;
 import java.time.LocalDate;
 import java.util.*;
-@Controller
+
 public class DateTest {
 
-    @Autowired
-    private IndexService indexService;
-    public  void getDeptName(){
-        HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-/*
-* 找出当日已经点检，并且为报警的数据
-* 责任部门为空
-* 遍历数据，当报警临时表中的多个字段相同时，将报警类型修改人、报警类别、责任部门数据 更新到点检结果表中
-*
-* */
+    public static void main(String[] args) throws ParseException {
 
-        List<Interlocking> interlockings = indexService.Interlocking_get_all_alarm_byDay();
-        List<Interlocking> interlockings1 = indexService.Interlocking_get_all_alarmType();
-        for(Interlocking a:interlockings){
-            System.out.println(a.getDeptName());
+            String a="2020-03-26 16:41:34";
+            String b="2020-03-26 17:51:34";
+        String h = timeDifference(a, b, "h",3);
+        System.out.println(h);
+
+    }
+
+    public static String timeDifference(String startTime, String endTime, String type,Integer num) {
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long l = 0;
+        double a=0;
+        String format="";
+        try {
+            l = dateTimeFormat.parse(endTime).getTime() - dateTimeFormat.parse(startTime).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
+        if (type.equals("h")){
+            a= (double) l/1000/60/60;
+            NumberFormat nf = NumberFormat.getNumberInstance();
+            nf.setMaximumFractionDigits(num);
+             format = nf.format(a);
+        }
+        return format;
     }
 
 }
