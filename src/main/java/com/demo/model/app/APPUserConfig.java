@@ -20,13 +20,13 @@ public class APPUserConfig {
         this.deptName = deptName;
     }
 
-//    public String getStation() {
-//        return station;
-//    }
-//
-//    public void setStation(String station) {
-//        this.station = station;
-//    }
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
 
     public String getRouteName() {
         return routeName;

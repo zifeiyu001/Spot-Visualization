@@ -19,7 +19,6 @@
     <link rel="stylesheet" href="/css/mycss/table.css">
     <link rel="stylesheet" href="/css/mycss/top.css">
     <script type="text/javascript" src="/plugins/jQuery/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src="/js/jquery-cookie.js"></script>
     <script src="/plugins/jedate/jedate.js" charset="utf-8"></script>
     <script src="/js/utils/choosePath.js"></script>
     <script src="/plugins/layer/layer.js" charset="utf-8"></script>
@@ -183,8 +182,8 @@
             width: 70%;
             height: 80%;
             margin-top: 5%;
-            min-width: 800px;
-            min-height: 600px;
+            min-width: 600px;
+            min-height: 400px;
             border-radius: 1%;
             margin-left: 15%;
             background: #fff;
@@ -192,9 +191,10 @@
         }
         #deal_write_modal_top{
             width: 100%;
-            line-height: 24px;
-            margin-top: 1%;
+            /*line-height: 24px;*/
+            /*margin-top: 1%;*/
             position: absolute;
+            height: 13%;
             color: red;
             font-size: 20px;
             }
@@ -330,7 +330,6 @@
                                 </select>
                             </label>
                             <label type="button" class="btn btn-primary" style = "width:5%;    margin-left: 3%;" onclick="search('b')">确定</label>
-                            <label type="button" class="btn btn-primary" style = "width:5%;    margin-left: 3%;" onclick="ccc()">确111定</label>
                         </div>
                     </form>
                     <div class="form-group" style="margin-top:1%;">
@@ -371,7 +370,7 @@
 <#-------------------------B、C类报警处理------------------------------------->
                 <div id="search_service" class="form2" style=" display: none">
                     <div class="col-sm-9" style="width:50%;">
-                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">报警清单</h1>
+                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">BC类处理清单</h1>
                         <div class="col-sm-12" >
                             <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;  ">
                                 <#--<div style="width: 300px;height: 400px;background-color: #00FFFF"></div>-->
@@ -440,7 +439,7 @@
                         </div>
                     </div>
                     <div class="col-sm-9" style="width:50%;">
-                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">月度维修清单</h1>
+                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">待修清单</h1>
                         <div class="col-sm-12" >
                             <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;">
                                 <div class="form-group" style = "width:auto;margin-left:10%;" >
@@ -736,7 +735,7 @@
                     <a style="margin-left: 90%;cursor:pointer"  onclick="closeDealWriteData_modal();">关闭</a>
                     <div style="    font-size: 30px; text-align: center; color: black;line-height: 100%;">故障处理单</div>
                 </div>
-                <div style="width: 100%;height: 450px ;overflow-y: scroll; margin-top: 75px;">
+                <div style="width: 100%;min-height: 300px;height: 74%;overflow-y: scroll; margin-top: 75px;">
                     <table cellpadding="0" cellspacing="0"   style="width: 90%; line-height: 20px;  margin-left: 5%;table-layout:fixed; ;text-align: center"
                            class="table table-striped table-bordered table-hover">
                         <tbody>
@@ -807,14 +806,14 @@
 
                     </table>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="padding: 15px; text-align: right; bottom: 0;position: absolute; right: 0;height: 13%;">
                     <button type="button" class="btn btn-default"  onclick="closeDealWriteData_modal();">取消</button>
                     <button type="button" class="btn btn-primary" id="alarmbutt" <#--disabled="disabled"--> onclick="upBjByName()">提交</button>
                 </div>
             </div>
         </div>
 
-<script type="text/javascript" src="/js/searchResult-1.0.5.js?"></script>
+<script type="text/javascript" src="/js/searchResult-1.0.7.js?"></script>
 
 </body>
 </html>

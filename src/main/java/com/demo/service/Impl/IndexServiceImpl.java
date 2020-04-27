@@ -93,13 +93,9 @@ import com.demo.model.process.grindingFloat.*;
 import com.demo.model.report.Report;
 import com.demo.model.universal.*;
 import com.demo.service.IndexService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1858,7 +1854,6 @@ public class IndexServiceImpl implements IndexService {
 //     获取设备运行时间的字段
     @Override
     public List<AppDCS> app_jjb_getRunTimeField(String equip) { return appMapper.app_jjb_getRunTimeField(equip); }
-
 
     @Resource
     private ConfigUserMapper configUserMapper;

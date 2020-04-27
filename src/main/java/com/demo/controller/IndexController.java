@@ -191,6 +191,7 @@ public class IndexController {
     public Map<String,Object>  getUser(@RequestBody Map<String, String> params, HttpServletRequest request) throws UnsupportedEncodingException {
         String name = params.get("name");
         LoginUser login_name = indexService.get_login_name(name);
+
         Map<String,Object> map = new HashMap<>();
         if (login_name!=null){
             //创建session对象
@@ -1346,7 +1347,8 @@ public class IndexController {
     @GetMapping("/spot/index1")
     public String toConfig1(){ return "/index1";  }
 //   维修单查询
-
+    @GetMapping("/spot/changeShifts/write")
+    public String changeShifts(){ return "/changeShifts";  }
 
     @GetMapping("/spot/dxj_repair_list")
     public String todxj_repair_list(){ return "/dxjSystem/dxj_repair_list";  }

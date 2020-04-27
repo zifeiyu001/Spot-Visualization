@@ -579,13 +579,14 @@ function search(c,b) {
             for (var i = 0; i < length; i++) {
                 // alert(json[i].abnormalHandleDealDepart);
                 var alpid = json[i].altpid;
+                var abnormalHandleType=json[i].abnormalHandleType;
                 // alert(json[i].resultId);
                 var alarmFlag = json[i].alarmFlag;
-                if (alpid == 0){
-                    str += '<tr  style="background-color:rgba(0,162,44,0.57)""><td>'
-                }else if (alarmFlag ==="Y") {
-                    str += '<tr  style="background-color:rgba(64,162,56,0.57)""><td>'
-                }  else if(json[i].abnormalHandleAdminType == null && alpid>0){
+                if (abnormalHandleType == 0){
+                    str += '<tr  style="background-color:rgba(0,162,44,0.57)"><td>'
+                }else if (alarmFlag =="Y") {
+                    str += '<tr  style="background-color:rgba(64,162,56,0.57)"><td>'
+                }  else if(json[i].abnormalHandleAdminType == null && abnormalHandleType>0){
                     str += '<tr  style="background-color: #ffc2ff"><td>'
                 } else if (json[i].abnormalHandleAdminType == 1 &&  alarmFlag ==="N") {
                     str += '<tr style="background-color: #ff2203"><td>'
@@ -615,7 +616,7 @@ function search(c,b) {
                     + (json[i].dealUser==null?'-':json[i].dealUser) + '</td><td>'
                     +((json[i].deal_remark==null||json[i].deal_remark=='')?'-':json[i].deal_remark)+ '</td>';
 
-                if((json[i].abnormalHandleAdminType == null &&alpid>0 &&alarmFlag=='N')&& getHour(json[i].uploadResultTime,getCurDate())>alarm_tips_time) {
+                if((json[i].abnormalHandleAdminType == null &&abnormalHandleType>0 &&alarmFlag=='N')&& getHour(json[i].uploadResultTime,getCurDate())>alarm_tips_time) {
                         str += '<td  class="light">'+ judgeAlarm(json[i].abnormalHandleAdminType)+'</td><td>';
 
                 }
@@ -625,7 +626,7 @@ function search(c,b) {
 
                  str+= ((json[i].abnormalHandleDealDepart==null||json[i].abnormalHandleDealDepart=='')?'-':json[i].abnormalHandleDealDepart) + '</td><td>'
 
-                    + ((alpid<1||alarmFlag=='Y'||json[i].abnormalHandleAdminType>1)?'<input type="button" class="btn btn-warning" value="修改" disabled style="border-color: #bebbb7;' +
+                    + ((abnormalHandleType<1||alarmFlag=='Y'||json[i].abnormalHandleAdminType>1)?'<input type="button" class="btn btn-warning" value="修改" disabled style="border-color: #bebbb7;' +
                         'background-color: #bebbb7;background-image: linear-gradient(to bottom, #bebbb7 0%, #bebbb7 100%); ">':
                         '<input type="button" class="btn btn-warning" value="修改" style="cursor: pointer;"onclick="openModal(\''+json[i].resultId+'\'\,\''+json[i].deptName+'\')">')+'</td><td>'
 
@@ -638,6 +639,7 @@ function search(c,b) {
                         'background-color: #bebbb7;background-image: linear-gradient(to bottom, #bebbb7 0%, #bebbb7 100%); ">':
                         '<input type="button" class="btn btn-warning" value="查看处理单" style="cursor: pointer;"onclick="openDealData_modal(\''+json[i].resultId+'\')">')+'</td></tr>';
             }
+
             $('#groupTable').append(str);
             setScrollHeight();
         },
@@ -728,6 +730,7 @@ function changeAType() {
                     if (msg=='true'){
                         search('b');
                     }
+                    alert(data)
                 },
                 complete: function() {
 
@@ -932,6 +935,10 @@ function closeDealWriteData_modal(){
 }
 function openDealWriteData_modal(result_id){
     document.getElementById("deal_write_modal_cover").style.display = "block";
+    var clientHeight = document.documentElement.clientHeight;
+    var innerHeight = window.innerHeight;
+    // alert(clientHeight+"==="+innerHeight);
+    $("#deal_write_modal_cover").attr("height",clientHeight);
     // alert(result_id)
     getWriteDefaultDealData(result_id);
 }
@@ -1033,38 +1040,59 @@ function upBjByName(){
     var service_start_date=$("#repair-start-date1").val();
     var service_end_date=$("#repair-end-date1").val();
     var service_acceptor=$("#deal-name1").val();
-    $.ajax({
-        url: "/interlocking/repair/write/writeDealData",
-        contentType: "application/json",
-        data: JSON.stringify({
-            "resultId": resultid, "dev_code": dev_code, "service_start_date":service_start_date, "service_end_date":service_end_date,
-            "dev_name":dev_name, "dev_model":dev_model, "dev_dept":dev_dept, "dev_category":dev_category,"service_unit_type": service_unit_type,
-            "service_unit":service_unit, "alarm_type":alarm_type, "alarm_name":alarm_name, "alarm_time":alarm_time, "alarm_content":alarm_content,
-              "service_content":service_content, "service_remarks":service_remarks,"service_alarm_time" :getCurDate(),"dev_depart":dev_depart
-        }),
-        type: "post",
-        cache: true,
-        dataType: "json",
-        beforeSend: function() {
-            $("#service-tbody").empty();
-            loading = layer.msg('正在加载···', {icon: 16, shade: 0.3, time:0});
-        },
-        success: function (result) {
-            var json=result.data;
-            if (result.type==='true'){
-                closeDealWriteData_modal();
-                search("b")
-            }
-            alert(json);
-        },
-        complete: function() {
-            layer.close(loading);
+    if (service_unit==null||service_unit==""||service_unit==undefined){
+        alert("请填写 "+f(service_unit_type)+" ")
+    }
+    else if (service_content==null||service_content==""||service_content==undefined) {
+        alert("请填写维修内容")
+    }
+    else {
+        $.ajax({
+            url: "/interlocking/repair/write/writeDealData",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "resultId": resultid, "dev_code": dev_code, "service_start_date":service_start_date, "service_end_date":service_end_date,
+                "dev_name":dev_name, "dev_model":dev_model, "dev_dept":dev_dept, "dev_category":dev_category,"service_unit_type": service_unit_type,
+                "service_unit":service_unit, "alarm_type":alarm_type, "alarm_name":alarm_name, "alarm_time":alarm_time, "alarm_content":alarm_content,
+                "service_content":service_content, "service_remarks":service_remarks,"service_alarm_time" :getCurDate(),"dev_depart":dev_depart
+            }),
+            type: "post",
+            cache: true,
+            dataType: "json",
+            beforeSend: function() {
+                $("#service-tbody").empty();
+                loading = layer.msg('正在加载···', {icon: 16, shade: 0.3, time:0});
+            },
+            success: function (result) {
+                var json=result.data;
+                if (result.type==='true'){
+                    closeDealWriteData_modal();
+                    search("b")
+                }
+                alert(json);
+            },
+            complete: function() {
+                layer.close(loading);
 
-        }
-    });
+            }
+        });
+    }
+
 
 }
 
+
+
+
+
+function f(service_unit_type) {
+    if (service_unit_type==='自修')
+        return '维修人';
+    else {
+        return service_unit_type+"单位";
+    }
+
+}
 //获取当前时间
 getCurDate();
 function getCurDate()

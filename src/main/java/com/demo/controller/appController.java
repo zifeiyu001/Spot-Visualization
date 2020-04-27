@@ -6,24 +6,20 @@ import com.demo.model.app.*;
 import com.demo.model.interlocking.Interlocking;
 import com.demo.model.universal.*;
 import com.demo.service.IndexService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.poi.ss.formula.functions.Now;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Base64Utils;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.demo.model.universal.DCSAlarm.getAlarm;
 import static com.demo.model.universal.base64StrImage.base64StrToImage;
@@ -44,7 +40,8 @@ public class appController {
 
     @RequestMapping(value = "/app/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResultJson appLogina(@RequestBody Map<String, String> params) throws ParseException {
+    public ResultJson appLogina(@RequestBody  Map<String, String> params, HttpServletRequest request) throws ParseException, IOException {
+        System.out.println("==========================");
         ResultJson resultJson = new ResultJson();
         String userName = params.get("userName"); // 用户名
         String passWord = params.get("passWord");// 获取明文密码
@@ -73,6 +70,8 @@ public class appController {
 
         return resultJson;
     }
+
+
     /*============================================交接班进入================================================================== */
     @RequestMapping(value = "/app/accessjjb", method = RequestMethod.POST)
     @ResponseBody
@@ -109,6 +108,7 @@ public class appController {
         String startTime="";
 //        获取登录用户的信息
         List<APPUserConfig> appUserConfigs = indexService.app_get_jjb_team_byUserId(userId);
+
 
 //        ================计算当前时间的班组==========
         for (int a=0;a<appSchedulings.size()-1;a++){
@@ -491,19 +491,20 @@ public class appController {
 
     @RequestMapping(value = "/app/djResult", method = RequestMethod.POST)
     @ResponseBody
-    public ResultJson result(HttpServletResponse response, @RequestBody Map<String, String> params) {
+    public ResultJson result(HttpServletRequest request, @RequestBody Map<String, String> params) throws ParseException, IOException{
 
-        int status = response.getStatus();
+//        int status = response.getStatus();
         String dateTime = "";
         String msg = "";
         ResultJson resultJson = new ResultJson();
         List<AppReport> appReports = null;
+        System.out.println("-------"+params.values());
         String deptName = params.get("deptName");// 工段
         String job = params.get("job");//岗位
         String metaStartTime = params.get("startTime");
         String metaEndTime = params.get("endTime");
 //        int meta = Integer.parseInt(params.get("meta"));//meta值
-//        System.out.println(deptName + "==" + job + "==" + metaStartTime + "=="+metaEndTime);
+        System.out.println(deptName + "==?" + job + "==" + metaStartTime + "=="+metaEndTime);
         // 获取当前的 时
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
@@ -1008,7 +1009,6 @@ public class appController {
     public ResultJson appConfigGetTeam(@RequestBody Map<String, String> params) {
         ResultJson resultJson = new ResultJson();
         String deptName = params.get("deptName"); // 工段名称
-//        System.out.println(deptName);
         List<APPUserConfig> appUserConfigs = indexService.app_config_getJob_user(deptName);
         resultJson.setData(appUserConfigs);
         return resultJson;
@@ -1063,6 +1063,14 @@ public class appController {
         resultJson.setData(appUserConfigs);
         return resultJson;
     }
+
+
+
+
+
+
+
+
 
 /*=================================测试内容==============================================*/
 

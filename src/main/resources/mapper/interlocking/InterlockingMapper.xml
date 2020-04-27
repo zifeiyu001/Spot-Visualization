@@ -260,13 +260,13 @@
         and(
                  1=2
             <if test="zcCheck=='true'">
-                or  ALTPID =0
+                or ( abnormalHandleType =0 and  ALTPID=0)
             </if>
             <if test="wjCheck=='true'">
                 or ALTPID is  null
             </if>
             <if test="bjCheck=='true'">
-                or ALTPID>0
+                or ( abnormalHandleType>0)
             </if>
             <!--<if test="bjType1=='true'">-->
                 <!--or abnormalHandleAdminType =1-->
@@ -344,19 +344,27 @@
        and DEPT_NAME !='综合工段'
         and(
               1=2
+        <!--<if test="zcCheck=='true'">-->
+            <!--or  ALTPID =0-->
+        <!--</if>-->
+        <!--<if test="wjCheck=='true'">-->
+            <!--or ALTPID is  null-->
+        <!--</if>-->
         <if test="zcCheck=='true'">
-            or  ALTPID =0
+            or ( abnormalHandleType =0 and  ALTPID=0)
         </if>
         <if test="wjCheck=='true'">
             or ALTPID is  null
         </if>
-
+        <if test="bjCheck=='true'">
+            or ( abnormalHandleType>0)
+        </if>
         <!--<if test="RDStatus=='yes'">-->
           <!--and  abnormalHandleDealDepart is not null-->
         <!--</if>-->
-        <if test="bjCheck=='true'">
-            or ALTPID>0
-        </if>
+        <!--<if test="bjCheck=='true'">-->
+            <!--or ALTPID>0-->
+        <!--</if>-->
         <!--<if test="bjType1=='true'">-->
             <!--or abnormalHandleAdminType =1-->
             <!--or ( ALTPID>0-->

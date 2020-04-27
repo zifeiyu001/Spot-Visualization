@@ -2,6 +2,7 @@ package com.demo.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.demo.model.CfgUser;
 import com.demo.model.app.AppCycle;
 import com.demo.model.app.AppDCS;
 import com.demo.model.app.AppLoginUser;
@@ -157,61 +158,61 @@ public class InterlockingController {
         return objectObjectHashMap;
     }
 
-    // =========================获取点检结果数据==================================
-    @RequestMapping(value = "/interlocking/getResult1", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getResult1(@RequestBody Map<String, String> params) {
-        String deptName = params.get("deptName");
-        String route = params.get("route");
-        String zone = params.get("zone");
-        String equip = params.get("equip");
-        String part = params.get("part");
-        String content = params.get("content");
-        String startTime = params.get("startTime");
-        String endTime = params.get("endTime");
-        String yjCheck = params.get("yjCheck");
-        String wjCheck = params.get("wjCheck");
-        String zcCheck = params.get("zcCheck");
-        String bjCheck = params.get("bjCheck");
-        String abjType1 = params.get("abjType1");
-        String abjType2 = params.get("abjType2");
-        String abjType3 = params.get("abjType3");
-        String sbjType1 = params.get("sbjType1");
-        String sbjType2 = params.get("sbjType2");
-        String sbjType3 = params.get("sbjType3");
-        String nowPage = params.get("nowPage");
-        String numPerPage1 = params.get("numPerPage");
-        Integer numPerPage = Integer.parseInt(params.get("numPerPage"));
-        Integer startPage = Integer.parseInt(params.get("startPage"));
-
-        List<ConfigUser> configUsers = indexService.search_config_alarm_liable_all();
-
-        //查询结果数量
-        Integer integer = indexService.Interlocking_get_result_total1(deptName, route, zone, equip, part, content, startTime, endTime, yjCheck,wjCheck,zcCheck, bjCheck, abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3 );
-
-        if (startTime.equals("")) {
-            Date now = new Date();
-            Date startDate = DateUtils.addDays(now, -30);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            startTime = sdf.format(startDate);// format  为格式化方法
-        }
-        HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-        List<Interlocking> spotResults = indexService.Interlocking_get_result1(deptName, route, zone, equip, part, content, startTime, endTime, yjCheck,wjCheck,zcCheck, bjCheck, abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3,
-                startPage, numPerPage);
-        for (int a=0;a<spotResults.size();a++){
-            List<AlarmDealData> alarm_deal_data = indexService.get_alarm_deal_data(spotResults.get(a).getResultId());
-            if(alarm_deal_data.size()>0){
-                spotResults.get(a).setDealData("1");
-            }
-            else {
-                spotResults.get(a).setDealData("0");
-            }
-
-        }
-        objectObjectHashMap.put("total", integer);
-        objectObjectHashMap.put("data", spotResults);
-        return objectObjectHashMap;
-    }
+//    // =========================获取点检结果数据==================================
+//    @RequestMapping(value = "/interlocking/getResult1", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getResult1(@RequestBody Map<String, String> params) {
+//        String deptName = params.get("deptName");
+//        String route = params.get("route");
+//        String zone = params.get("zone");
+//        String equip = params.get("equip");
+//        String part = params.get("part");
+//        String content = params.get("content");
+//        String startTime = params.get("startTime");
+//        String endTime = params.get("endTime");
+//        String yjCheck = params.get("yjCheck");
+//        String wjCheck = params.get("wjCheck");
+//        String zcCheck = params.get("zcCheck");
+//        String bjCheck = params.get("bjCheck");
+//        String abjType1 = params.get("abjType1");
+//        String abjType2 = params.get("abjType2");
+//        String abjType3 = params.get("abjType3");
+//        String sbjType1 = params.get("sbjType1");
+//        String sbjType2 = params.get("sbjType2");
+//        String sbjType3 = params.get("sbjType3");
+//        String nowPage = params.get("nowPage");
+//        String numPerPage1 = params.get("numPerPage");
+//        Integer numPerPage = Integer.parseInt(params.get("numPerPage"));
+//        Integer startPage = Integer.parseInt(params.get("startPage"));
+//
+//        List<ConfigUser> configUsers = indexService.search_config_alarm_liable_all();
+//
+//        //查询结果数量
+//        Integer integer = indexService.Interlocking_get_result_total1(deptName, route, zone, equip, part, content, startTime, endTime, yjCheck,wjCheck,zcCheck, bjCheck, abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3 );
+//
+//        if (startTime.equals("")) {
+//            Date now = new Date();
+//            Date startDate = DateUtils.addDays(now, -30);
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            startTime = sdf.format(startDate);// format  为格式化方法
+//        }
+//        HashMap<String, Object> objectObjectHashMap = new HashMap<>();
+//        List<Interlocking> spotResults = indexService.Interlocking_get_result1(deptName, route, zone, equip, part, content, startTime, endTime, yjCheck,wjCheck,zcCheck, bjCheck, abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3,
+//                startPage, numPerPage);
+//        for (int a=0;a<spotResults.size();a++){
+//            List<AlarmDealData> alarm_deal_data = indexService.get_alarm_deal_data(spotResults.get(a).getResultId());
+//            if(alarm_deal_data.size()>0){
+//                spotResults.get(a).setDealData("1");
+//            }
+//            else {
+//                spotResults.get(a).setDealData("0");
+//            }
+//
+//        }
+//        objectObjectHashMap.put("total", integer);
+//        objectObjectHashMap.put("data", spotResults);
+//        return objectObjectHashMap;
+//    }
     /*===========================================报警处理单查询=============================*/
 //  通过resultID查询报警处理单
     @RequestMapping(value = "/interlocking/getAlarmDealData", method = RequestMethod.POST)

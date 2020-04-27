@@ -167,8 +167,6 @@ function getUser() {
 // //获取部门中的岗位
 function getTeam() {
     var content = $("#workshopUser2 option:selected").text();
-    // $("#mana-team").empty();
-    // alert(content)
     $.ajax({
         url: "/app/config/getJob",
         data:JSON.stringify({"deptName":content}),
@@ -177,13 +175,10 @@ function getTeam() {
         cache: true,
         dataType: "json",
         success: function (result) {
-            // alert(content);
             var json = result.data;
             var str = "<option value='test'>"+"全部岗位"+"</option>";
             for (var i=0; i < json.length; i++) {
-                // alert(json[i].station);
                 str += "<option value='"+ json[i].station +"'>"+json[i].station+"</option>";
-                // alert(json[i].user)
             }
             $('#job2').empty().append(str);
 

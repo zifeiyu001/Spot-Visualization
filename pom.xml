@@ -6,7 +6,7 @@
 	<groupId>com</groupId>
 	<!--<artifactId>spring-boot-echarts</artifactId>-->
 	<artifactId>Spot-Visualization</artifactId>
-	<version>V0.5.8</version>
+	<version>V0.6.5</version>
 	<packaging>jar</packaging>
 
 	<name>demo</name>
@@ -141,13 +141,16 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.47</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.apache.httpcomponents</groupId>-->
-            <!--<artifactId>httpclient</artifactId>-->
-            <!--<version>4.5.2</version>-->
-        <!--</dependency>-->
-
-
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
+        </dependency>
     </dependencies>
 
 	<build>
