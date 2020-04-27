@@ -194,4 +194,68 @@ public class ChangeShiftsController {
         }
     }
 
+
+
+
+
+    //    获取当期时间的排班顺序数
+    private int getPaibanNum1()  {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); //时间格式
+        String startTime1="2019-07-28 20:00:00";//周期开始时间
+        int days=4;//周期天数
+        int teamhour=12;//每班小时数
+        int cyclehour=days*24;
+        long l0=1000*60*30;
+        Date now = new Date(); //当期时间
+        long nowL = now.getTime();
+        long beforeNowL = now.getTime() - l0;
+        long afterNowL = now.getTime()+l0;
+
+        Date startTime = null;
+        try {
+            startTime = simpleDateFormat.parse(startTime1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long h=1000*60*60;
+        assert startTime != null;
+        long totaltime=nowL-startTime.getTime();
+        
+
+
+
+        //计算总计小时数，当有小数时，取整加一
+        long l = totaltime%h == 0 ? (totaltime/h):(totaltime/h)+1;
+        //计算周期后所剩余小时数
+        long aaa=l%cyclehour;
+        //所余小时数在第几位，即为周期内排班顺序（当有小数时，取整加一）
+        long m=(int)aaa%teamhour == 0 ? (aaa/teamhour):(aaa/teamhour)+1;
+        return  (int) m;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
