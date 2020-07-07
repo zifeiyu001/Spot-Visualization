@@ -4,8 +4,8 @@
 
 <mapper namespace="com.demo.mapper.interlocking.InterlockingMapper">
     <insert id="Interlocking_insert_temp_result">
-        INSERT INTO dxj_alarmtype_temp(deptName,routeName,zoneName,devName,scPart,scContent,altpid,stdValue,abnormalHandleAdminType,abnormalHandleUser,abnormalHandleDealDepart)
-        VALUES ("${deptName}" ,"${routeName}","${zoneName}","${devName}","${scPart}","${scContent}","${altpid}","${stdValue}","${alarmType}","${userName}","${selectDepart}")
+        INSERT INTO dxj_alarmtype_temp(deptName,routeName,zoneName,devName,scPart,scContent,altpid,abnormalHandleAdminType,dealUser,abnormalHandleDealDepart)
+        VALUES ("${deptName}" ,"${routeName}","${zoneName}","${devName}","${scPart}","${scContent}","${altpid}","${alarmType}","${dealPersonLiable}","${selectDepart}")
     </insert>
     <insert id="writeDealData">
         INSERT INTO dxj_spot_deal(
@@ -46,10 +46,10 @@
     </update>
     <update id="Interlocking_update_temp_result">
         UPDATE  dxj_alarmtype_temp
-        SET abnormalHandleAdminType ="${alarmType}",abnormalHandleUser ="${userName}" ,abnormalHandleDealDepart="${selectDepart}"
+        SET abnormalHandleAdminType ="${alarmType}",dealUser ="${dealPersonLiable}" ,abnormalHandleDealDepart="${selectDepart}"
         WHERE deptName="${deptName}"  and  routeName="${routeName}" AND  zoneName="${zoneName}"
             AND   devName="${devName}" AND scPart="${scPart}" AND scContent="${scContent}"
-           AND altpid="${altpid}" AND stdValue ="${stdValue}"
+           AND altpid="${altpid}"
     </update>
     <update id="Interlocking_changeAlarmPersonLiable">
               UPDATE dxj_spot_result SET  alarm_personLiable="${alarm_personLiable}"  WHERE ID ="${resultId}"
@@ -122,7 +122,9 @@
 
     </update>
     <update id="dealBCAlarmInResult">
-        UPDATE  dxj_spot_result  SET alarm_flag='Y',alarm_remark="${dealRemark}",alarm_manage_time=NOW(),alarm_manage_name="${user}"  WHERE "${resultIds}" LIKE CONCAT("%",ID,"%")
+        UPDATE  dxj_spot_result  SET alarm_flag='Y',alarm_remark="${dealRemark}",alarm_manage_time=NOW(),alarm_manage_name="${user}"  WHERE "${resultIds}" =ID
+
+--             UPDATE  dxj_spot_result  SET alarm_flag='Y',alarm_remark="${dealRemark}",alarm_manage_time=NOW(),alarm_manage_name="${user}"  WHERE "${resultIds}" LIKE CONCAT("%",ID,"%")
     </update>
     <update id="mergeBCAlarmData">
         UPDATE  dxj_spot_alarm_result
@@ -300,6 +302,12 @@
             and abnormalHandleType =  3 )
         </if>
         )
+--         ORDER BY abnormalHandleAdminType DESC
+--         ORDER BY abnormalHandleAdminType is null , abnormalHandleAdminType
+--         ORDER BY IF ( (abnormalHandleType is NULL OR abnormalHandleType=0),1,0),IF ( (abnormalHandleAdminType is NULL),0,1) ,abnormalHandleAdminType
+
+        ORDER BY IF ( (abnormalHandleType is NULL OR abnormalHandleType=0),1,0),IF ( (abnormalHandleAdminType is NULL ),0,1)
+        ,IF ( (alarm_flag ='N' ),0,1),abnormalHandleAdminType
         LIMIT ${startPage},${numPerPage}
 
     </select>
@@ -412,7 +420,7 @@
     <select id="Interlocking_get_temp_result" resultType="com.demo.model.interlocking.Interlocking">
           SELECT * FROM dxj_alarmtype_temp WHERE  deptName="${deptName}"  and  routeName="${routeName}" AND  zoneName="${zoneName}"
             AND   devName="${devName}" AND scPart="${scPart}" AND scContent="${scContent}"
-           AND altpid="${altpid}" AND stdValue ="${stdValue}"
+           AND altpid="${altpid}"
     </select>
     <select id="search_config_alarm_liable_all" resultType="com.demo.model.universal.ConfigUser">
         SELECT user,alarmType,department,team FROM dxj_config_liable
@@ -427,14 +435,15 @@
             ALTPID as altpid,
             abnormalHandleUser,
             abnormalHandleAdminType,
-            abnormalHandleDealDepart
+            abnormalHandleDealDepart,
+            uploadResultTime
         FROM
             dxj_spot_result
         WHERE
-            TASKSTART_TM >=CONCAT(CURDATE(),' 00:00:00')
-            AND CONCAT(CURDATE(),' 23:59:59')>TASKSTART_TM
+            uploadResultTime >=CONCAT(CURDATE(),' 00:00:00')
+            AND CONCAT(CURDATE(),' 23:59:59')>=uploadResultTime
             AND ALTPID>0
-            AND abnormalHandleDealDepart IS NULL
+            AND abnormalHandleAdminType IS NULL
     </select>
     <select id="Interlocking_get_all_alarmType" resultType="com.demo.model.interlocking.Interlocking">
         SELECT  * FROM dxj_alarmtype_temp
@@ -683,8 +692,16 @@
         FROM
               dxj_spot_alarm_result
         WHERE
+        ((
             uploadResultTime>="${start_date}"
             AND "${end_date}">=uploadResultTime
+        )
+        or (
+              uploadResultTimeEnd>="${start_date}"
+              AND "${end_date}">=uploadResultTimeEnd
+        ))
+
+
             AND deptName !="综合工段"
 
         <if test="deptName!='test'">
@@ -696,7 +713,8 @@
             <if test="alarm_type != 'test'">
                 AND abnormalHandleAdminType="${alarm_type}"
             </if>
-        ORDER BY alarm_merge,deptName,monthly_alarm_list ,uploadResultTime DESC
+--             AND monthly_alarm_list='N'  -- 此为取消B类清单中显示的已添加到月度清单的数据，暂时不用
+            ORDER BY alarm_merge,deptName,monthly_alarm_list ,uploadResultTime DESC
     </select>
     <select id="getbcAlarmContent" resultType="com.demo.model.interlocking.Interlocking">
 --         SELECT
@@ -720,7 +738,7 @@
     <select id="getbcMonthlyAlarmListData" resultType="com.demo.model.interlocking.Interlocking">
         SELECT         deptName,routeName,zoneName,devName,scPart,monthly_alarm_list,
                 scContent,uploadResultTime,alarm_times ,id as alarmId,abnormalHandleAdminType,pid ,
-                remark,alarm_personLiable as dealPerson,alarm_deal_delay,alarm_deal_delay_remark,resultId,uploadResultTimeEnd
+                remark,alarm_personLiable as dealPerson,alarm_deal_delay,alarm_deal_delay_remark,resultId,uploadResultTimeEnd,result,std_value as 'stdValue'
          from dxj_spot_alarm_result WHERE
           monthly_alarm_list='Y'
           and alarm_merge='N'
@@ -753,6 +771,52 @@
         AND abnormalHandleAdminType="${alarmType}"
         AND alarm_merge="N"
     </select>
+    <select id="getBCData" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT DEPT_NAME as 'deptName' ,uploadResultTime,devName,SC_PART as 'scPart' ,SC_CONTENT as 'scContent',
+                abnormalHandleAdminType,alarm_flag as 'alarmFlag',REMARK as 'remark'
+        FROM dxj_spot_result
+        WHERE TASKSTART_TM>="${start}"
+         AND  "${end}">TASKSTART_TM
+        <if test="deptName!='test'">
+            AND DEPT_NAME="${deptName}"
+        </if>
+        <if test="alarmType==2||alarmType==3">
+            AND abnormalHandleAdminType=${alarmType}
+        </if>
+        <if test="alarmType==0">
+            AND (abnormalHandleAdminType='2' OR abnormalHandleAdminType='3')
+        </if>
+        <if test="state==1">
+            AND alarm_flag="Y"
+        </if>
+        <if test="state==2">
+            AND alarm_flag="N"
+        </if>
+        ORDER BY DEPT_NAME,uploadResultTime
+
+
+    </select>
+    <select id="getBCMergeData" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT deptName ,
+--         (CASE WHEN uploadResultTimeEnd is NULL THEN uploadResultTime ELSE CONCAT(uploadResultTime,'至',uploadResultTimeEnd) END) as 'uploadResultTime',
+        uploadResultTime,uploadResultTimeEnd,
+        devName,scPart ,scContent,
+        abnormalHandleAdminType,alarm_flag as 'alarmFlag',remark,alarm_times
+        FROM dxj_spot_alarm_result
+        WHERE uploadResultTime>="${start}"
+        AND  "${end}">uploadResultTime
+        <if test="deptName!='test'">
+            AND deptName="${deptName}"
+        </if>
+        <if test="alarmType==2||alarmType==3">
+            AND abnormalHandleAdminType=${alarmType}
+        </if>
+        <if test="alarmType==0">
+            AND (abnormalHandleAdminType='2' OR abnormalHandleAdminType='3')
+        </if>
+        ORDER BY deptName,uploadResultTime
+    </select>
+
 
 
 </mapper>

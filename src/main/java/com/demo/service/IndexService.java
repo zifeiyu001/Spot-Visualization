@@ -463,16 +463,15 @@ public interface IndexService {
                                             String spotResult,String userName1,String uploadResultTime,String selectDepart,String alarmType,String user,String pid);
 
     List<Interlocking> Interlocking_get_temp_result(String deptName,  String routeName, String zoneName,
-                                               String devName, String scPart,String scContent,
-                                                    String stdValue,String altpid );
+                                               String devName, String scPart,String scContent, String altpid );
     Integer Interlocking_update_temp_result( String deptName, String routeName, String zoneName,
                                                        String devName, String scPart, String scContent,
-                                                        String altpid,  String stdValue,
-                                                        String alarmType,String userName,String selectDepart);
+                                                        String altpid,
+                                                        String alarmType,String dealPersonLiable,String selectDepart);
    Integer Interlocking_insert_temp_result( String deptName, String routeName, String zoneName,
                                                         String devName, String scPart, String scContent,
-                                                        String altpid,  String stdValue,
-                                                        String alarmType,String userName,String selectDepart);
+                                                        String altpid,
+                                                        String alarmType,String dealPersonLiable,String selectDepart);
 
     Integer Interlocking_update_alarm_result( String deptName, String routeName, String zoneName,
                                              String devName, String scPart, String scContent,
@@ -550,7 +549,9 @@ public interface IndexService {
 //    获取是否有处理报警的权限
     List<ConfigUser> getAlarmDealJurisdiction(String dev_depart,String userid,String alarm_type);
 
-
+//获取BC类报警的所有数据
+    List<Interlocking> getBCData(String start,String end,String deptName,String alarmType,String state);
+    List<Interlocking> getBCMergeData(String start,String end,String deptName,String alarmType,String state);
 
 //===================app接口测试===================================
 //   点检结果

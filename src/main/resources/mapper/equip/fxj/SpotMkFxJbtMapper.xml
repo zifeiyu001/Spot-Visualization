@@ -20,6 +20,11 @@
                                 "一级"
                             END
                         ) level,
+
+
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag,
                         std_value AS standard
                 FROM
                         dxj_spot_result

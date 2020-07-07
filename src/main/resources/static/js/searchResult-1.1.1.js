@@ -1,4 +1,3 @@
-
 /*=====================================判断登录用户=================================================*/
 
 // 获取登录用户id
@@ -118,8 +117,18 @@ jeDate({
     okfun:function(val){alert(val)}
 });
 jeDate({
+    dateCell:"#form5dateStart",
+    format:"YYYY-MM-DD hh:mm:ss",
+    // format:"YYYY-MM-DD 00:00:00",
+    isinitVal:true,
+    isTime:true, //isClear:false,
+    initHour:-24,
+    minDate:"1900-01-01 00:00:00",
+    okfun:function(val){alert(val)}
+});
+jeDate({
 
-    dateCell:"#dateEnd2",
+    dateCell:"#form5dateEnd",
     // format:"YYYY-MM-DD 00:00:00",
     format:"YYYY-MM-DD hh:mm:ss",
     isinitVal:true,
@@ -131,13 +140,13 @@ jeDate({
 jeDate({
     dateCell:"#search-bc-start-date",
     format:"YYYY-MM-DD hh:mm:ss",
-    // format:"YYYY-MM-DD 00:00:00",
-    isinitVal:true,
-    isTime:true, //isClear:false,
-    initHour:-30*24,
+    isinitVal:false,
+    // isTime:true,
+    // initHour:0,
     minDate:"1900-01-01 00:00:00",
     okfun:function(val){alert(val)}
 });
+$("#search-bc-start-date").val(getCurrentMonthFirst());
 jeDate({
     dateCell:"#search-bc-end-date",
     format:"YYYY-MM-DD hh:mm:ss",
@@ -159,43 +168,48 @@ function chooseItem(param){
         $("#li2").attr("class","");
         $("#li3").attr("class","");
         $("#li4").attr("class","");
+        $("#li5").attr("class","");
         $(".form1").show();
         $(".form2").hide();
         $(".form3").hide();
         $(".form4").hide();
+        $(".form5").hide();
     }
     else if (param==='alarmDeal') {
         $("#li1").attr("class","");
         $("#li2").attr("class","active");
         $("#li3").attr("class","");
         $("#li4").attr("class","");
+        $("#li5").attr("class","");
         $(".form1").hide();
         $(".form2").show();
         $(".form3").hide();
         $(".form4").hide();
-
-
+        $(".form5").hide();
     }
     else if (param==='service') {
         $("#li1").attr("class","");
         $("#li2").attr("class","");
         $("#li3").attr("class","active");
         $("#li4").attr("class","");
+        $("#li5").attr("class","");
         $(".form1").hide();
         $(".form2").hide();
         $(".form3").show();
         $(".form4").hide();
+        $(".form5").hide();
     }
-    else {
+    else if (param==='config') {
         $("#li1").attr("class","");
         $("#li2").attr("class","");
         $("#li3").attr("class","");
         $("#li4").attr("class","active");
+        $("#li5").attr("class","");
         $(".form1").hide();
         $(".form2").hide();
         $(".form3").hide();
         $(".form4").show();
-
+        $(".form5").hide();
         setTimeout(function(){
             var a=$('.htmleaf-header').outerHeight(true);
             var b=$('#menuHeight').outerHeight(true);
@@ -204,6 +218,18 @@ function chooseItem(param){
             $(".form4").height(d*0.85);
             // alert(d)
         },100);
+    }
+    else {
+        $("#li1").attr("class","");
+        $("#li2").attr("class","");
+        $("#li3").attr("class","");
+        $("#li4").attr("class","");
+        $("#li5").attr("class","active");
+        $(".form1").hide();
+        $(".form2").hide();
+        $(".form3").hide();
+        $(".form4").hide();
+        $(".form5").show();
     }
 
 }
@@ -266,6 +292,7 @@ $(function () {
             $('#workshop2').empty().append(str);
             $('#workshop3').empty().append(str);
             $('#workshop4').empty().append(str);
+            $('#form5workshop').empty().append(str);
             $("#popupWindow-allDept").empty().append(str1);
             $('#route').empty().append('<option value="test">' + '全部线路' + '</option>');
             $('#zone').empty().append('<option value="test">' + '全部区域' + '</option>');
@@ -605,16 +632,20 @@ function search(c,b) {
                     + json[i].devName + '</td><td>'
                     + json[i].scPart + '</td><td>'
                     + json[i].scContent + '</td><td>'
-                    + (json[i].remark==null?"-":json[i].remark) + '</td><td>'
+                    // + (json[i].remark==null?"-":json[i].remark) + '</td><td>'
+                    + (CheckIsNullOrEmpty(json[i].remark)?'-':json[i].remark) + '</td><td>'
                     + json[i].result + '</td><td>'
                     + judgeAlarm(json[i].abnormalHandleType) + '</td><td>'
                     + (json[i].personLiable==null?"-":json[i].personLiable) + '</td><td>'
                     + (json[i].userName==null?"-":json[i].userName) + '</td><td>'
                     + json[i].taskStartTime + '</td><td>'
                     + json[i].taskEndTime + '</td><td>'
-                    + (json[i].dealPerson==null?'-':json[i].dealPerson) + '</td><td>'
-                    + (json[i].dealUser==null?'-':json[i].dealUser) + '</td><td>'
-                    +((json[i].deal_remark==null||json[i].deal_remark=='')?'-':json[i].deal_remark)+ '</td>';
+                    + (CheckIsNullOrEmpty(json[i].dealPerson)?'-':json[i].dealPerson) + '</td><td>'
+                    + (CheckIsNullOrEmpty(json[i].dealUser)?'-':json[i].dealUser) + '</td><td>'
+                    +(CheckIsNullOrEmpty(json[i].deal_remark)?'-':json[i].deal_remark)+ '</td>';
+                    // + (json[i].dealPerson==null?'-':json[i].dealPerson) + '</td><td>'
+                    // + (json[i].dealUser==null?'-':json[i].dealUser) + '</td><td>'
+                    // +((json[i].deal_remark==null||json[i].deal_remark=='')?'-':json[i].deal_remark)+ '</td>';
 
                 if((json[i].abnormalHandleAdminType == null &&abnormalHandleType>0 &&alarmFlag=='N')&& getHour(json[i].uploadResultTime,getCurDate())>alarm_tips_time) {
                         str += '<td  class="light">'+ judgeAlarm(json[i].abnormalHandleAdminType)+'</td><td>';
@@ -1154,9 +1185,9 @@ function search_bc_alarm_data(){
                         'value='+json[i].alarmId+","+json[i].deptName+","+json[i].abnormalHandleAdminType+","+json[i].resultId+'>'+'</td><td>');
                     str+= (i + 1) + '</td><td>'
                         + json[i].deptName + '</td><td>'
-                        + json[i].routeName + '</td><td>'
+                        // + json[i].routeName + '</td><td>'
                         // + json[i].zoneName + '</td><td>'
-                        // + json[i].devName + '</td><td>'
+                        + json[i].devName + '</td><td>'
                         + json[i].scPart + '</td><td>'
                         + json[i].scContent + '</td><td>'
                         + json[i].remark + '</td><td>'
@@ -1288,7 +1319,7 @@ function search_bc_monthly_alarm_list(param){
                         + json[i].devName + '</td><td>'
                         + json[i].scPart + '</td><td>'
                         + json[i].scContent + '</td><td>'
-                        // + json[i].remark + '</td><td>'
+                        + (json[i].remark==''?'-':json[i].remark) + '</td><td>'
                         +((json[i].uploadResultTimeEnd!=null&&json[i].uploadResultTimeEnd!='')?(dateFormat(json[i].uploadResultTime,'yyyy-MM-dd HH:mm:ss')+"至"+
                             dateFormat(json[i].uploadResultTimeEnd,'yyyy-MM-dd HH:mm:ss')):dateFormat(json[i].uploadResultTime,'yyyy-MM-dd HH:mm:ss'))
                         + '</td><td>'
@@ -1689,7 +1720,85 @@ function changeBCAlarmType() {
     }else {alert("请至少选择一个部门");}
 
 }
+//form5查询BC类的所有数据
+function search_all_BC_data(){
+    var start = $("#form5dateStart").val();
+    var end   = $("#form5dateEnd").val();
+    var deptName=$("#form5workshop option:selected").val();
+    var alarmType=$("#form5alarmType option:selected").val();
+    var state=$("#form5dealState option:selected").val();
+    // alert(start+"--"+end+"--"+deptName+"--"+alarmType +"---"+state);
+    $.ajax({
+        url: "/interlocking/BCType/getAllData",
+        contentType: "application/json",
+        data: JSON.stringify({
+            "start": start,
+            "end": end,
+            // "start": '2020-03-01 00:00:00',
+            // "end": '2020-03-04 00:00:00',
+            "deptName": deptName,
+            "alarmType":alarmType,
+            "state":state
+        }),
+        type: "post",
+        cache: true,
+        dataType: "json",
+        beforeSend: function() {
+            loading = layer.msg('正在加载···', {icon: 16, shade: 0.3, time:0});
+        },
+        success: function (result) {
+            var json=result.data;
+            var code=result.code;
+            $("#form5-tbody").empty();
+            if (json.length>0){
+                var str='';
+                for (var i = 0; i < json.length; i++) {
+                    str += '<tr><td>'+(i + 1) + '</td><td>';
+                    if(state==='2'&&!CheckIsNullOrEmpty(json[i].uploadResultTimeEnd)){
+                            str+=  dateFormat(json[i].uploadResultTime,'yyyy-MM-dd HH:mm:ss') +'至'+dateFormat(json[i].uploadResultTimeEnd,'yyyy-MM-dd HH:mm:ss')+ '</td><td>';
+                    }else {
+                        str+=  dateFormat(json[i].uploadResultTime,'yyyy-MM-dd HH:mm:ss') + '</td><td>';
+                    }
 
+                       str+= json[i].deptName + '</td><td>'
+                        + json[i].devName + '</td><td>'
+                        + json[i].scPart + '</td><td>'
+                        + json[i].scContent + '</td><td>'
+                        + (CheckIsNullOrEmpty(json[i].remark)?'-':json[i].remark)+ '</td><td>'
+                        + (json[i].abnormalHandleAdminType=='2'?'B类':'C类') + '</td><td>';
+                        if(state==='2'){
+                            $("#dealState1").text("报警次数");
+                            str+= json[i].alarm_times + '</td></tr>';
+                        }else {
+                            $("#dealState1").text("处理状态");
+                            str+=  (json[i].alarmFlag=='Y'?'已处理':'未处理') + '</td></tr>';
+                        }
+
+
+                }
+                $("#form5-tbody").append(str);
+            }else {
+                alert("无数据");
+            }
+        },
+        complete: function() {
+            closeChangeBCModal();
+            layer.close(loading);
+        }
+    });
+
+
+}
+//判断数据是否为Null或者undefined或者为空字符串
+/**
+ * @return {boolean}
+ */
+function CheckIsNullOrEmpty(value) {
+    //正则表达式用于判斷字符串是否全部由空格或换行符组成
+    var reg = /^\s*$/;
+    //返回值为true表示不是空字符串
+    return (value == null || value == 'undefined' ||value==''|| value == undefined||reg.test(value))
+}
 /*=======================工具方法=======================================*/
 //计算两个时间测差值
 function getHour(s1, s2) {
@@ -1733,8 +1842,11 @@ function downloadBB(){
     }else {
         title=deptName;
     }
-    var da=['部门','设备','运行时间','内容','时间','次数','责任人'].toString();
-    location.href = "/downloadBB123?data="+da+"&title="+title+"月度报警清单";
+    var da=['部门','设备','部位','内容','时间','次数','责任人'].toString();
+
+    var data=['所属工段','序号','检修项目','检修内容','所需材料','检修时间（h）','检修人员','项目(安全)负责人','厂技术负责人','备注'].toString();
+    // location.href = "/downloadBB123?data="+da+"&title="+title+"月度报警清单";
+    location.href = "/downloadBB123?data="+data+"&title="+deptName;
 }
 
 
@@ -1778,3 +1890,15 @@ function getScrollHeight(){
 function setScrollHeight() {
     $("html,body").animate({"scrollTop":scrollTop});
 }
+function  getCurrentMonthFirst () {
+    var date = new Date();
+
+
+    date.setDate(1);
+    var month = parseInt(date.getMonth() + 1);
+    var day = date.getDate();
+    if (month < 10)  month = '0' + month;
+    if (day < 10)  day = '0' + day;
+    return date.getFullYear() + '-' + month + '-' + day+" 00:00:00"
+}
+// alert("======="+getCurrentMonthFirst());

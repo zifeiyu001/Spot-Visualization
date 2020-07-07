@@ -20,6 +20,11 @@
                     "一级"
                 END
             ) level
+            ,
+
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag
         FROM
             dxj_spot_result
         WHERE
@@ -33,7 +38,7 @@
                     )
              )
 --         AND alarm_flag='N'
---            AND          (ALTPID = 1 OR ALTPID = 2)
+           AND          (ALTPID = 1 OR ALTPID = 2)
 
 				AND
           date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
@@ -52,11 +57,16 @@
             (
                 CASE
                 WHEN ALTPID = 1 THEN
-                    "二级预警"
+                    "二级"
                 WHEN ALTPID = 2 THEN
-                    "一级预警"
+                    "一级"
                 END
             ) level
+             ,
+
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag
         FROM
             dxj_spot_result
         WHERE
@@ -70,7 +80,7 @@
                     )
              )
 
---         AND (ALTPID = 1 OR ALTPID = 2)
+        AND (ALTPID = 1 OR ALTPID = 2)
 --         AND alarm_flag='N'
 				AND
           date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
@@ -91,11 +101,15 @@
             (
                 CASE
                 WHEN ALTPID = 1 THEN
-                    "二级预警"
+                    "二级"
                 WHEN ALTPID = 2 THEN
-                    "一级预警"
+                    "一级"
                 END
             ) level
+             ,
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag
         FROM
             dxj_spot_result
         WHERE
@@ -109,7 +123,7 @@
                     )
              )
 
---         AND (ALTPID = 1 OR ALTPID = 2)
+        AND (ALTPID = 1 OR ALTPID = 2)
 --         AND alarm_flag='N'
 				AND
           date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)

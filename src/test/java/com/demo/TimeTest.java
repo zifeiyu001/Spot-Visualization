@@ -1,16 +1,18 @@
 package com.demo;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimeTest {
+    public static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static void main(String[] args) {
-        timer1();
+//        timer1();
         timer2();
-        timer3();
-        timer4();
+//        timer3();
+//        timer4();
         System.out.println(new Date());
     }
 
@@ -27,12 +29,14 @@ public class TimeTest {
     // 第二种方法：设定指定任务task在指定延迟delay后进行固定延迟peroid的执行
     // schedule(TimerTask task, long delay, long period)
     public static void timer2() {
+        Date date = new Date();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
+
             public void run() {
                 System.out.println("---2----设定要指定任务--------");
             }
-        }, 1000, 5000);
+        }, 0, 5000);
     }
 
     // 第三种方法：设定指定任务task在指定延迟delay后进行固定频率peroid的执行。

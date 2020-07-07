@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <#--判断用户是否登录-->
-<#--<#if !Session.username??>-->
+<#if !Session.username??>
     <script>
         alert("账号未登陆，请登录...");
         window.location.href='http://172.16.5.4/bkzyCMS/login';

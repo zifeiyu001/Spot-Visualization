@@ -20,7 +20,6 @@ public class DESUtil {
         try{
 //            发布使用
             FileInputStream f = new FileInputStream("C:\\Program Files (x86)\\Spot-Visualization\\code\\key.txt");
-//            FileInputStream f = new FileInputStream("src\\main\\resources\\key.txt");
             ObjectInputStream ips = new ObjectInputStream(f);
 
             Key k = (Key) ips.readObject();

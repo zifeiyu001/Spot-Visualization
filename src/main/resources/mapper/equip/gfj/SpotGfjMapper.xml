@@ -26,8 +26,7 @@
                     )
                 AND
 
-    TASKSTART_TM>'2019-09-22'
---                         to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+                        to_days(TASKSTART_TM) = to_days(now())-- 当天数据
                 GROUP BY section
           </select>
     <select id="SPOT_FX_GFJ2_LIST" resultType="com.demo.model.equip.SpotStatistics">
@@ -54,8 +53,7 @@
                     )
                 AND
 
-    TASKSTART_TM>'2019-09-22'
---                         to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+                        to_days(TASKSTART_TM) = to_days(now())-- 当天数据
                 GROUP BY section
     </select>
     <select id="SPOT_FX_GFJ3_LIST" resultType="com.demo.model.equip.SpotStatistics">

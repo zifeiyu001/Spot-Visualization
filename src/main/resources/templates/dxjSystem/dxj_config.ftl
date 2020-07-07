@@ -30,7 +30,7 @@
 	<div class="row">
  <!-----------------------------------------------------责任人---------------------------------------------------------------->
         <div class="col-sm-9" style="  width: 100%; " >
-            <nav class="navbar navbar-default" style="  width: 20%; position: fixed">
+            <nav class="navbar navbar-default" style="width: 20%; position: fixed">
                 <ul class="nav nav-tabs nav-justified">
                     <li id="li1" style="cursor: pointer"><a onclick="chooseItem('duty')">报警责任人配置</a></li>
                 <ul class="nav nav-tabs nav-justified">

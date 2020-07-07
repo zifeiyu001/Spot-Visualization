@@ -43,6 +43,7 @@ function tableAlarmColor(){
     for(var i = 0;i < table.rows.length;i++){
         var _cell = _row[i].cells;
         var d=_cell[4].innerHTML;
+        var e=_cell[5].innerHTML;
         var a="一级";
         var b="二级";
         if(d==a){
@@ -62,8 +63,9 @@ function flashit(){
     for(var i = 0;i < table.rows.length;i++){
         var _cell = _row[i].cells;
         var d=_cell[4].innerHTML;
+        var e=_cell[5].innerHTML;
 
-        if(d=="一级"){
+        if(d=="一级"&&e=='未处理'){
 
             if (table.rows[i].style.backgroundColor  =="transparent"){
                 table.rows[i].style.backgroundColor ="darkred";

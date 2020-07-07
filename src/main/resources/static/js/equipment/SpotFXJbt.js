@@ -1,4 +1,5 @@
-// 基于准备好的dom，初始化echarts实例
+ // 基于准备好的dom，初始化echarts实例
+
 var myChart1 = echarts.init(document.getElementById("spotdata"));
 
 // 指定图表的配置项和数据
@@ -163,7 +164,8 @@ setInterval(function () {
 //======================================报警表格数据获取===================
 var isLoaded2 = false;
 function getAlarmData() {
-    var equipName=$("#equipName option:selected").val();  //获取选中的设备
+    var equipName=$("#chooseEquip option:selected").val();  //获取选中的设备
+    // alert(equipName)
     $.ajax({
         url:"/spot/fx/jbt/alarm",
         contentType: "application/json",
@@ -179,6 +181,7 @@ function getAlarmData() {
             var json = result.data;
             $('#tab tr:gt(0)').remove();
             var s = '';
+            // alert(json.length)
             if (json.length > 0) {
                 //============清空无报警样式css===================
                 $(".alarmbody").css("background-image","")
@@ -192,8 +195,7 @@ function getAlarmData() {
                         + json[i].spot + '</td><td>'
                         + json[i].value + '</td><td>'
                         + json[i].level + '</td><td>'
-                        + '<button style="cursor: pointer;color: #FFFFFF" onclick="dealWith(\'' + json[i].id + '\')">处理</button>'
-                        + '</td></tr>'
+                        +json[i].flag +'</td></tr>'
                     ;
                 }
                 $('#tab').append(s);
@@ -217,102 +219,6 @@ setInterval(function () {
     isLoaded2 && getAlarmData()
 }, 1800000);    //请求时间间隔
 
-
-//=====================================详细点检结果========================
-var isLoaded3 = false;
-function getDetailedData() {
-    var equipName=$("#equipName option:selected").val();  //获取选中的设备
-    $.ajax({
-        url:"/spot/fx/jbt/detailed",
-        contentType: "application/json",
-        data:JSON.stringify({"equipName":equipName}),
-        type:"post",
-        cache:false,
-        async: false,
-        dataType:"json",
-        beforeSend: function() {
-            isLoaded3= false;
-        },
-        success: function (result) {
-            var  json=result.data;
-            $('#table tr:gt(0)').remove();
-            var s = '';
-            if(equipName=='原矿4.5m搅拌桶'||equipName=='再磨4m搅拌桶'){
-                s +='<tr class="CSSmf">' +
-                    '<td>' + json[0].devName + '</td>' +
-                    '<td>' +json[0].a1 + '</td><td>'
-                    + json[0].a2 + '</td><td>'
-                    + json[0].a3 + '</td><td>'
-                    + json[0].a4 + '</td><td>'
-                    + json[0].a5 +'</td><td>'
-                    +json[0].a6 + '</td><td>'
-                    + json[0].a7 + '</td><td>'
-                    + json[0].a8 + '</td><td>'
-                    + json[0].a9 + '</td><tr>'
-                    + '<tr class="CSSdy"><td>'
-                    + json[1].devName + '</td><td>'
-                    +json[1].a1 + '</td><td>'
-                    + json[1].a2 + '</td><td>'
-                    + json[1].a3 + '</td><td>'
-                    + json[1].a4 +'</td></tr>'
-                    + '<tr class="CSSsc"><td>'
-                    + json[2].devName + '</td><td>'
-                    + json[2].a1 + '</td><td>'
-                    + json[2].a2 + '</td><td>'
-                    + json[2].a3 + '</td><tr>';
-            }
-            else if(equipName=='2#选硫搅拌桶'){
-                s +='<tr class="CSSmf">' +
-                    '<td>' + json[0].devName + '</td>' +
-                    '<td>' +json[0].a1 + '</td><td>'
-                    + json[0].a2 + '</td><td>'
-                    + json[0].a3 + '</td><td>'
-                    + json[0].a4 + '</td><td>'
-                    + json[0].a5 +'</td><td>'
-                    +json[0].a6 + '</td><td>'
-                    + json[0].a7 + '</td><td>'
-                    + json[0].a8 + '</td><td>'
-                    + json[0].a9 + '</td><tr>'
-                    + '<tr class="CSSdy"><td>'
-                    + json[1].devName + '</td><td>'
-                    +json[1].a1 + '</td><td>'
-                    + json[1].a2 + '</td><td>'
-                    + json[1].a3 + '</td><td>'
-                    + json[1].a4 +'</td></tr>'
-                    + '<tr class="CSSsc"><td>'
-                    + json[2].devName + '</td><td>'
-                    + json[2].a1 + '</td><td>'
-                    + json[2].a2 + '</td><tr>';
-            }
-            else {
-                s +='<tr class="CSSmf">' +
-                    '<td>' + json[0].devName + '</td>' +
-                    '<td>' +json[0].a1 + '</td><td>'
-                    + json[0].a2 + '</td><td>'
-                    + json[0].a3 + '</td><td>'
-                    + json[0].a4 + '</td><td>'
-                    + json[0].a5 +'</td><td>'
-                    +json[0].a6 + '</td><td>'
-                    + json[0].a7 + '</td><td>'
-                    + json[0].a8 + '</td><td>'
-                    + json[0].a9 + '</td><tr>'
-                    + '<tr class="CSSdy"><td>'
-                    + json[1].devName + '</td><td>'
-                    +json[1].a1 + '</td><td>'
-                    + json[1].a2 + '</td><td>'
-                    + json[1].a3 + '</td><td>'
-                    + json[1].a4 +'</td></tr>';
-            }
-            $('#table').append(s);
-        },
-        complete: function() {
-            isLoaded3 = true; }
-    })
-}
-getDetailedData();
-setInterval(function () {
-    isLoaded3 && getDetailedData()
-}, 1800000);    //请求时间间隔
 function scDiv() {
     var equipName=$("#equipName option:selected").val();
     // alert(equipName1);

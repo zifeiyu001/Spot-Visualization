@@ -167,7 +167,7 @@
         <button class="sc"  onclick="getAlarmData('sb')">
             <h2 class="spotStatistics_title">设备点检数据</h2>
             <div  class="statistics" >
-                    <div id="sb1"></div>
+                <div id="sb1"></div>
             </div>
         </button>
         <button class="dy"  onclick="getAlarmData('dy')">
@@ -304,7 +304,7 @@
         </div>
     </div>
 </div>
-<script src="/js/process/index-1.0.0.js"></script>
+<script src="/js/process/index-1.0.1.js"></script>
 <script src="/js/utils/choosePath.js"></script>
 <script src="/js/utils/alarmTable.js"></script>
 </body>

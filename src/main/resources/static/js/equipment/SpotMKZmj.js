@@ -1,5 +1,5 @@
 // 基于准备好的dom，初始化echarts实例
-var myChart1 = echarts.init(document.getElementById('spotdata'));
+var myChart1 = echarts.init(document.getElementById('spotZmj'));
 
 // 指定图表的配置项和数据
 myChart1.setOption({
@@ -75,6 +75,7 @@ function reqs() {
                 var data = result.data;
                 if(data.length>0) {
                 if (data) {
+
                     for (var a = 0; a < data.length; a++) {
                         sections.push(data[a].section);
                     }
@@ -185,8 +186,7 @@ function getAlarmData(param) {
                         + json[i].spot + '</td><td>'
                         + json[i].value + '</td><td>'
                         +json[i].level +'</td><td>'
-                        +'<button style="cursor: pointer;color: #FFFFFF" onclick="dealWith(\''+json[i].id+'\')">处理</button>'
-                        +'</td></tr>'
+                        +json[i].flag +'</td></tr>'
                 ;}
                 $('#tab').append(s);
             }
@@ -250,8 +250,8 @@ function getDetailedData1(param) {
             isLoaded3 = true; }
     })
 }
-
-getDetailedData();
-setInterval(function () {
-    isLoaded3 && getDetailedData()
-}, 1800000);    //请求时间间隔
+//
+getDetailedData1("param1");
+// setInterval(function () {
+//     isLoaded3 && getDetailedData1()
+// }, 1800000);    //请求时间间隔

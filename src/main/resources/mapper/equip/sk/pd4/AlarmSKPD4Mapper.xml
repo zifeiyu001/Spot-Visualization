@@ -20,6 +20,9 @@
                                 "一级"
                             END
                         ) level,
+                            (CASE   WHEN alarm_flag="N" THEN '未处理'
+                         WHEN alarm_flag="Y" THEN '已处理'
+                          END) flag,
                         std_value AS standard
                 FROM
                         dxj_spot_result
@@ -28,7 +31,7 @@
 												OR (DEPT_NAME="电仪工段" AND devName="4#皮带运输机电机")
 												OR (DEPT_NAME="碎矿生产" AND devName="4#皮带运输机"))
                 AND (ALTPID = 1 OR ALTPID = 2)
-                		and  alarm_flag='N'
+--                 		and  alarm_flag='N'
                 AND date(TASKSTART_TM) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                 ORDER BY
                     uploadResultTime DESC;

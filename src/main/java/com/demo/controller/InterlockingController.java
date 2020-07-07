@@ -158,61 +158,27 @@ public class InterlockingController {
         return objectObjectHashMap;
     }
 
+
 //    // =========================获取点检结果数据==================================
-//    @RequestMapping(value = "/interlocking/getResult1", method = RequestMethod.POST)
-//    @ResponseBody
-//    public Map<String, Object> getResult1(@RequestBody Map<String, String> params) {
-//        String deptName = params.get("deptName");
-//        String route = params.get("route");
-//        String zone = params.get("zone");
-//        String equip = params.get("equip");
-//        String part = params.get("part");
-//        String content = params.get("content");
-//        String startTime = params.get("startTime");
-//        String endTime = params.get("endTime");
-//        String yjCheck = params.get("yjCheck");
-//        String wjCheck = params.get("wjCheck");
-//        String zcCheck = params.get("zcCheck");
-//        String bjCheck = params.get("bjCheck");
-//        String abjType1 = params.get("abjType1");
-//        String abjType2 = params.get("abjType2");
-//        String abjType3 = params.get("abjType3");
-//        String sbjType1 = params.get("sbjType1");
-//        String sbjType2 = params.get("sbjType2");
-//        String sbjType3 = params.get("sbjType3");
-//        String nowPage = params.get("nowPage");
-//        String numPerPage1 = params.get("numPerPage");
-//        Integer numPerPage = Integer.parseInt(params.get("numPerPage"));
-//        Integer startPage = Integer.parseInt(params.get("startPage"));
-//
-//        List<ConfigUser> configUsers = indexService.search_config_alarm_liable_all();
-//
-//        //查询结果数量
-//        Integer integer = indexService.Interlocking_get_result_total1(deptName, route, zone, equip, part, content, startTime, endTime, yjCheck,wjCheck,zcCheck, bjCheck, abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3 );
-//
-//        if (startTime.equals("")) {
-//            Date now = new Date();
-//            Date startDate = DateUtils.addDays(now, -30);
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            startTime = sdf.format(startDate);// format  为格式化方法
-//        }
-//        HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-//        List<Interlocking> spotResults = indexService.Interlocking_get_result1(deptName, route, zone, equip, part, content, startTime, endTime, yjCheck,wjCheck,zcCheck, bjCheck, abjType1, abjType2, abjType3,sbjType1,sbjType2,sbjType3,
-//                startPage, numPerPage);
-//        for (int a=0;a<spotResults.size();a++){
-//            List<AlarmDealData> alarm_deal_data = indexService.get_alarm_deal_data(spotResults.get(a).getResultId());
-//            if(alarm_deal_data.size()>0){
-//                spotResults.get(a).setDealData("1");
-//            }
-//            else {
-//                spotResults.get(a).setDealData("0");
-//            }
-//
-//        }
-//        objectObjectHashMap.put("total", integer);
-//        objectObjectHashMap.put("data", spotResults);
-//        return objectObjectHashMap;
-//    }
+    @RequestMapping(value = "/interlocking/BCType/getAllData", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> getResult1(@RequestBody Map<String, String> params) {
+        HashMap<String, Object> stringObjectMap = new HashMap<String, Object>();
+        String start = params.get("start");
+        String end = params.get("end");
+        String deptName = params.get("deptName");
+        String alarmType = params.get("alarmType");
+        String state = params.get("state");
+        List<Interlocking> bcData;
+        if (state.equals("2")){
+            bcData= indexService.getBCMergeData(start, end, deptName, alarmType, state);
+        }else {
+            bcData = indexService.getBCData(start, end, deptName, alarmType, state);
+        }
+        stringObjectMap.put("code", 200);
+        stringObjectMap.put("data",bcData );
+        return stringObjectMap;
+    }
     /*===========================================报警处理单查询=============================*/
 //  通过resultID查询报警处理单
     @RequestMapping(value = "/interlocking/getAlarmDealData", method = RequestMethod.POST)
@@ -368,11 +334,12 @@ public class InterlockingController {
         String dealRemark = params.get("dealRemark");
         String userId = (String) request.getSession().getAttribute("username");
         String user = (String) request.getSession().getAttribute("user");
-
+        String[] split = resultIds.split(",");
         String alarmIds = "(" + alarmId + ")";
         Set hashSet = new HashSet();
         String[] deptName = deptNames.split(",");
         String[] alarm_type = alarm_types.split(",");
+
         int length = 0;
         for (int a=0;a<deptName.length;a++){
             String deptName1 = "%" + deptName[a] + "%";
@@ -386,13 +353,16 @@ public class InterlockingController {
             if (deptName.length == length) {
 //                判断是立即处理
                 if (dealStatus.equals("1")){
-                    //              处理alarm表报警
+                    //处理alarm表报警
                     Integer dealResult = indexService.dealBCAlarm(alarmIds,dealRemark,user);
 //                处理result表报警
                     if (dealResult > 0) {
                             hashMap.put("data", "处理完成！");
                             hashMap.put("code","200");
-                            indexService.dealBCAlarmInResult(resultIds, dealRemark, user);
+                        String[] split1 = resultIds.split(",");
+                        for (String s : split1) {
+                                indexService.dealBCAlarmInResult(s, dealRemark, user);
+                            }
                     } else {
                         hashMap.put("data", "处理失败！");
                         hashMap.put("code","400");
@@ -451,13 +421,12 @@ public class InterlockingController {
 //        有权限时
         if (authority.equals("true")){
 //             获取alarm表中resultid
-            String resultIds1="";//所有需修改的resultId
-//            System.out.println(alarmId+"");
+            StringBuilder resultIds1= new StringBuilder();//所有需修改的resultId
             for(int b=0;b<alarmId.split(",").length;b++){
                 List<Interlocking> resultId_alarmid = indexService.get_resultId_alarmid(alarmId.split(",")[b]);
-                resultIds1=resultIds1+resultId_alarmid.get(0).getResultId()+",";
+                resultIds1.append(resultId_alarmid.get(0).getResultId()).append(",");
             }
-            Integer integer = indexService.changeBCAlarmType("("+alarmId+")",resultIds1, responsibilityDeptName, alarm_after_Type, personLiable.toString());
+            Integer integer = indexService.changeBCAlarmType("("+alarmId+")", resultIds1.toString(), responsibilityDeptName, alarm_after_Type, personLiable.toString());
             if (integer>0){
                 hashMap.put("data","修改完成！");
                 hashMap.put("code","200");
@@ -653,10 +622,7 @@ public class InterlockingController {
         String operationName = request.getSession().getAttribute("user").toString();  //用户名
         String selectDepart = params.get("selectDepart");
         String part = params.get("part");
-//        System.out.println("operationName====="+operationName+"===========resultId"+resultId);
-//        String responsibleUser = changePersonLiable(resultId); //责任人
         String dealPersonLiable = getDealPersonLiable(selectDepart, alarmType);//责任人
-//        System.out.println("责任人==="+dealPersonLiable);
 //        判断是否选择报警处理部门
         if(selectDepart.isEmpty()){
             hashMap.put("data", "请至少选择一个部门");
@@ -681,15 +647,14 @@ public class InterlockingController {
                     String altpid = resultByResult.get(0).getAltpid();
                     String stdValue = resultByResult.get(0).getStdValue();
                     String uploadResultTime = resultByResult.get(0).getUploadResultTime(); //上传时间
-    //是否为BC类报警
+                    //是否为BC类报警
                     if (alarmType.equals("2") || alarmType.equals("3")) {
-    //                    查询alarmResult表中是否有相同数据
+                    // 查询alarmResult表中是否有相同数据
                         List<Interlocking> rsu = indexService.searchAlarmResultDataByInfo(deptName, routeName, zoneName, devName, scPart, scContent, remark, alarmType);
                         if (rsu.size() > 0) {
                             List<Interlocking> interlockings = indexService.getbcAlarmContent(rsu.get(0).getAlarmId());
-//                            System.out.println(rsu.get(0).getAlarmId());
                             String alarmResultId=interlockings.get(0).getResultId()+","+resultId+",";
-    //                        获取数据中的最大、最小时间
+                            //获取数据中的最大、最小时间
                             String start = interlockings.get(0).getUploadResultTime();
                             String end = interlockings.get(0).getUploadResultTimeEnd();
                             ToolUtil toolUtil = new ToolUtil();
@@ -697,7 +662,6 @@ public class InterlockingController {
                             HashMap<String, String> stringStringHashMap = toolUtil.MaxMinValuesOfMultipleData(c);
                             String startTime = stringStringHashMap.get("start");
                             String endTime = stringStringHashMap.get("end");
-//
     //                        数据合并，增加次数(修改开始、结束时间，责任部门、责任人、报警类型)
                             Integer integer = indexService.updateAlarmResultTimes(rsu.get(0).getAlarmId(), rsu.get(0).getAlarm_times(), selectDepart,
                                     dealPersonLiable, alarmType,startTime, endTime, alarmResultId);
@@ -726,28 +690,17 @@ public class InterlockingController {
                             hashMap.put("data", "操作成功");
                             hashMap.put("msg", "true");
                     }
-
+                    /*将报警数据同步到报警临时表中*/
+//                    判断有无数据
+                    List<Interlocking> result = indexService.Interlocking_get_temp_result(deptName, routeName, zoneName, devName, scPart, scContent, altpid);
+                    if (result.size() > 0) {//判断有数据
+                        //update
+                        indexService.Interlocking_update_temp_result(deptName, routeName, zoneName, devName, scPart, scContent, altpid, alarmType, dealPersonLiable, selectDepart);
+                    } else {
+                        //insert
+                        indexService.Interlocking_insert_temp_result(deptName, routeName, zoneName, devName, scPart, scContent,  altpid, alarmType, dealPersonLiable, selectDepart);
+                    }
                 }
-    //暂时停用
-    //
-    //                //  将修改的报警类型及责任人同步到报警表中
-    //                indexService.Interlocking_update_alarm_result(deptName, routeName, zoneName, devName, scPart, scContent, user, alarmType);
-    //
-    //                List<Interlocking> result = indexService.Interlocking_get_temp_result(deptName, routeName, zoneName, devName, scPart, scContent, stdValue, altpid);
-    //                if (result.size() > 0) {//判断有数据
-    //                    //update
-    //                    Integer result1 = indexService.Interlocking_update_temp_result(deptName, routeName, zoneName, devName, scPart, scContent, stdValue, altpid, alarmType, userName, selectDepart);
-    //                } else {
-    //                    //insert
-    //                    Integer result2 = indexService.Interlocking_insert_temp_result(deptName, routeName, zoneName, devName, scPart, scContent, stdValue, altpid, alarmType, userName, selectDepart);
-    //                }
-    //                hashMap.put("data", "操作成功");
-    //                hashMap.put("msg", "true");
-    //                indexService.Interlocking_changeAlarmPersonLiable(resultId, responsibleUser); //保存数据
-    //            } else {
-    //                hashMap.put("data", "操作失败");
-    //                hashMap.put("msg", "error");
-    //            }
 
             } else {
                 hashMap.put("data", "无权限操作");
@@ -757,33 +710,60 @@ public class InterlockingController {
         return hashMap;
     }
 //
-//    // 报警类型根据之前选择自动执行
-//    private void alarmData() {
-//        /*
-//         * 找出当日已经点检，并且为报警的数据
-//         * 责任部门为空
-//         * 遍历数据，当报警临时表中的多个字段相同时，将报警类型修改人、报警类别、责任部门数据 更新到点检结果表中
-//         * 根据报警类别，责任部门，跟新责任人
-//         * */
-//        List<Interlocking> interlockings = indexService.Interlocking_get_all_alarm_byDay(); //当日所有报警数据
-//        List<Interlocking> allAlarmType = indexService.Interlocking_get_all_alarmType(); //所有报警类型
-//        for (Interlocking a : interlockings) { //遍历当日所有报警数据
-//            for (Interlocking b : allAlarmType) { //遍历所有报警类型
-//                if (a.getDeptName().equals(b.getDeptName()) && a.getRouteName().equals(b.getRouteName()) && a.getZoneName().equals(b.getZoneName())
-//                        && a.getDevName().equals(b.getDevName()) && a.getScPart().equals(b.getScPart()) && a.getScContent().equals(b.getScContent())
-//                        && a.getAltpid().equals(b.getAltpid()) && a.getStdValue().equals(b.getStdValue())) {//当报警类型相同时
-//                    Integer configUsers = indexService.Interlocking_changeAlarmType(a.getResultId(), b.getAbnormalHandleAdminType(), b.getAbnormalHandleUser(), b.getAbnormalHandleDealDepart());
-//                    if (configUsers > 0) { //当报警级别修改完毕后
-//                        String user = changePersonLiable(a.getResultId());
-//                        Integer integer = indexService.Interlocking_changeAlarmPersonLiable(a.getResultId(), user); // 存储对应类别、部门的责任人
-//                        if (integer > 0) {
-//                            Integer integer1 = indexService.Interlocking_update_alarm_result(a.getDeptName(), a.getRouteName(), a.getZoneName(), a.getDevName(), a.getScPart(), a.getScContent(), user,a.getAbnormalHandleAdminType());
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    // 报警类型根据之前选择自动执行
+    private void alarmData() {
+        /*
+         * 找出当日已经点检，并且为报警的数据
+         * 责任部门为空
+         * 遍历数据，当报警临时表中的多个字段相同时，将报警类型修改人、报警类别、责任部门数据 更新到点检结果表中
+         * 根据报警类别，责任部门，跟新责任人
+         * */
+//        System.out.println("开始-------------------");
+        List<Interlocking> interlockings = indexService.Interlocking_get_all_alarm_byDay(); //当日所有报警数据
+        List<Interlocking> allAlarmType = indexService.Interlocking_get_all_alarmType(); //所有报警类型
+        for (Interlocking a : interlockings) { //遍历当日所有报警数据
+            for (Interlocking b : allAlarmType) { //遍历所有报警类型（已在报警表中存在）
+                if (a.getDeptName().equals(b.getDeptName()) && a.getRouteName().equals(b.getRouteName()) && a.getZoneName().equals(b.getZoneName())
+                        && a.getDevName().equals(b.getDevName()) && a.getScPart().equals(b.getScPart()) && a.getScContent().equals(b.getScContent())
+                        && a.getAltpid().equals(b.getAltpid()) ) {
+                    //当此报警类型，修改result表的报警类型
+                        Integer integer = indexService.Interlocking_changeAlarmType(a.getResultId(), b.getAbnormalHandleAdminType(), b.getAbnormalHandleUser(), b.getAbnormalHandleDealDepart(), b.getDealUser());
+                        if (integer>0){
+
+//                            获取BC报警表中有相同报警内容的数据
+                            List<Interlocking> rsu = indexService.searchAlarmResultDataByInfo(b.getDeptName(), b.getRouteName(), b.getZoneName(),
+                                    b.getDevName(), b.getScPart(), b.getScContent(), b.getRemark(), b.getAbnormalHandleAdminType());
+                            if (rsu.size() > 0) {
+//                                有相同报警报警时
+                                List<Interlocking> bcAlarmContent = indexService.getbcAlarmContent(rsu.get(0).getAlarmId());
+//                                拼接resultId
+                                String alarmResultId=bcAlarmContent.get(0).getResultId()+","+a.getResultId();
+                                //获取数据中的最大、最小时间
+                                String start = bcAlarmContent.get(0).getUploadResultTime();
+                                String end = bcAlarmContent.get(0).getUploadResultTimeEnd();
+                                ToolUtil toolUtil = new ToolUtil();
+                                String[] c = {a.getUploadResultTime(), start, end};
+                                HashMap<String, String> stringStringHashMap = toolUtil.MaxMinValuesOfMultipleData(c);
+                                String startTime = stringStringHashMap.get("start");
+                                String endTime = stringStringHashMap.get("end");
+                                //数据合并，增加次数(修改开始、结束时间，责任部门、责任人、报警类型)
+//                                System.out.println(b.getDealUser()+"===========b.getPermission()");
+                                indexService.updateAlarmResultTimes(rsu.get(0).getAlarmId(), rsu.get(0).getAlarm_times(), b.getAbnormalHandleDealDepart(),
+                                        b.getDealUser(), b.getAbnormalHandleAdminType(),startTime, endTime, alarmResultId);
+                            } else { //当alarmResult无数据;
+                                // 插入数据
+                                Integer integer1 = indexService.insertBCAlarmDataToAlarmResult(a.getResultId(), a.getDeptName(), a.getRouteName(), a.getZoneName(),
+                                        a.getDevName(), a.getScPart(), a.getScContent(), a.getRemark(),
+                                        a.getResult(), a.getUserName(), a.getUploadResultTime(), b.getAbnormalHandleDealDepart(), b.getAbnormalHandleAdminType(),b.getDealUser());
+
+                            }
+
+                        }
+
+                }
+            }
+        }
+    }
 
 //    获取处理责任人
     private String getDealPersonLiable(String depart,String alarmType){
@@ -793,7 +773,6 @@ public class InterlockingController {
 * 分别查询每个部门，报警类型的责任人
 * 拼接责任人
 * */
-//        System.out.println("alarmType===="+alarmType+"======depart===="+depart);
         List<ConfigUser> configUsers = indexService.search_config_alarm_liable_all();
         String[] split = depart.split(","); //切分责任部门
         for (String s1 : split) { //获取点检结果表责任部门下的每个部门
@@ -855,14 +834,14 @@ public class InterlockingController {
         return s.toString();
     }
 
-//    //定时操作 （报警类型）
-//    @Component
-//    public class ScheduledTask {
-//        @Scheduled(fixedRate = 1800000) //每半小时执行一次
-//        public void reportCurrentTime() throws InterruptedException {
-//            alarmData();
-//        }
-//    }
+    //定时操作 （报警类型）
+    @Component
+    public class ScheduledTask {
+        @Scheduled(fixedRate = 1000*60*30) //每半小时执行一次
+        public void reportCurrentTime() throws InterruptedException {
+            alarmData();
+        }
+    }
 
 
     public List<Interlocking> aa(List<Interlocking> spotResults, List<ConfigUser> configUsers) {

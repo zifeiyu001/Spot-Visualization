@@ -154,7 +154,7 @@
         })
     }
 </script>
-<script  src="/js/equipment/SpotFXFxj.js"></script>
+<script  src="/js/equipment/SpotFXJbt.js"></script>
 <script  src="/js/equipment/SpotEquip.js"></script>
 <script src="/js/utils/choosePath.js"></script>
 

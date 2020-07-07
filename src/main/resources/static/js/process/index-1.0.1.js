@@ -92,6 +92,7 @@ option={
             color:'#ffffff'
         }
     },
+
     series: [
         {
             type:'pie',
@@ -159,12 +160,25 @@ option={
     ]
 };
 myChart1.setOption(option);
-myChart1.showLoading();
+myChart1.showLoading({
+    text : 'loading',
+    textColor: '#fffdf5',
+    maskColor:'transparent'
+});
 myChart2.setOption(option);
-myChart2.showLoading();
 myChart3.setOption(option);
-myChart3.showLoading();
-
+myChart3.showLoading(
+    {
+        text : 'loading',
+        textColor: '#fffdf5',
+        maskColor:'transparent'
+    }
+);
+myChart2.showLoading({
+    text : 'loading',
+    textColor: '#fffdf5',
+    maskColor:'transparent'
+});
 
 function reqs() {
     var isLoaded1=false;
@@ -185,10 +199,14 @@ function reqs() {
     var danger3=[];
     var alarm3=[];
     var incomplete3=[];
-
+    var complete4=[];
+    var normal4=[];
+    var danger4=[];
+    var alarm4=[];
+    var incomplete4=[];
     $.ajax({
         type: "get",
-        // async: false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        async: false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
         url: "/spot/index/monthlysSotStatistics",    //请求发送到TestServlet处
         data: {},
         dataType: "json",
@@ -216,48 +234,22 @@ function reqs() {
                         danger2.push(data[a].danger);
                         alarm2.push(data[a].alarm);
                         incomplete2.push(data[a].incomplete);
-                    }else {
+                    }else if(data[a].equip==='设备'){
                         complete3.push(data[a].complete);
                         normal3.push(data[a].normal);
                         danger3.push(data[a].danger);
                         alarm3.push(data[a].alarm);
                         incomplete3.push(data[a].incomplete);
-
+                    }else {
+                        complete4.push(data[a].complete);
+                        normal4.push(data[a].normal);
+                        danger4.push(data[a].danger);
+                        alarm4.push(data[a].alarm);
+                        incomplete4.push(data[a].incomplete);
                     }
+
+
             }
-
-
-
-                // for (var a = 0; a < data.length; a++) {
-                //     if (data[a].complete == 0) null;
-                //     else {
-                //         if(data[a].equip=='生产'){
-                //             complete1.push(data[a].complete);
-                //         }else if (data[a].equip=='生产')
-                //     }
-                //
-                // }
-                // for (var b = 0; b < data.length; b++) {
-                //     if (data[b].normal == 0) null;
-                //     else normal1.push(data[b].normal);
-                // }
-                // for (var c = 0; c < data.length; c++) {
-                //     if (data[c].danger == 0) null;
-                //     else
-                //
-                // danger1.push(data[c].danger);
-                // alarm1.push(data[d].alarm);
-                // incomplete1.push(data[e].incomplete);
-                // }
-                // for (var d = 0; d < data.length; d++) {
-                //     if (data[d].alarm == 0) null;
-                //     else alarm1.push(data[d].alarm);
-                // }
-                // for (var e = 0; e < data.length; e++) {
-                //     if (data[e].incomplete == 0) null;
-                //     else incomplete1.push(data[e].incomplete);
-                // }
-
                 myChart1.hideLoading();    //隐藏加载动画
                 myChart1.setOption({        //加载数据图表
                     series: [
@@ -332,6 +324,8 @@ function reqs() {
             }
             else {
                 $("#sc1").text("无点检数据").css("margin-top","30%").css("color","#FFFFFF").css("font-size","16px");
+                $("#sb1").text("无点检数据").css("margin-top","30%").css("color","#FFFFFF").css("font-size","16px");
+                $("#dy1").text("无点检数据").css("margin-top","30%").css("color","#FFFFFF").css("font-size","16px");
             }
 
         },
@@ -625,8 +619,9 @@ function getAlarmData(param) {
                         + json[i].content + '</td><td>'
                         + json[i].result + '</td><td>'
                         +json[i].level + '</td><td>'
-                        +'<button style="cursor: pointer;color: #FFFFFF" onclick="dealWith(\''+json[i].id+'\',\''+param+'\')">处理</button>'
-                        +'</td></tr>'
+                        +json[i].flag+'</td></tr>'
+                        // +'<button style="cursor: pointer;color: #FFFFFF" onclick="dealWith(\''+json[i].id+'\',\''+param+'\')">处理</button>'
+                        // +'</td></tr>'
                     ;}
                 $('#tab').append(s);
             }

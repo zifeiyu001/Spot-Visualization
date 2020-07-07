@@ -89,6 +89,7 @@ function reqs() {
                     for (var e = 0; e < data.length; e++) {
                         dangers.push(data[e].danger);
                     }
+
                     myChart1.hideLoading();    //隐藏加载动画
                     myChart1.setOption({        //加载数据图表
                         xAxis: {
@@ -184,8 +185,7 @@ function getAlarmData(param) {
                         + json[i].spot + '</td><td>'
                         + json[i].value + '</td><td>'
                         +json[i].level +'</td><td>'
-                        +'<button style="cursor: pointer;color: #FFFFFF" onclick="dealWith(\''+json[i].id+'\')">处理</button>'
-                        +'</td></tr>'
+                        +json[i].flag +'</td></tr>'
                 ;}   $('#tab').append(s);
             }
             else {

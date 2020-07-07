@@ -79,7 +79,7 @@ function reqs1() {
     var WCus=[];
     $.ajax({
         type : "get",
-        async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
         url : "/process/float/FX_1_PV_treatment",    //请求发送到TestServlet处
         data : {},
         dataType : "json",   //返回数据形式为json
@@ -510,8 +510,7 @@ function getAlarmData(param) {
                         + json[i].spot + '</td><td>'
                         + json[i].value + '</td><td>'
                         +json[i].level +'</td><td>'
-                        +'<button style="cursor: pointer;color: #FFFFFF"  onclick="dealWith(\''+json[i].id+'\')">处理</button>'
-                        +'</td></tr>'
+                        +json[i].flag +'</td></tr>'
                     ;}
                 $('#tab').append(s);
             }

@@ -10,13 +10,13 @@
 
         ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV07_2' THEN DocValue  else 0 end ), 2) as  'WCu',     -- 总尾矿铜品位
 
-        ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV07_1' THEN DocValue  else 0 end ), 2) as  'WS',     -- 总尾矿铜品位
+        ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV07_1' THEN DocValue  else 0 end ), 2) as  'WS',     -- 总尾矿硫品位
 
         ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV08_2' THEN DocValue  else 0 end ), 2) as  'CuCu',    -- 铜精矿铜品位
 
         ROUND(MAX(CASE WHEN TagName = 'MK.FEED.ORE.WIC.SUM' THEN DocValue  else 0 end ), 2) as  'CLL',      -- 处理量
 
-        ROUND(MAX(CASE WHEN TagName = 'NDJ1.ND' THEN DocValue/100  else 0 end ), 2) as  'NDJ1ND'
+        ROUND(MAX(CASE WHEN TagName = 'NDJ1.ND' THEN DocValue/100  else 0 end ), 2) as  'NDJ1ND'            -- 铜精矿浓密机底流浓度
 
                 FROM
                         rcd_hour
@@ -28,6 +28,8 @@
                         OR TagName = 'XFenXiYi_001.PV08_2'  -- 铜精矿铜品位
 
                         OR TagName = 'MK.FEED.ORE.WIC.SUM'  -- 处理量
+
+                        OR  TagName='XFenXiYi_001.PV07_1'   -- 总尾矿硫品位
 
                         OR TagName = 'NDJ1.ND'  -- 铜精矿浓密机底流浓度
 

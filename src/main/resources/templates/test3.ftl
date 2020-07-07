@@ -7,27 +7,31 @@
         <meta name="renderer" content="webkit">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link rel="stylesheet" href="//res.layui.com/layui/dist/css/layui.css"  media="all">
-        <link rel="stylesheet" href="/plugins/layui/css/layui.css"  media="all">
-        <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
-        <#--<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>-->
-        <script src="/plugins/layer/layer.js" charset="utf-8"></script>
-        <script src="/plugins/layui/layui.js" charset="utf-8"></script>
-        <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
     </head>
 <body>
 
 
 
    <button type="button" onclick="m()" style="width: 60px;height: 30px;background-color: #00FFFF"></button>
-
-
-
-<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
+    <#--跳转前判断登录人员的工段、岗位、班组、班次等信息-->
+    function m() {
+        $.ajax({
+            type: 'post',
+            url : '/spot/changeShifts/login',
+            data: $("form").serialize(),
+            success : function(responseText) {
+            },
+            complete : function() {
+                //请求完成的处理
+            },
+            error : function() {
+            },
+            beforeSend:function(XMLHttpRequest){
 
+            }
+        });
+    }
 </script>
-
 </body>
 </html>

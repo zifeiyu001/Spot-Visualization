@@ -12,8 +12,7 @@
     </insert>
     <insert id="app_config_set_station_user">
                 INSERT INTO  dxj_jjb_station_user ( deptName, station, team,userName,userId)
-
-                VALUES( "${deptName}", "${station}","${team}","${userName}","${userId}")
+                VALUES( "${deptName}","${station}","${team}","${userName}","${userId}")
     </insert>
     <update id="app_config_update_station">
 

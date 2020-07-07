@@ -83,8 +83,8 @@
         <div class="echartsData"  id="alarm2">
             <div class="spotstatistics" id="alarm3">
                 <h2 class="spotStatistics_title">点检统计</h2>
-                <div class="statistics">
-                    <div id="spotZmj"></div>
+                <div class="statistics" id="spotZmj">
+                    <#--<div ></div>-->
                 </div>
             </div>
             <div class="alarm">

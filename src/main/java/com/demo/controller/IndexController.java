@@ -305,6 +305,8 @@ public class IndexController {
     @ResponseBody
     public Map<String,Object> getSpot_Zmj_Url() {
         Map<String,Object> map = new HashMap<>();
+        List<SpotStatistics> spotStatistics = indexService.SPOT_ZMJ_LIST();
+        System.out.println(spotStatistics.get(0).getSection());
         map.put("msg", "ok");
         map.put("data", indexService.SPOT_ZMJ_LIST());
         return map;
@@ -700,6 +702,7 @@ public class IndexController {
         List<detailedData> detailedData1 = indexService.SPOT_FX_JBT_SB_LIST(equip);
         List<detailedData> detailedData2 = indexService.SPOT_FX_JBT_DY_LIST(equip);
         detailedData1.addAll(detailedData2);
+        System.out.println(equip);
         if (!equip.equals("1#选硫搅拌桶")){
             List<detailedData> detailedData3 = indexService.SPOT_FX_JBT_SC_LIST(equip);
             detailedData1.addAll(detailedData3);

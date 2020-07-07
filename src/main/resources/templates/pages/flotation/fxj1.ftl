@@ -130,11 +130,12 @@
 
     function getDetailedData1(param) {
         var equip=$("#chooseEquip option:selected" ).val();
+        // alert(equip);
         $.ajax({
             url:"/spot/fx/fxj1/detailed/test",
             type:"post",
             // cache:false,
-            // async: false,
+            async: true,
             contentType: "application/json",
             data:JSON.stringify({"param":param,"equip":equip}),
             dataType:"json",

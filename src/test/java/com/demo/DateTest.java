@@ -14,11 +14,11 @@ import java.util.*;
 public class DateTest {
 
     public static void main(String[] args) throws ParseException {
-
+        System.out.println(3|9);
             String a="2020-03-26 16:41:34";
             String b="2020-03-26 17:51:34";
         String h = timeDifference(a, b, "h",3);
-        System.out.println(h);
+//        System.out.println(h);
 
     }
 

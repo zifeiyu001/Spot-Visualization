@@ -93,18 +93,17 @@ public interface InterlockingMapper {
                                             @Param("pid") String pid);
 //    查询临时表是否有数据
     List<Interlocking> Interlocking_get_temp_result(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
-                                               @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,
-                                                @Param("stdValue") String stdValue,@Param("altpid") String altpid);
+                                               @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,@Param("altpid") String altpid);
 //    更新临时表数据
     Integer Interlocking_update_temp_result(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
                                                     @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,
-                                                    @Param("altpid") String altpid, @Param("stdValue") String stdValue,
-                                                       @Param("alarmType") String alarmType, @Param("userName") String userName, @Param("selectDepart") String selectDepart);
+                                                    @Param("altpid") String altpid,
+                                                       @Param("alarmType") String alarmType, @Param("dealPersonLiable") String dealPersonLiable, @Param("selectDepart") String selectDepart);
 //    出入临时表数据
     Integer Interlocking_insert_temp_result(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
                                                        @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,
-                                                       @Param("altpid") String altpid, @Param("stdValue") String stdValue,
-                                                       @Param("alarmType") String alarmType, @Param("userName") String userName, @Param("selectDepart") String selectDepart);
+                                                       @Param("altpid") String altpid, @Param("alarmType") String alarmType,
+                                                        @Param("dealPersonLiable") String dealPersonLiable, @Param("selectDepart") String selectDepart);
 
     List<Interlocking> Interlocking_get_all_alarm_byDay();
     List<Interlocking> Interlocking_get_all_alarmType();
@@ -144,7 +143,6 @@ public interface InterlockingMapper {
     List<Interlocking> getbcMonthlyAlarmListData(@Param("deptName") String deptName);
     //     处理BC类报警
     Integer dealBCAlarm( @Param("alarmId") String alarmId,@Param("dealRemark") String dealRemark,@Param("user") String user);
-
     //    延期bc类报警
     Integer delayBCAlarm( @Param("alarmIds") String alarmIds,@Param("dealRemark")  String dealRemark);
 
@@ -223,7 +221,11 @@ public interface InterlockingMapper {
 
 //    获取是否有处理报警的权限
      List<ConfigUser> getAlarmDealJurisdiction(@Param("dev_depart") String dev_depart,@Param("userid") String userid,@Param("alarm_type") String alarm_type);
-
+    //获取BC类报警的所有数据
+    List<Interlocking> getBCData(@Param("start")String start,@Param("end")String end,
+                                 @Param("deptName")String deptName,@Param("alarmType")String alarmType,@Param("state")String state);
+    List<Interlocking> getBCMergeData(@Param("start")String start,@Param("end")String end,
+                                 @Param("deptName")String deptName,@Param("alarmType")String alarmType,@Param("state")String state);
 
     //    获取配置参数
 

@@ -1,55 +1,71 @@
-package com.demo;
-
-import java.sql.Timestamp;
-import java.text.ParsePosition;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Date;
 
 public class aa {
-//    public static int getDiscrepantDays(Date dateStart, Date dateEnd) {
-//        return (int) ((dateEnd.getTime() - dateStart.getTime()) / 1000 / 60 / 60 / 24);
-//    }
+    public static void main(String[] args) throws Exception {
 
-    public static void main(String[] args) {
-        System.out.println( java.util.UUID.randomUUID());
-//当前日期
-        LocalDate to = LocalDate.now();
-        System.out.println(to);
-// 周期开启日期
-        LocalDate of = LocalDate.of(2019, 9, 7);
-        System.out.println(of);
-        int cycleNum=4;
-// 当前日期与周期开始日期的差值
-        int days = (int) ChronoUnit.DAYS.between(of, to);
-        System.out.println(days);
-        int cycleDate=days%cycleNum;
-        System.out.println(cycleDate);
-//计算周期内日期
-        LocalDate of1 = LocalDate.of(2019, 9, 7 + cycleDate);
-//        System.out.println(days%4);
-//        System.out.println(days);
-//        System.out.println(of);
-        System.out.println(of1);
-        Date date = aa("09:11:01");
-        System.out.println(date.getTime());
-
+        System.out.println(getDate());
     }
-    //String类型转换成Date类型
-    public static Date aa(String date_str) {
-        try {
-            Calendar zcal = Calendar.getInstance();//日期类
-            Timestamp timestampnow = new Timestamp(zcal.getTimeInMillis());//转换成正常的日期格式
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");//改为需要的东西
-            ParsePosition pos = new ParsePosition(0);
-            java.util.Date current = formatter.parse(date_str, pos);
-            timestampnow = new Timestamp(current.getTime());
-            return timestampnow;
+    public static String getDate(){
+        String chineseDate = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String datestr = sdf.format(new Date());
+        String[] strs = datestr.split("-");
+        // 年
+        for (int i = 0; i < strs[0].length(); i++) {
+            chineseDate += formatDigit(strs[0].charAt(i));
         }
-        catch (NullPointerException e) {
-            return null;
+        // 月
+        char c1 = strs[1].charAt(0);
+        char c2 = strs[1].charAt(1);
+        String newmonth = "";
+        if (c1 == '0') {
+            newmonth = String.valueOf(formatDigit(c2));
+        } else if (c1 == '1' && c2 == '0') {
+            newmonth = "十";
+        } else if (c1 == '1' && c2 != '0') {
+            newmonth = "十" + formatDigit(c2);
         }
+        chineseDate = chineseDate + "年" + newmonth + "月";
+        // 日
+        char d1 = strs[2].charAt(0);
+        char d2 = strs[2].charAt(1);
+        String newday = "";
+        if (d1 == '0') {//单位数天
+            newday = String.valueOf(formatDigit(d2));
+        } else if (d1 != '1' && d2 == '0') {//几十
+            newday = String.valueOf(formatDigit(d1)) + "十";
+        } else if (d1 != '1' && d2 != '0') {//几十几
+            newday = formatDigit(d1) + "十" + formatDigit(d2);
+        } else if (d1 == '1' && d2 != '0') {//十几
+            newday = "十" + formatDigit(d2);
+        } else {//10
+            newday = "十";
+        }
+        return chineseDate;
+    }
+    public static char formatDigit(char sign) {
+        if (sign == '0')
+            sign = '〇';
+        if (sign == '1')
+            sign = '一';
+        if (sign == '2')
+            sign = '二';
+        if (sign == '3')
+            sign = '三';
+        if (sign == '4')
+            sign = '四';
+        if (sign == '5')
+            sign = '五';
+        if (sign == '6')
+            sign = '六';
+        if (sign == '7')
+            sign = '七';
+        if (sign == '8')
+            sign = '八';
+        if (sign == '9')
+            sign = '九';
+        return sign;
     }
 }

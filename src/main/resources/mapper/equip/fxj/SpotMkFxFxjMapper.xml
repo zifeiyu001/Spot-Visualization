@@ -27,14 +27,17 @@
                                 "一级"
                             END
                         ) level,
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                         WHEN alarm_flag="Y" THEN '已处理'
+                          END) flag,
                         std_value AS standard
                 FROM
                         dxj_spot_result
                 WHERE
             (ROUTE_NAME='浮选系统' OR ROUTE_NAME='浮选路线')
             AND
-            (   devName = "${equip}" OR
-                devName = CONCAT('二厂浮选电机',substring_index("${equip}",'浮', 1) ) or
+            (   devName = CONCAT("${equip}",'浮选机') OR
+                devName = CONCAT('二厂浮选电机',"${equip}" ) or
                  devName = CONCAT("${equip}",'电机')
             )
                 AND (ALTPID = 1 OR ALTPID = 2)
@@ -60,9 +63,9 @@
         WHERE
             (ROUTE_NAME='浮选系统' OR ROUTE_NAME='浮选路线')
         AND
-        (   devName = "${equip}" OR
-            devName = CONCAT('二厂浮选电机',substring_index("${equip}",'浮', 1) ) or
-             devName = CONCAT("${equip}",'电机')
+        (   devName = CONCAT("${equip}",'浮选机') OR
+            devName = CONCAT('二厂浮选电机',"${equip}") or
+             devName = CONCAT("${equip}",'浮选机电机')
         )
 
         AND to_days(TASKSTART_TM) = to_days(now()) -- 当天数据

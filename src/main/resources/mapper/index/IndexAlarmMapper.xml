@@ -68,7 +68,7 @@
         </if>)
         and
         (ALTPID = 1 OR ALTPID = 2)
-        AND alarm_flag='N'
+--         AND alarm_flag='N'
         and
 --         TO_DAYS(uploadResultTime)=TO_DAYS(NOW())
         date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)

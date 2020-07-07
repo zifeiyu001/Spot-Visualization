@@ -96,6 +96,7 @@
             dxj_spot_result
         WHERE
             DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 本月数据
+
 						AND DEPT_NAME !='综合工段'
 				GROUP BY  RIGHT(DEPT_NAME,2)
 

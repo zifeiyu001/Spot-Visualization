@@ -117,6 +117,7 @@
         (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
         WHEN DEPT_NAME LIKE '%设备' THEN '设备'
         WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        else 'weizhi'
         END) as section,
         SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
         FROM

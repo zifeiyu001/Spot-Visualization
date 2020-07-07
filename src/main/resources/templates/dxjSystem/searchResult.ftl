@@ -233,8 +233,8 @@
                         <li id="li1" class="active" ><a style=" cursor: pointer;" onclick="chooseItem('dxj')">点巡检结果预处理</a></li>
                        <li  id="li2"><a style=" cursor: pointer;" onclick="chooseItem('alarmDeal')">报警月度清单</a></li>
                         <li  id="li3"><a style=" cursor: pointer;" onclick="chooseItem('service')">处理单查询</a></li>
+                       <li  id="li5"><a style=" cursor: pointer;" onclick="chooseItem('BC')">BC类报警查询</a></li>
                        <li  id="li4"><a style=" cursor: pointer;" onclick="chooseItem('config')">配置</a></li>
-                       <#--<li ><a href="/spot/dxj_config">人员配置</a></li>-->
                        <li><a href="javascript:choosePath()">返回上层</a></li>
                     </ul>
                 </nav><!-- /导航区域 -->
@@ -370,7 +370,7 @@
 <#-------------------------B、C类报警处理------------------------------------->
                 <div id="search_service" class="form2" style=" display: none">
                     <div class="col-sm-9" style="width:50%;">
-                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">BC类处理清单</h1>
+                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">BC类未处理清单</h1>
                         <div class="col-sm-12" >
                             <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;  ">
                                 <#--<div style="width: 300px;height: 400px;background-color: #00FFFF"></div>-->
@@ -462,6 +462,7 @@
                                             <td>设备</td>
                                             <td>部位</td>
                                             <td>内容</td>
+                                            <td>备注</td>
                                             <td>时间</td>
                                             <td>次数</td>
                                             <td>延期</td>
@@ -523,6 +524,76 @@
                         </div>
                     </div>
                 </div>
+                <#--BC类报警查询-->
+                <div id="search_service" class="form5" style=" display: none">
+                    <div class="col-sm-9" style="width:100%;">
+                        <div class="col-sm-12" >
+                            <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;    margin-left: 16%;">
+                                <#--<div style="width: 300px;height: 400px;background-color: #00FFFF"></div>-->
+                                <div class="form-group" style = "width:auto;">
+                                    <label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto" >开始时间</label>
+                                    <div class="col-md-4" style="width: 18%;" >
+                                        <input class="form-control dateStart" id="form5dateStart" name="dateStart" type="text" placeholder="请选择" readonly style = "width:auto">
+                                    </div>
+                                    <label for="ass_role_id" class="col-sm-2 control-label" style = "width:auto;    margin-left: 4%;" >结束时间</label>
+                                    <div class="col-md-4" style="width: 18%;">
+                                        <input class="form-control dateEnd" id="form5dateEnd" name="dateStart" type="text" placeholder="请选择" readonly style = "width:auto">
+                                    </div>
+                                    <label for="ass_role_id" class="col-sm-2 control-label"  style = "width:auto;    margin-left: 4%;">工段选择</label>
+                                    <div class="col-md-4"  style="width: 18%;">
+                                        <select class="form-control" id="form5workshop" name="bm" style = "width:100%" >
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" style = "width:auto;" >
+
+                                    <label for="ass_role_id" class="col-sm-2 control-label"  style = "width:auto">报警类型</label>
+                                    <div class="col-md-4"  style="width: 18%;">
+                                        <select class="form-control" id="form5alarmType"  style = "width:100%" >
+                                            <option value="0" selected>全部类型</option>
+                                            <option value="2" >B类报警</option>
+                                            <option value="3">C类报警</option>
+                                        </select>
+                                    </div>
+                                    <label for="ass_role_id" class="col-sm-2 control-label"  style = "width:auto;margin-left: 4%;">处理状态</label>
+                                    <div class="col-md-4"  style="width: 18%;">
+                                        <select class="form-control" id="form5dealState"  style = "width:100%" >
+                                            <option value="0" selected>全选</option>
+                                            <option value="1">已处理</option>
+                                            <option value="2">未处理</option>
+                                        </select>
+                                    </div>
+
+                                    <label type="button" class="btn btn-primary" style = "width:20%;    margin-left: 7%;" onclick="search_all_BC_data()">查询</label>
+                                </div>
+                                <#--<div class="form-group" style = "width:auto;margin-left:10%;" >-->
+                                   <#---->
+                                <#--</div>-->
+
+                            </form>
+                            <div class="form-group col-sm-12" style="margin-top:1%;   width: 73%; margin-left: 14%;" id="liable-details-div">
+                                <table id="groupTable" class="table table-striped table-bordered table-hover">
+                                    <thead id="groupTable-thead" align="center">
+                                    <tr>
+                                        <td>序号</td>
+                                        <td>日期</td>
+                                        <td>部门</td>
+                                        <td>设备</td>
+                                        <td>部位</td>
+                                        <td>内容</td>
+                                        <td>备注</td>
+                                        <td>报警类型</td>
+                                        <td id="dealState1">处理状态</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="form5-tbody" align="center" class="liabletbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <#--配置页面-->
                 <div class="col-sm-12 form4" style=" display: none">
                     <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;    width: 100%; height: 100%">
                         <iframe src="/spot/dxj_config" frameborder="0" width="100%"  height="100%"></iframe>
@@ -813,7 +884,7 @@
             </div>
         </div>
 
-<script type="text/javascript" src="/js/searchResult-1.0.7.js?"></script>
+<script type="text/javascript" src="/js/searchResult-1.1.1.js?"></script>
 
 </body>
 </html>

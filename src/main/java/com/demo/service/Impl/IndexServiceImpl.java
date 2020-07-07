@@ -1514,18 +1514,18 @@ public class IndexServiceImpl implements IndexService {
                 spotResult,userName1,uploadResultTime,selectDepart,alarmType,user,pid);
     };
     @Override
-    public List<Interlocking> Interlocking_get_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String stdValue, String altpid) {
-        return interlockingMapper.Interlocking_get_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,stdValue,altpid);
+    public List<Interlocking> Interlocking_get_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid) {
+        return interlockingMapper.Interlocking_get_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,altpid);
     }
 
     @Override
-    public Integer Interlocking_update_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid, String stdValue, String alarmType, String userName, String selectDepart) {
-        return interlockingMapper.Interlocking_update_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,stdValue,altpid,alarmType,userName,selectDepart);
+    public Integer Interlocking_update_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid,  String alarmType, String dealPersonLiable, String selectDepart) {
+        return interlockingMapper.Interlocking_update_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,altpid,alarmType,dealPersonLiable,selectDepart);
     }
 
     @Override
-    public Integer Interlocking_insert_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid, String stdValue, String alarmType, String userName, String selectDepart) {
-        return interlockingMapper.Interlocking_insert_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,stdValue,altpid,alarmType,userName,selectDepart);
+    public Integer Interlocking_insert_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid,String alarmType, String dealPersonLiable, String selectDepart) {
+        return interlockingMapper.Interlocking_insert_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,altpid,alarmType,dealPersonLiable,selectDepart);
     }
 
     @Override
@@ -1583,7 +1583,6 @@ public class IndexServiceImpl implements IndexService {
     public Integer dealBCAlarm(String alarmId,String dealRemark,String user){
         return interlockingMapper.dealBCAlarm( alarmId,dealRemark,user);
     };
-
 //    延期bc类报警
     @Override
     public Integer delayBCAlarm(String alarmIds,String dealRemark){
@@ -1694,6 +1693,13 @@ public class IndexServiceImpl implements IndexService {
 //    获取是否有处理报警的权限
     public List<ConfigUser> getAlarmDealJurisdiction(String dev_depart,String userid,String alarm_type){
         return  interlockingMapper.getAlarmDealJurisdiction(dev_depart, userid, alarm_type);
+    };
+    //获取BC类报警的所有数据
+    public List<Interlocking> getBCData(String start,String end,String deptName,String alarmType,String state){
+        return interlockingMapper.getBCData(start,end,deptName,alarmType,state);
+    };
+    public List<Interlocking> getBCMergeData(String start,String end,String deptName,String alarmType,String state){
+        return interlockingMapper.getBCMergeData(start,end,deptName,alarmType,state);
     };
 
     //    =======================app测试==================================

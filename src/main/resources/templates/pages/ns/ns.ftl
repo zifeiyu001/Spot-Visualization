@@ -44,9 +44,9 @@
         #firstColumn{width: 18%;height: 100%;min-width: 250px;min-height: 400px;display: inline-block;position: relative;float: left;}
         /*生产/点检数据*/
         #scdata ,#djdata,#qxcl{height: 98% !important;width: 98% !important;}
-        .spotstatistics {width: 100%;height: 33%;min-height: 200px;min-width: 200px;margin: 2px;
+        .spotstatistics {width: 100%;height: 49%;min-height: 200px;min-width: 200px;margin: 2px;
             background-size: 100% 100%;background-image: url("/images/module/aleftboxtbott.png");}
-        .spotStatistics_title{text-align: center ;color: #FFFFFF;padding-top: 1%;height: 8%;font-size: 12px;}
+        .spotStatistics_title{text-align: center ;color: #FFFFFF;padding-top: 4%;height: 8%;font-size: 12px;}
         .statistics{width: 100%;height: 91%;}
 
         /*图形区*/
@@ -128,12 +128,12 @@
                 <div class="secondLine" id="alarm1">
                     <#--工段的生产数据-->
                         <div id="firstColumn">
-                            <div class="spotstatistics">
-                                <h2 class="spotStatistics_title">数据统计</h2>
-                                <div class="statistics">
-                                    <div id="scdata"></div>
-                                </div>
-                            </div>
+                            <#--<div class="spotstatistics">-->
+                                <#--<h2 class="spotStatistics_title">数据统计</h2>-->
+                                <#--<div class="statistics">-->
+                                    <#--<div id="scdata"></div>-->
+                                <#--</div>-->
+                            <#--</div>-->
                             <div class="spotstatistics">
                                 <h2 class="spotStatistics_title">点检统计</h2>
                                 <div class="statistics">
