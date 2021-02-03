@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.report.equip.mf.ReportSCMFMapper">
+
+    <select id="REPORT_SC_MF_PDG_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT  equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
+            SELECT
+                    devName as equipName,
+                    <if test="duty=='白班'">
+                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
+                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
+                    </if>
+                    <if test="duty=='夜班'">
+                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
+                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
+                    </if>
+                        from dxj_spot_result
+             WHERE
+                            DEPT_NAME="${team}"
+                            <if test="team=='磨浮生产'">
+                                <if test="equip=='皮带岗'">
+                                        AND ROUTE_NAME='皮带岗'
+                                        AND devName !='石灰溜槽'
+                                        AND devName !='石灰搅拌桶'
+                                </if>
+                                <if test="equip=='浮选岗'">
+                                    AND ROUTE_NAME='浮选路线'
+                                    AND(ZONE_NAME='一段工艺' OR ZONE_NAME='二段工艺')
+                                </if>
+                            </if>
+
+                        <if test="duty=='白班'">
+                            AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                            AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                        </if>
+                        <if test="duty=='夜班'">
+                            AND TASKSTART_TM >= concat("${time}", ' ', '20:00:00')
+                            AND    concat(DATE_FORMAT(date_sub("${time}",interval -1 day),'%Y-%m-%d'),' ', '08:00:00')  >TASKSTART_TM
+                        </if>
+
+             GROUP BY
+                    equipName,DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')
+        )as m   GROUP BY  FIELD(equipName,'1#中重型板式给矿机','2#中重型板式给矿机','5#皮带运输机','1#石灰泵','2#石灰泵','石灰分配器')
+
+    </select>
+    <select id="REPORT_SC_MF_FXG_1_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
+            SELECT
+                    (CASE WHEN devName='原矿4.5m搅拌桶' AND  SC_PART='矿浆浓度' THEN '一段浓度（%）'
+                    WHEN devName='原矿4.5m搅拌桶' AND  SC_PART='矿浆细度' THEN '一段细度（%）'
+                    WHEN devName='原矿4.5m搅拌桶' AND  SC_PART='矿浆pH值' THEN '一段pH值（ml/PH）'
+                    WHEN devName='再磨4m搅拌桶' AND  SC_PART='矿浆浓度' THEN '二段浓度（%）'
+                    WHEN devName='再磨4m搅拌桶' AND  SC_PART='矿浆细度' THEN '二段细度（%）'
+                    WHEN devName='再磨4m搅拌桶' AND  SC_PART='矿浆pH值' THEN '二段pH值（ml/PH）'
+                    WHEN devName='2#选硫搅拌桶' AND  SC_PART='矿浆浓度' THEN '选硫浓度（%）'
+                    WHEN devName='2#选硫搅拌桶' AND  SC_PART='矿浆pH值' THEN '选硫pH值（ml/PH）'
+                    ELSE devName
+                    END)as equipName,
+        <if test="duty=='白班'">
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
+        </if>
+        <if test="duty=='夜班'">
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
+        </if>
+
+             from
+                     dxj_spot_result
+             WHERE
+                        DEPT_NAME='磨浮生产'
+                        AND ROUTE_NAME='浮选路线'
+                        AND(ZONE_NAME='一段工艺' OR ZONE_NAME='二段工艺')
+                        AND SC_PART !='搅拌桶'
+                        --  白班、页面时间划分
+                        <if test="duty=='白班'">
+                        AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                        AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                        </if>
+                        <if test="duty=='夜班'">
+                        AND TASKSTART_TM >= concat("${time}", ' ', '20:00:00')
+                        AND    concat(DATE_FORMAT(date_sub("${time}",interval -1 day),'%Y-%m-%d'),' ', '08:00:00')  >TASKSTART_TM
+                        </if>
+            GROUP BY
+                    equipName,DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')
+        )as m   GROUP BY  FIELD(equipName,'一段浓度（%）','一段细度（%）','一段pH值（ml/PH）','二段浓度（%）','二段细度（%）','二段pH值（ml/PH）','选硫浓度（%）','选硫pH值（ml/PH）')
+
+
+
+
+
+
+    </select>
+    <select id="REPORT_SC_MF_FXG_2_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT  equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
+                SELECT
+                        (CASE WHEN ROUTE_NAME='浮选底层' THEN ZONE_NAME ELSE ROUTE_NAME END)  equipName,
+                        <if test="duty=='白班'">
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
+
+                        </if>
+                        <if test="duty=='夜班'">
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
+
+                        </if>
+
+                from
+                        dxj_spot_result
+                WHERE
+                        DEPT_NAME='磨浮生产'
+
+                        AND (ROUTE_NAME='浮选柱'
+
+                        OR ROUTE_NAME='浮选路线'
+
+                        OR ROUTE_NAME='浮选底层'
+
+                        OR ROUTE_NAME='鼓风机')
+
+
+                        <if test="duty=='白班'">
+                        AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                        AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                        </if>
+                        <if test="duty=='夜班'">
+                        AND TASKSTART_TM >= concat("${time}", ' ', '20:00:00')
+                        AND    concat(DATE_FORMAT(date_sub("${time}",interval -1 day),'%Y-%m-%d'),' ', '08:00:00')  >TASKSTART_TM
+                        </if>
+                GROUP BY
+                        equipName,DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')
+        )as m   GROUP BY  FIELD(equipName,'浮选底层区域一','浮选底层区域二','浮选底层区域三','浮选路线','鼓风机','浮选柱')
+
+
+    </select>
+    <select id="REPORT_SC_MF_MKG_1_RUN_LIST" resultType="com.demo.model.report.Report">
+
+
+    </select>
+    <select id="REPORT_SC_MF_MKG_2_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
+                SELECT
+                        (CASE WHEN devName='MQY2745高低压稀油润滑系统' THEN 'MQY2745再磨机稀油站'
+                        WHEN devName='MQY4870高低压稀油润滑系统' THEN 'MQY4870球磨机稀油站'
+                        WHEN devName='MZS6433高压稀油润滑系统' THEN 'MZS6433半自磨机高压油站'
+                        WHEN devName='MZS6433低压稀油润滑系统' THEN 'MZS6433半自磨机低压油站'
+                        WHEN devName='1#离心式渣浆泵（粗砂）' THEN '1#粗砂泵'
+                        WHEN devName='2#离心式渣浆泵（粗砂）' THEN '2#粗砂泵'
+                        WHEN devName='1#离心式渣浆泵（再磨砂）' THEN '1#再磨砂泵'
+                        WHEN devName='2#离心式渣浆泵（再磨砂）' THEN '2#再磨砂泵'
+                        ELSE devName
+                        END) as equipName,
+
+                        <if test="duty=='白班'">
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
+                        </if>
+                        <if test="duty=='夜班'">
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
+                        </if>
+                 from
+                      dxj_spot_result
+                WHERE
+                        DEPT_NAME='磨浮生产'
+                    AND(
+                          ( ROUTE_NAME='磨矿岗'AND devName!='球磨机结构')
+                          OR( ROUTE_NAME='浮选底层' AND ZONE_NAME='浮选底层区域三' AND devName LIKE '%（再磨砂）'))
+                    <if test="duty=='白班'">
+                    AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                    AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                    </if>
+                    <if test="duty=='夜班'">
+                    AND TASKSTART_TM >= concat("${time}", ' ', '20:00:00')
+                    AND    concat(DATE_FORMAT(date_sub("${time}",interval -1 day),'%Y-%m-%d'),' ', '08:00:00')  >TASKSTART_TM
+                    </if>
+                GROUP BY
+                      equipName,DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')
+        )as m   GROUP BY  FIELD(equipName,'MZS6433半自磨机','MQY4870球磨机','MQY2745再磨机','MZS6433半自磨机低压油站','MZS6433半自磨机高压油站'
+        ,'MQY4870球磨机稀油站','MQY2745再磨机稀油站','1#粗砂泵','2#粗砂泵','1#再磨砂泵','2#再磨砂泵','FX660-GT旋流器（A组）','FX660-GT旋流器（B组）','FX350-GT旋流器')
+
+
+
+
+
+
+
+    </select>
+
+
+</mapper>

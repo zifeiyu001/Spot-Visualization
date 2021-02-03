@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.gfj.AlarmGfjMapper">
+     <select id="FX_GFJ_1_ALARM_LIST" resultType="com.demo.model.equip.SpotAlarm">
+       SELECT
+            DEPT_NAME AS section,
+            devName as equip,
+            SC_PART as part,
+            SC_CONTENT AS spot,
+            RESULT AS value,
+            std_value as standard,
+            uploadResultTime as time,
+            (
+                CASE
+                WHEN ALTPID = 1 THEN
+                    "二级"
+                WHEN ALTPID = 2 THEN
+                    "一级"
+                END
+            ) level
+            ,
+
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag
+        FROM
+            dxj_spot_result
+        WHERE
+
+            (
+
+                ZONE_NAME='鼓风机' AND
+                    (devName='1#离心式鼓风机' OR devName='1#离心式鼓风机稀油站'
+                    OR devName='1#鼓风机电机' OR devName='1#鼓风机1#稀油站电机'
+                    OR devName='1#鼓风机2#稀油站电机'
+                    )
+             )
+--         AND alarm_flag='N'
+           AND          (ALTPID = 1 OR ALTPID = 2)
+
+				AND
+          date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
+        ORDER BY
+            COMPLETE_TM DESC
+   </select>
+    <select id="FX_GFJ_2_ALARM_LIST" resultType="com.demo.model.equip.SpotAlarm">
+               SELECT
+            DEPT_NAME AS section,
+            devName as equip,
+            SC_PART as part,
+            SC_CONTENT AS spot,
+            RESULT AS value,
+            std_value as standard,
+            uploadResultTime as time,
+            (
+                CASE
+                WHEN ALTPID = 1 THEN
+                    "二级"
+                WHEN ALTPID = 2 THEN
+                    "一级"
+                END
+            ) level
+             ,
+
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag
+        FROM
+            dxj_spot_result
+        WHERE
+
+            (
+
+                ZONE_NAME='鼓风机' AND
+                    (devName='2#离心式鼓风机' OR devName='2#离心式鼓风机稀油站'
+                    OR devName='2#鼓风机电机' OR devName='2#鼓风机1#稀油站电机'
+                    OR devName='2#鼓风机2#稀油站电机'
+                    )
+             )
+
+        AND (ALTPID = 1 OR ALTPID = 2)
+--         AND alarm_flag='N'
+				AND
+          date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
+        ORDER BY
+            COMPLETE_TM DESC
+
+    </select>
+    <select id="FX_GFJ_3_ALARM_LIST" resultType="com.demo.model.equip.SpotAlarm">
+
+               SELECT
+            DEPT_NAME AS section,
+            devName as equip,
+            SC_PART as part,
+            SC_CONTENT AS spot,
+            RESULT AS value,
+            std_value as standard,
+            uploadResultTime as time,
+            (
+                CASE
+                WHEN ALTPID = 1 THEN
+                    "二级"
+                WHEN ALTPID = 2 THEN
+                    "一级"
+                END
+            ) level
+             ,
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag
+        FROM
+            dxj_spot_result
+        WHERE
+
+            (
+
+                ZONE_NAME='鼓风机' AND
+                    (devName='3#离心式鼓风机' OR devName='3#离心式鼓风机稀油站'
+                    OR devName='3#鼓风机电机' OR devName='3#鼓风机1#稀油站电机'
+                    OR devName='3#鼓风机2#稀油站电机'
+                    )
+             )
+
+        AND (ALTPID = 1 OR ALTPID = 2)
+--         AND alarm_flag='N'
+				AND
+          date(uploadResultTime) >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
+        ORDER BY
+            COMPLETE_TM DESC
+    </select>
+
+</mapper>

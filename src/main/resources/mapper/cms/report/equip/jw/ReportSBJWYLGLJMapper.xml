@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.report.equip.jw.ReportSBJWYLGLJMapper">
+    <select id="REPORT_SB_JW_YLJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+            (CASE WHEN devName='1#离心式渣浆泵（进浆）' OR devName='1#高效节能快速压滤机' THEN '1#高效节能快速压滤机'
+WHEN devName='2#离心式渣浆泵（进浆）' OR devName='2#程控隔膜压滤机' THEN '2#程控隔膜压滤机'
+WHEN devName='3#APN型压滤机' OR devName='1#隔膜泵（进浆）' OR devName='2#隔膜泵（进浆）'  OR devName='自动加油机' THEN '3#APN型压滤机'
+WHEN devName='3m搅拌桶'  THEN '3m搅拌桶'
+WHEN devName='1#铜回流渣浆泵'  OR devName='2#铜回流渣浆泵'  THEN '铜回流泵'
+WHEN devName='铜液下泵'  THEN '铜液下泵'
+END
+) AS zoneName,
+devName as equipName,
+        (case WHEN SC_PART ='其它' THEN SC_PART  ELSE
+    CONCAT(SC_PART,SC_CONTENT) end ) AS part,
+            RESULT AS result,
+            ALTPID AS altpid
+        FROM
+            dxj_spot_result
+        WHERE
+            DEPT_NAME = '精尾设备'
+        AND ZONE_NAME LIKE '压滤机'
+         		AND TASKSTART_TM="${time}"
+        GROUP BY
+            equipName,SC_CONTENT
+
+        ORDER BY zoneName,
+            equipName ,FIELD(part,'其它')
+
+    </select>
+    <select id="REPORT_SB_JW_GLJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+            (CASE WHEN devName='1#TT-80陶瓷过滤机' OR devName='1#循环水泵（化工离心泵）' OR devName='2#循环水泵（化工离心泵）' THEN '1#TT-80陶瓷过滤机'
+WHEN devName='2#TT-80陶瓷过滤机' OR devName='3#循环水泵（化工离心泵）'  OR devName='4#循环水泵（化工离心泵）' THEN '2#TT-80陶瓷过滤机'
+WHEN devName='1#硫回流渣浆泵' OR devName='2#硫回流渣浆泵' THEN '硫回流泵'
+WHEN devName='硫液下泵'  THEN '液下泵'
+WHEN devName='1#水环真空泵'  OR devName='2#水环真空泵'  THEN '真空泵'
+
+END
+) AS zoneName,
+devName as equipName,
+        (case WHEN SC_PART ='其它' THEN SC_PART  ELSE
+    CONCAT(SC_PART,SC_CONTENT) end ) AS part,
+            RESULT AS result,
+            ALTPID AS altpid
+        FROM
+            dxj_spot_result
+        WHERE
+            DEPT_NAME = '精尾设备'
+        AND ZONE_NAME LIKE '过滤机'
+          	AND TASKSTART_TM="${time}"
+        GROUP BY
+            equipName,SC_CONTENT
+
+        ORDER BY zoneName,
+            equipName,FIELD(part,'其它')
+
+    </select>
+
+</mapper>

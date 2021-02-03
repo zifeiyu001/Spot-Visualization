@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.SpotNsDetailedMapper">
+        <select id="SPOT_NS_LNM_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+            SELECT
+
+                (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+                WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+                WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+                END) as section,
+                SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+            FROM
+                    dxj_spot_result
+            WHERE
+            TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+                <if test="param=='param1'">
+                    AND ((DEPT_NAME='精尾设备' AND devName='NJG型周边传动浓缩机（硫浓密）'
+                    and SC_PART in ('减速机、液压控制泵站','行走轮及链条'))
+                    OR (DEPT_NAME='电仪工段' AND devName='硫45m浓密油泵电机1号（行走）')
+                    OR (DEPT_NAME='精尾生产' AND devName='NJG型周边传动浓缩机（硫浓密）' AND SC_PART in ('行走轮' ,'减速机、液压控制泵站' ,'齿轮链条')
+                    ))
+                </if>
+                <if test="param=='param2'">
+                    AND ((DEPT_NAME='精尾设备' AND devName='NJG型周边传动浓缩机（硫浓密）'
+                    and SC_PART in ('耙架提升油缸','中心柱轴承'))
+                    OR (DEPT_NAME='电仪工段' AND devName='硫45m浓密油泵电机2号（提耙）')
+                    OR (DEPT_NAME='精尾生产' AND devName='NJG型周边传动浓缩机（硫浓密）' AND SC_PART='耙架提升机')
+                    )
+                </if>
+                <if test="param=='param3'">
+                    AND ((DEPT_NAME='精尾设备' AND devName='NJG型周边传动浓缩机（硫浓密）'
+                    and SC_PART in ('消泡泵','自助加油泵','其它'))
+                    OR (DEPT_NAME='精尾生产' AND devName='NJG型周边传动浓缩机（硫浓密）' AND SC_PART in ('三相异步电机' ,'压力表' ,'其它')
+                    ))
+
+                </if>
+
+
+            ORDER BY
+                  FIELD(section,'设备','电仪','生产'),part
+        </select>
+    <select id="SPOT_NS_TNM_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND ((DEPT_NAME='精尾设备' AND devName='NJG型周边传动浓缩机（铜浓密）'
+            and SC_PART in ('减速机、液压控制泵站','行走轮及链条'))
+            OR (DEPT_NAME='电仪工段' AND devName='铜30m浓密油泵电机1号（行走）')
+            OR (DEPT_NAME='精尾生产' AND devName='NJG型周边传动浓缩机（铜浓密）' AND SC_PART in ('行走轮' ,'减速机、液压控制泵站' ,'齿轮链条')
+            ))
+        </if>
+        <if test="param=='param2'">
+            AND ((DEPT_NAME='精尾设备' AND devName='NJG型周边传动浓缩机（铜浓密）'
+            and SC_PART in ('耙架提升油缸','中心柱轴承'))
+            OR (DEPT_NAME='电仪工段' AND devName='铜30m浓密油泵电机2号（提耙）')
+            OR (DEPT_NAME='精尾生产' AND devName='NJG型周边传动浓缩机（铜浓密）' AND SC_PART='耙架提升机')
+            )
+        </if>
+        <if test="param=='param3'">
+            AND ((DEPT_NAME='精尾设备' AND devName='NJG型周边传动浓缩机（铜浓密）'
+            and SC_PART in ('消泡泵','自助加油泵','其它'))
+            OR (DEPT_NAME='精尾生产' AND devName='NJG型周边传动浓缩机（铜浓密）' AND SC_PART in ('三相异步电机' ,'压力表' ,'其它')
+            ))
+
+        </if>
+
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_NS_WNM_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND ((DEPT_NAME='精尾设备' AND devName='NXZ型中心传动高效浓缩机'
+            and SC_PART in ('减速机、液压控制泵站','行走轮及链条'))
+            OR (DEPT_NAME='电仪工段' AND devName='45m尾油泵电机')
+            OR (DEPT_NAME='精尾生产' AND devName='NXZ型中心传动高效浓缩机' AND SC_PART in ('行走轮' ,'减速机、液压控制泵站' ,'齿轮链条')
+            ))
+        </if>
+        <if test="param=='param2'">
+            AND ((DEPT_NAME='精尾设备' AND devName='NXZ型中心传动高效浓缩机'
+            and SC_PART in ('耙架提升油缸','中心柱轴承'))
+            OR (DEPT_NAME='精尾生产' AND devName='NXZ型中心传动高效浓缩机' AND SC_PART='耙架提升机')
+            )
+        </if>
+        <if test="param=='param3'">
+            AND ((DEPT_NAME='精尾设备' AND devName='NXZ型中心传动高效浓缩机'
+            and SC_PART in ('消泡泵','自助加油泵','其它'))
+            OR (DEPT_NAME='精尾生产' AND devName='NXZ型中心传动高效浓缩机' AND SC_PART in ('三相异步电机' ,'压力表' ,'其它')
+            ))
+
+        </if>
+
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_NS_SGNM_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+        <if test="param=='param1'">
+				and ((DEPT_NAME='精尾设备' and devName='NJG型周边传动浓缩机（事故浓密）'
+				AND SC_PART !='行走轮及链条' ) OR (DEPT_NAME='电仪工段' and devName='18m浓密池提耙电机'))
+        </if>
+        <if test="param=='param2'">
+                and ((DEPT_NAME='精尾设备' and devName='NJG型周边传动浓缩机（事故浓密）'
+				AND SC_PART ='行走轮及链条' ) OR (DEPT_NAME='电仪工段' and devName='18m浓密池行走电机'))
+        </if>
+        <if test="param=='param3'">
+            and DEPT_NAME='电仪工段' AND ZONE_NAME='浓密机NJG-18' and devName='1#离心式渣浆泵电机'
+        </if>
+        <if test="param=='param4'">
+            and DEPT_NAME='精尾设备' and devName='1#离心式渣浆泵（底流）'
+        </if>
+
+        <if test="param=='param5'">
+            and DEPT_NAME='电仪工段' AND ZONE_NAME='浓密机NJG-18' and devName='2#离心式渣浆泵电机'
+        </if>
+        <if test="param=='param6'">
+            and DEPT_NAME='精尾设备' and devName='2#离心式渣浆泵（底流）'
+        </if>
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+
+    </select>
+
+
+</mapper>

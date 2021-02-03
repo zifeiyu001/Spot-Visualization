@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.mk.gkfj.SpotGkfjMapper">
+    <select id="SPOT_MK_PD_LIST" resultType="com.demo.model.equip.SpotStatistics">
+                     SELECT
+(CASE  WHEN DEPT_NAME='电仪工段' THEN '电仪'
+WHEN DEPT_NAME='磨浮生产' then '生产'
+WHEN DEPT_NAME='磨浮设备' THEN '设备'
+END) section,
+--                     DEPT_NAME as section,
+                    count(COMPLETESTATE = 'Y' OR NULL) AS checked,
+                    count(COMPLETESTATE = 'W' OR NULL) AS unchecked,
+                    count(ALTPID = 1 OR NULL) AS alarm,
+                    count(ALTPID = 2 OR NULL) AS danger
+                FROM
+                    dxj_spot_result
+                WHERE
+                   (
+
+				devName='5#皮带运输机' OR devName='5#皮带运输机电机'
+
+                    )
+                AND
+                        to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+                GROUP BY section
+    </select>
+    <select id="SPOT_MK_ZB_LIST" resultType="com.demo.model.equip.SpotStatistics">
+                SELECT
+                    (CASE  WHEN DEPT_NAME='电仪工段' THEN '电仪'
+                    WHEN DEPT_NAME='磨浮生产' then '生产'
+                    WHEN DEPT_NAME='磨浮设备' THEN '设备'
+                    END) section,
+                    count(COMPLETESTATE = 'Y' OR NULL) AS checked,
+                    count(COMPLETESTATE = 'W' OR NULL) AS unchecked,
+                    count(ALTPID = 1 OR NULL) AS alarm,
+                    count(ALTPID = 2 OR NULL) AS danger
+                FROM
+                    dxj_spot_result
+                WHERE
+                   (
+
+										devName='1#中重型板式给矿机' OR devName='1#中重型板式给矿机电机'
+							OR devName='2#中重型板式给矿机' OR devName='2#中重型板式给矿机电机'
+
+                    )
+                AND
+                        to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+                GROUP BY section
+    </select>
+    <select id="SPOT_MK_XLQ_LIST" resultType="com.demo.model.equip.SpotStatistics">
+                     SELECT
+(CASE  WHEN DEPT_NAME='电仪工段' THEN '电仪'
+WHEN DEPT_NAME='磨浮生产' then '生产'
+WHEN DEPT_NAME='磨浮设备' THEN '设备'
+END) section,
+--                     DEPT_NAME as section,
+                    count(COMPLETESTATE = 'Y' OR NULL) AS checked,
+                    count(COMPLETESTATE = 'W' OR NULL) AS unchecked,
+                    count(ALTPID = 1 OR NULL) AS alarm,
+                    count(ALTPID = 2 OR NULL) AS danger
+                FROM
+                    dxj_spot_result
+                WHERE
+                   (
+
+			devName='FX350-GT旋流器' OR devName='FX660-GT旋流器（A组）'
+							OR devName='FX660-GT旋流器（B组）'
+
+                    )
+                AND
+                        to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+                GROUP BY section
+    </select>
+
+</mapper>

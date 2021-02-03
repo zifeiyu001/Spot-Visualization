@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.SpotFxDetailedMapper">
+        <select id="SPOT_FX_GFJ1_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+            SELECT
+
+                (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+                WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+                WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+                END) as section,
+                SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+            FROM
+                    dxj_spot_result
+            WHERE
+            TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+                <if test="param=='param1'">
+                    and 		devName='1#离心式鼓风机'
+                </if>
+                <if test="param=='param2'">
+                    AND devName='1#鼓风机电机'
+                </if>
+                <if test="param=='param3'">
+
+                    AND devName='1#离心式鼓风机稀油站' AND ( SC_CONTENT='油泵运转是否正常、给油量是否稳定、连续' OR
+                    SC_CONTENT='油站供油温度' OR  SC_CONTENT='供油压力是否正常' OR  SC_CONTENT='回油滤网有无堵塞'
+                    OR  SC_CONTENT='供回油管、阀、接头是否漏油' OR  SC_CONTENT='油泵压力是否正常')
+
+                </if>
+                <if test="param=='param4'">
+                    AND devName='1#鼓风机1#稀油站电机'
+                </if>
+                <if test="param=='param5'">
+                    AND devName='1#鼓风机2#稀油站电机'
+                </if>
+                <if test="param=='param6'">
+                     AND devName='1#离心式鼓风机稀油站' AND (
+                    SC_CONTENT='油箱内油质是否符合要求' OR  SC_CONTENT='油箱油位是否在标准范围内' OR  SC_CONTENT='油站油箱温度')
+                </if>
+
+            ORDER BY
+                  FIELD(section,'设备','电仪','生产'),part
+        </select>
+    <select id="SPOT_FX_GFJ2_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            and 		devName='2#离心式鼓风机'
+        </if>
+        <if test="param=='param2'">
+            AND devName='2#鼓风机电机'
+        </if>
+        <if test="param=='param3'">
+
+            AND devName='2#离心式鼓风机稀油站' AND ( SC_CONTENT='油泵运转是否正常、给油量是否稳定、连续' OR
+            SC_CONTENT='油站供油温度' OR  SC_CONTENT='供油压力是否正常' OR  SC_CONTENT='回油滤网有无堵塞'
+            OR  SC_CONTENT='供回油管、阀、接头是否漏油' OR  SC_CONTENT='油泵压力是否正常')
+
+        </if>
+        <if test="param=='param4'">
+            AND devName='2#鼓风机1#稀油站电机'
+        </if>
+        <if test="param=='param5'">
+            AND devName='2#鼓风机2#稀油站电机'
+        </if>
+        <if test="param=='param6'">
+            AND devName='2#离心式鼓风机稀油站' AND (
+            SC_CONTENT='油箱内油质是否符合要求' OR  SC_CONTENT='油箱油位是否在标准范围内' OR  SC_CONTENT='油站油箱温度')
+        </if>
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_FX_GFJ3_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            and 		devName='3#离心式鼓风机'
+        </if>
+        <if test="param=='param2'">
+            AND devName='3#鼓风机电机'
+        </if>
+        <if test="param=='param3'">
+
+            AND devName='3#离心式鼓风机稀油站' AND ( SC_CONTENT='油泵运转是否正常、给油量是否稳定、连续' OR
+            SC_CONTENT='油站供油温度' OR  SC_CONTENT='供油压力是否正常' OR  SC_CONTENT='回油滤网有无堵塞'
+            OR  SC_CONTENT='供回油管、阀、接头是否漏油' OR  SC_CONTENT='油泵压力是否正常')
+
+        </if>
+        <if test="param=='param4'">
+            AND devName='3#鼓风机1#稀油站电机'
+        </if>
+        <if test="param=='param5'">
+            AND devName='3#鼓风机2#稀油站电机'
+        </if>
+        <if test="param=='param6'">
+            AND devName='3#离心式鼓风机稀油站' AND (
+            SC_CONTENT='油箱内油质是否符合要求' OR  SC_CONTENT='油箱油位是否在标准范围内' OR  SC_CONTENT='油站油箱温度')
+        </if>
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_FX_FXJ1_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND ((DEPT_NAME='磨浮设备' AND devName=CONCAT("${equip}",'浮选机') AND
+            SC_PART in ('轴承（上）','轴承（下）','皮带','主轴','电流','定子'))
+            OR (DEPT_NAME='电仪工段' AND devName=CONCAT('二厂浮选电机',"${equip}")  )
+            OR (DEPT_NAME='磨浮生产' AND devName=CONCAT("${equip}",'浮选机') AND SC_PART='浮选机'))
+        </if>
+        <if test="param=='param2'">
+            AND ((DEPT_NAME='磨浮设备' AND devName=CONCAT("${equip}",'浮选机') AND
+            SC_PART NOT in ('轴承（上）','轴承（下）','皮带','主轴','电流','定子'))
+            OR (DEPT_NAME='磨浮生产' AND devName=CONCAT("${equip}",'浮选机') AND SC_PART NOT in('浮选机')))
+        </if>
+
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_FX_FXJ2_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND ((DEPT_NAME='磨浮设备' AND devName=CONCAT("${equip}",'浮选机') AND
+            SC_PART in ('轴承（上）','轴承（下）','皮带','主轴','电流','定子'))
+            OR (DEPT_NAME='电仪工段' AND devName=CONCAT('二厂浮选电机',"${equip}")  )
+            OR (DEPT_NAME='磨浮生产' AND devName=CONCAT("${equip}",'浮选机') AND SC_PART='浮选机'))
+        </if>
+        <if test="param=='param2'">
+            and DEPT_NAME='磨浮设备' AND devName=CONCAT("${equip}",'浮选机') AND SC_PART LIKE '%刮板%'
+        </if>
+        <if test="param=='param3'">
+            AND ((DEPT_NAME='磨浮设备' AND devName=CONCAT("${equip}",'浮选机') AND
+            SC_PART NOT in ('轴承（上）','轴承（下）','皮带','主轴','电流','定子') AND SC_PART NOT LIKE '刮板%')
+            OR (DEPT_NAME='磨浮生产' AND devName=CONCAT("${equip}",'浮选机') AND SC_PART NOT in('浮选机')))
+        </if>
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_FX_XLQ_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            and  devName='脱泥旋流器'
+        </if>
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+    <select id="SPOT_FX_JBT_DETAILED_LIST" resultType="com.demo.model.equip.SpotAlarm">
+        SELECT
+
+        (CASE WHEN DEPT_NAME='电仪工段' THEN '电仪'
+        WHEN DEPT_NAME LIKE '%设备' THEN '设备'
+        WHEN DEPT_NAME LIKE '%生产' THEN '生产'
+        END) as section,
+        SC_PART as part,SC_CONTENT as content ,RESULT as result,ALTPID as level
+        FROM
+        dxj_spot_result
+        WHERE
+        TO_DAYS(NOW())=TO_DAYS(TASKSTART_TM)
+
+        <if test="param=='param1'">
+            AND ((DEPT_NAME='磨浮设备' AND devName="${equip}" AND
+            SC_PART in ('轴承（上）','轴承（下）','皮带','主轴','电流','定子'))
+            OR (DEPT_NAME='电仪工段' AND devName=CONCAT("${equip}",'电机')  )
+            OR (DEPT_NAME='磨浮生产' AND devName="${equip}" AND SC_PART='浮选机'))
+        </if>
+        <if test="param=='param2'">
+            AND ((DEPT_NAME='磨浮设备' AND devName="${equip}" AND
+            SC_PART NOT in ('轴承（上）','轴承（下）','皮带','主轴','电流','定子'))
+            OR (DEPT_NAME='磨浮生产' AND devName="${equip}" AND SC_PART NOT in('浮选机')))
+        </if>
+
+
+        ORDER BY
+        FIELD(section,'设备','电仪','生产'),part
+    </select>
+
+
+</mapper>

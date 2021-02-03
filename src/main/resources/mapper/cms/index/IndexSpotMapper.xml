@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.index.IndexSpotMapper">
+    <select id="INDEX_DY_LIST" resultType="com.demo.model.equip.SpotStatistics">
+        SELECT
+        '合计' as equip,
+        count(COMPLETESTATE='Y' OR null) as complete,
+        count(COMPLETESTATE='Y' and ALTPID='0' OR null) as normal,
+        count(COMPLETESTATE='Y' and ALTPID='1' OR null) as danger,
+        count(COMPLETESTATE='Y' and ALTPID='2' OR null) as alarm,
+        count(COMPLETESTATE='W'  OR null) as incomplete
+        FROM
+        dxj_spot_result
+        WHERE
+        DEPT_NAME='电仪工段'
+        AND
+        (<if test="param=='day'">
+        to_days(TASKSTART_TM) = to_days(now()) -1 -- 昨天数据
+        </if>
+        <if test="param=='month'">
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -1 -- 上月数据
+        </if>
+        <if test="param=='week'">
+            week(TASKSTART_TM)=week(NOW())-1 -- 上周数据
+        </if>
+        <if test="param=='model'">
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 当月数据
+        </if>)
+
+    </select>
+    <select id="INDEX_SB_LIST" resultType="com.demo.model.equip.SpotStatistics">
+
+        SELECT
+            '合计' as equip,
+            count(COMPLETESTATE='Y' OR null) as complete,
+            count(COMPLETESTATE='Y' and ALTPID='0' OR null) as normal,
+            count(COMPLETESTATE='Y' and ALTPID='1' OR null) as danger,
+            count(COMPLETESTATE='Y' and ALTPID='2' OR null) as alarm,
+            count(COMPLETESTATE='W'  OR null) as incomplete
+        FROM
+            dxj_spot_result
+        WHERE
+            DEPT_NAME like  '%设备'
+        AND
+        (<if test="param=='day'">
+            to_days(TASKSTART_TM) = to_days(now()) -1 -- 昨天数据
+        </if>
+        <if test="param=='month'">
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -1 -- 上月数据
+        </if>
+        <if test="param=='week'">
+            week(TASKSTART_TM)=week(NOW())-1 -- 上周数据
+        </if>
+        <if test="param=='model'">
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 本月数据
+        </if>)
+    </select>
+    <select id="INDEX_SC_LIST" resultType="com.demo.model.equip.SpotStatistics">
+        SELECT
+        '合计' as equip,
+        count(COMPLETESTATE='Y' OR null) as complete,
+        count(COMPLETESTATE='Y' and ALTPID='0' OR null) as normal,
+        count(COMPLETESTATE='Y' and ALTPID='1' OR null) as danger,
+        count(COMPLETESTATE='Y' and ALTPID='2' OR null) as alarm,
+        count(COMPLETESTATE='W'  OR null) as incomplete
+        FROM
+        dxj_spot_result
+        WHERE
+        DEPT_NAME like '%生产'
+        and
+        (<if test="param=='day'">
+        to_days(TASKSTART_TM) = to_days(now()) -1 -- 昨天数据
+        </if>
+        <if test="param=='month'">
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -1 -- 上月数据
+        </if>
+        <if test="param=='week'">
+            week(TASKSTART_TM)=week(NOW())-1 -- 上周数据
+        </if>
+        <if test="param=='model'">
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 当月数据
+        </if>)
+    </select>
+    <select id="getMonthlysSotStatistics" resultType="com.demo.model.equip.SpotStatistics">
+
+        SELECT
+            RIGHT(DEPT_NAME,2)  as equip,
+            count(COMPLETESTATE='Y' OR null) as complete,
+            count(COMPLETESTATE='Y' and ALTPID='0' OR null) as normal,
+            count(COMPLETESTATE='Y' and ALTPID='1' OR null) as danger,
+            count(COMPLETESTATE='Y' and ALTPID='2' OR null) as alarm,
+            count(COMPLETESTATE='W'  OR null) as incomplete
+        FROM
+            dxj_spot_result
+        WHERE
+            DATE_FORMAT(TASKSTART_TM, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') -- 本月数据
+
+						AND DEPT_NAME !='综合工段'
+				GROUP BY  RIGHT(DEPT_NAME,2)
+
+    </select>
+
+</mapper>

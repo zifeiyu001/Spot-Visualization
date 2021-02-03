@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.report.equip.sk.ReportSBSKZBMapper">
+
+
+    <select id="REPORT_SB_SK_ZB_RUN_LIST" resultType="com.demo.model.report.Report">
+                 SELECT
+                SC_PART  as equipName,
+(CASE WHEN SC_CONTENT = '电机与减速机联轴器尼龙柱销有无磨损、异常振动' THEN '电机联轴器'
+			WHEN SC_CONTENT = '减速机与链轮轴装置联轴器锁紧盘有无滑动' THEN '减速机锁紧盘'
+			WHEN SC_CONTENT = '电机固定螺栓有无松动' THEN '电机地脚螺栓'
+			WHEN SC_CONTENT = '减速机油位是否正常' THEN '减速机油位'
+			WHEN SC_CONTENT = '减速机轴承和齿轮运行有无异响' THEN '减速机齿轮'
+
+			WHEN SC_CONTENT = '链轮轴承有无异响' THEN '轴承'
+			WHEN SC_CONTENT = '链轮轴基座固定螺栓有无松动' THEN '轴固定螺栓'
+			WHEN SC_CONTENT = '链轮齿磨损情况及有无断裂现象' THEN '轴链条齿'
+
+
+			WHEN SC_CONTENT LIKE '槽板运行%' OR SC_CONTENT LIKE '槽板有无%' THEN '槽板'
+			WHEN SC_CONTENT = '槽板固定螺栓有无松动' THEN '槽板固定螺栓'
+			WHEN SC_CONTENT LIKE '链节轴销及链节%' THEN '链条链节'
+			WHEN SC_CONTENT = '链节无明显跑偏' OR SC_CONTENT LIKE '链节和链轮轴装置%' THEN '链节运行'
+			WHEN SC_CONTENT LIKE '支重轮有无滚动%' THEN '支重轮'
+			WHEN SC_CONTENT = '中间支重轨道磨损是否失效' THEN '中间支重轨道'
+			WHEN SC_CONTENT LIKE '下托轮有无积矿%' THEN '下托轮'
+
+			WHEN SC_CONTENT = '尾轮轴承有无异响' THEN '尾轮轴承'
+			WHEN SC_CONTENT LIKE '尾轮轴基座不能%' THEN '尾轮轴基座'
+			WHEN SC_CONTENT = '尾轮链轮上有无积矿或磨损' THEN '尾轮轴链轮'
+
+			WHEN SC_CONTENT = '护板螺栓是否松动' THEN '护板固定螺栓'
+			WHEN SC_CONTENT = '护板磨损厚度是否正常' THEN '护板'
+
+
+ELSE  SC_CONTENT END)as part,
+
+RESULT as result,MAX(ALTPID) as altpid
+        from dxj_spot_result WHERE
+          DEPT_NAME="碎矿设备"
+
+            AND  (ZONE_NAME='重板'  AND devName='重型板式给料机')
+
+                and TASKSTART_TM="${time}"
+GROUP BY equipName ,part
+        ORDER BY equipName  DESC
+
+    </select>
+    <select id="REPORT_SB_SK_ZB_PD1_RUN_LIST" resultType="com.demo.model.report.Report">
+         SELECT
+                devName as equipName,
+						SC_PART as part,RESULT as result,ALTPID as altpid
+										from dxj_spot_result WHERE
+											DEPT_NAME="碎矿设备"
+
+            AND  (ZONE_NAME='重板'AND devName='1#皮带运输机' )
+
+
+                and TASKSTART_TM="${time}"
+           GROUP BY equipName ,SC_PART
+
+
+    </select>
+</mapper>

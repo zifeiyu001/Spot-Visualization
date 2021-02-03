@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.report.equip.ReportMapper">
+    <select id="REPORT_SB_SPOT_LIST" resultType="com.demo.model.report.Report">
+
+
+  SELECT
+        COUNT(*) as 'zong' ,
+        count(case when ALTPID is NULL THEN 1 end ) as 'wjian',
+        count(case when ALTPID=0 THEN 1 end ) as 'zchang',
+
+        count(case when ALTPID=1 THEN 1 end ) as 'bjing',
+        count(case when ALTPID=2 THEN 1 end ) as 'wxian',
+--         (case
+--         when USERNAME!='' then USERNAME
+--         else CHARGE_CNAME
+--         end )
+        max(USERNAME) as name,
+        max(SHIFTGROUPNAME) as teamName
+        from dxj_spot_result WHERE
+        <if test="workshop !='电仪工段'">
+                DEPT_NAME="${team}"
+
+--      磨浮
+              <if test="team=='磨浮设备'">
+                    <if test="equip=='再磨机'">
+                        AND  ((ZONE_NAME='再磨机' OR ZONE_NAME='FX350-GT旋流器' )
+                        or (ROUTE_NAME='浮选底层' AND  (devName = '1#离心式渣浆泵（再磨砂）' OR  devName = '2#离心式渣浆泵（再磨砂）'))
+                        or ZONE_NAME='再磨机稀油润滑系统'
+                        )
+
+                    </if>
+                    <if test="equip=='球磨机'">
+                        AND  (ZONE_NAME='球磨机' OR ZONE_NAME='FX660-GT旋流器' or ZONE_NAME='球磨机稀油润滑系统')
+
+                    </if>
+                    <if test="equip=='半自磨机'">
+                        AND  (ZONE_NAME='半自磨机'  or  ZONE_NAME='粗砂泵' or ZONE_NAME='半自磨机稀油润滑系统')
+                    </if>
+                    <if test="equip=='中板皮带'">
+                        and  (ZONE_NAME='5皮带' OR ZONE_NAME='中重型板式给料机'  OR ZONE_NAME='石灰泵房')
+                    </if>
+                    <if test="equip=='浮选机'">
+                          and  (ROUTE_NAME='浮选系统'  OR(ZONE_NAME='浮选底层区域一' AND devName LIKE '#脱泥泵'))
+                    </if>
+                    <if test="equip=='鼓风机'">
+                        AND (ZONE_NAME='浮选柱' or ZONE_NAME='鼓风机')
+                    </if>
+                    <if test="equip=='浮选泵'">
+                        AND (ROUTE_NAME='浮选底层' OR
+                        ( ROUTE_NAME='浮选柱' AND devName LIKE '%铜精选%' ))
+                        and devName != '1#离心式渣浆泵（再磨砂）' and  devName != '2#离心式渣浆泵（再磨砂）'
+                        and devName != '1#脱泥泵' and  devName != '2#脱泥泵'
+                    </if>
+                  AND TASKSTART_TM="${time}"
+              </if>
+--  碎矿
+              <if test="team=='碎矿设备'">
+                    <if test="equip=='重板'">
+                        AND  (ZONE_NAME='重板' )
+                    </if>
+                    <if test="equip=='颚破'">
+                        AND  (ZONE_NAME='颚破' )
+                    </if>
+                    <if test="equip=='2#皮带'">
+                        AND  (ZONE_NAME='2#皮带' )
+                    </if>
+                    <if test="equip=='4#皮带'">
+                        AND  (ZONE_NAME='4#皮带' )
+                    </if>
+                    <if test="equip=='石灰制乳输送'">
+                        AND  (ZONE_NAME='石灰制乳' or ZONE_NAME='石灰输送' )
+                    </if>
+                  AND TASKSTART_TM="${time}"
+              </if>
+--     精尾
+              <if test="team=='精尾设备'">
+                    <if test="equip=='压滤机'">
+                        AND  (ZONE_NAME='压滤机' )
+                    </if>
+                    <if test="equip=='过滤机'">
+                        AND  (ZONE_NAME='过滤机' )
+                    </if>
+                    <if test="equip=='空压机'">
+                        AND (ZONE_NAME='空气压缩机组')
+                    </if>
+                    <if test="equip=='尾砂泵'">
+                        AND ROUTE_NAME='尾砂泵'
+                    </if>
+                    <if test="equip=='厂前回水泵'">
+                        AND ZONE_NAME='厂前回水泵'
+                    </if>
+                    <if test="equip=='浓密机'">
+                        AND(ROUTE_NAME='浓密机' and  devName not  like  '%离心%')
+                    </if>
+                  AND TASKSTART_TM="${time}"
+              </if>
+--    磨浮生产
+              <if test="team=='磨浮生产'">
+                  <if test="equip=='皮带岗'">
+                      AND(ROUTE_NAME='皮带岗' )
+                  </if>
+                  <if test="equip=='磨矿岗'">
+                      AND(ROUTE_NAME='磨矿岗' )
+                  </if>
+                  <if test="equip=='浮选岗'">
+                      AND(ROUTE_NAME='鼓风机' or ROUTE_NAME='浮选柱' or ROUTE_NAME='浮选路线' or ROUTE_NAME='浮选底层')
+                  </if>
+                  <if test="duty=='白班'">
+                      AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                      AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                  </if>
+                  <if test="duty=='夜班'">
+                      AND concat("${time}", ' ', '08:00:00') > TASKSTART_TM
+                      AND  TASKSTART_TM >=  concat(DATE_FORMAT(date_sub("${time}",interval +1 day),'%Y-%m-%d'),' ', '20:00:00')
+                  </if>
+
+              </if>
+--     碎矿生产
+               <if test="team=='碎矿生产'">
+                    <if test="equip=='皮带岗'">
+                        AND(ROUTE_NAME='碎矿胶带运输机岗' )
+                    </if>
+                    <if test="equip=='石灰乳化岗'">
+                        AND(ROUTE_NAME='石灰乳化岗' )
+                    </if>
+                    <if test="equip=='破碎岗'">
+                        AND(ROUTE_NAME='破碎机岗')
+                    </if>
+                   <if test="duty=='白班'">
+                       AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                       AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                   </if>
+                   <if test="duty=='夜班'">
+                       AND concat("${time}", ' ', '08:00:00') > TASKSTART_TM
+                       AND  TASKSTART_TM >=  concat(DATE_FORMAT(date_sub("${time}",interval +1 day),'%Y-%m-%d'),' ', '20:00:00')
+                   </if>
+               </if>
+--        精尾生产
+                <if test="team=='精尾生产'">
+                    <if test="equip=='回水岗'">
+                        AND(ROUTE_NAME='回水岗' )
+                    </if>
+                    <if test="equip=='压滤机岗'">
+                        AND(ROUTE_NAME='压滤机岗' )
+                    </if>
+                    <if test="equip=='过滤机岗'">
+                        AND(ROUTE_NAME='过滤机岗')
+                    </if>
+                    <if test="equip=='尾砂泵岗'">
+                        AND(ROUTE_NAME='尾砂泵岗' )
+                    </if>
+                    <if test="equip=='中心气站岗'">
+                        AND(ROUTE_NAME='中心气站岗')
+                    </if>
+                    <if test="duty=='白班'">
+                        AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                        AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                    </if>
+                    <if test="duty=='夜班'">
+                        AND concat("${time}", ' ', '08:00:00') > TASKSTART_TM
+                        AND  TASKSTART_TM >=  concat(DATE_FORMAT(date_sub("${time}",interval +1 day),'%Y-%m-%d'),' ', '20:00:00')
+                    </if>
+                </if>
+        </if>
+-- 电仪
+
+
+        <if test="workshop=='电仪工段'">
+            DEPT_NAME="电仪工段"
+
+                    <if test="equip=='重板颚破'">
+                        AND ROUTE_NAME='碎矿系统' AND (ZONE_NAME='重板' OR  ZONE_NAME='颚破')
+                    </if>
+                    <if test="equip=='2#4#皮带'">
+                        AND ROUTE_NAME='碎矿系统' AND (ZONE_NAME='2#皮带' OR  ZONE_NAME='4#皮带')
+                    </if>
+                    <if test="equip=='石灰输送'">
+                        AND ROUTE_NAME='石灰输送'
+                    </if>
+                    <if test="equip=='浓密机'">
+                       and (ROUTE_NAME='浓密机' OR ROUTE_NAME='厂前回水泵')
+                    </if>
+                    <if test="equip=='压滤过滤'">
+                        and (ROUTE_NAME='压滤、过滤机' OR ROUTE_NAME='尾砂泵')
+                    </if>
+                    <if test="equip=='鼓风机'">
+                        and (ROUTE_NAME='鼓风机')
+                    </if>
+                    <if test="equip=='空压机'">
+                        AND (ROUTE_NAME='空气压缩机组')
+                    </if>
+                    <if test="equip=='中板皮带'">
+                        AND (ROUTE_NAME='中板皮带' AND (devName='1#中重型板式给矿机电机'
+                        OR devName='2#中重型板式给矿机电机' OR devName='5#皮带运输机电机'))
+                    </if>
+                    <if test="equip=='3M石灰'">
+                       and (ROUTE_NAME='中板皮带' AND (devName='1#石灰搅拌桶加压电机'
+                            OR devName='2#石灰搅拌桶加压电机' OR devName='3米石灰搅拌桶电机')
+                        )
+                    </if>
+                    <if test="equip=='浮选泵'">
+                        AND (ROUTE_NAME='浮选柱' OR ROUTE_NAME='浮选底层')
+                    </if>
+                    <if test="equip=='半自磨机'">
+                        AND ((ZONE_NAME='磨机区域' AND devName='MZS6433半自磨机电机')
+                        OR (ZONE_NAME='磨机底层' AND (devName='MZS6433半自磨机高压稀油站电机' OR devName='MZS6433半自磨机低压稀油站电机'
+                        OR devName='1#离心式渣浆泵电机（粗砂）' OR devName='2#离心式渣浆泵电机（粗砂）')))
+                    </if>
+                    <if test="equip=='再磨机'">
+                        AND ((ZONE_NAME='磨机区域' AND devName='MQY2745再磨机电机')
+                        OR (ZONE_NAME='磨机底层' AND devName='MQY2745再磨机高低压稀油站电机'))
+                    </if>
+                    <if test="equip=='球磨机'">
+                        AND ((ZONE_NAME='磨机区域' AND devName='MQY4870球磨机电机')
+                        OR (ZONE_NAME='磨机底层' AND devName='MQY4870球磨机高低压稀油站电机'))
+                    </if>
+                    <if test="equip=='浮选机'">
+                        AND ROUTE_NAME='浮选系统'
+                    </if>
+                  AND TASKSTART_TM="${time}"
+        </if>
+
+
+
+    </select>
+    <select id="REPORT_SB_DEAL_LIST" resultType="com.demo.model.report.Report">
+
+        SELECT
+            CONCAT(devName,'--',SC_PART,'--',SC_CONTENT,'--结果为：',RESULT,'--备注：',
+            (case WHEN REMARK is NULL THEN '无' ELSE REMARK END ) ) as 'content'
+            ,COMPLETE_TM as 'uploadTime'
+            ,alarm_flag as 'deal'
+            ,alarm_remark as 'dealResult'
+            ,alarm_manage_name as 'dealName'
+            ,alarm_manage_time as 'dealTime'
+        from
+            dxj_spot_result
+        WHERE
+            <if test="workshop !='电仪工段'">
+                  DEPT_NAME="${team}"
+    --      磨浮设备
+                 <if test="team=='磨浮设备'">
+                        <if test="equip=='再磨机'">
+                            AND  (ZONE_NAME='再磨机' OR ZONE_NAME='FX350-GT旋流器' or ZONE_NAME='再磨机稀油润滑系统')
+                        </if>
+                        <if test="equip=='球磨机'">
+                            AND  (ZONE_NAME='球磨机' OR ZONE_NAME='FX660-GT旋流器'or ZONE_NAME='球磨机稀油润滑系统' )
+                        </if>
+                        <if test="equip=='半自磨机'">
+                            AND  (ZONE_NAME='半自磨机'  or  ZONE_NAME='粗砂泵'  or ZONE_NAME='半自磨机稀油润滑系统')
+                        </if>
+                        <if test="equip=='中板皮带'">
+                            and    (devName='5#皮带运输机' OR devName='1#中重型板式给矿机' OR devName='2#中重型板式给矿机')
+                        </if>
+                        <if test="equip=='浮选机'">
+                            and  (ROUTE_NAME='浮选系统'  OR(ZONE_NAME='浮选底层区域一' AND devName LIKE '#脱泥泵'))
+                        </if>
+                        <if test="equip=='鼓风机'">
+                           AND (ZONE_NAME='浮选柱' or ZONE_NAME='鼓风机')
+                        </if>
+                        <if test="equip=='浮选泵'">
+                            AND (ROUTE_NAME='浮选底层' OR
+                            ( ROUTE_NAME='浮选柱' AND devName LIKE '%铜精选%' ))
+                            and devName != '1#离心式渣浆泵（再磨砂）' and  devName != '2#离心式渣浆泵（再磨砂）'
+                            and devName != '1#脱泥泵' and  devName != '2#脱泥泵'
+                        </if>
+                        and TASKSTART_TM="${time}"
+                 </if>
+    --      碎矿设备
+                  <if test="team=='碎矿设备'">
+                        <if test="equip=='重板'">
+                            AND  (ZONE_NAME='重板' )
+                        </if>
+                        <if test="equip=='颚破'">
+                            AND  (ZONE_NAME='颚破' )
+                        </if>
+                        <if test="equip=='2#皮带'">
+                            AND  (ZONE_NAME='2#皮带' )
+                        </if>
+                        <if test="equip=='4#皮带'">
+                            AND  (ZONE_NAME='4#皮带' )
+                        </if>
+                        <if test="equip=='石灰制乳输送'">
+                            AND  (ZONE_NAME='石灰制乳' or ZONE_NAME='石灰输送' )
+                        </if>
+                        and TASKSTART_TM="${time}"
+                  </if>
+
+    --     精尾设备
+                  <if test="team=='精尾设备'">
+                        <if test="equip=='压滤机'">
+                            AND  (ZONE_NAME='压滤机' )
+                        </if>
+                        <if test="equip=='过滤机'">
+                            AND  (ZONE_NAME='过滤机' )
+                        </if>
+                        <if test="equip=='空压机'">
+                                AND ROUTE_NAME='空气压缩机组'
+                        </if>
+                        <if test="equip=='尾砂泵'">
+                            AND ROUTE_NAME='尾砂泵'
+                        </if>
+                        <if test="equip=='厂前回水泵'">
+                            AND ZONE_NAME='厂前回水泵'
+                        </if>
+                        <if test="equip=='浓密机'">
+                            AND(ROUTE_NAME='浓密机' and  devName not  like  '%离心%')
+                        </if>
+                        and TASKSTART_TM="${time}"
+                  </if>
+--        磨浮生产
+                  <if test="team=='磨浮生产'">
+                      <if test="equip=='皮带岗'">
+                          AND(ROUTE_NAME='皮带岗' )
+                      </if>
+                      <if test="equip=='磨矿岗'">
+                          AND(ROUTE_NAME='磨矿岗' )
+                      </if>
+                      <if test="equip=='浮选岗'">
+                          AND(ROUTE_NAME='鼓风机' or ROUTE_NAME='浮选柱' or ROUTE_NAME='浮选路线' or ROUTE_NAME='浮选底层')
+                      </if>
+                      <if test="duty=='白班'">
+                          AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                          AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                      </if>
+                      <if test="duty=='夜班'">
+                          AND concat("${time}", ' ', '08:00:00') > TASKSTART_TM
+                          AND  TASKSTART_TM >=  concat(DATE_FORMAT(date_sub("${time}",interval +1 day),'%Y-%m-%d'),' ', '20:00:00')
+                      </if>
+                  </if>
+--         碎矿生产
+                <if test="team=='碎矿生产'">
+                    <if test="equip=='皮带岗'">
+                        AND(ROUTE_NAME='碎矿胶带运输机岗' )
+                    </if>
+                    <if test="equip=='石灰乳化岗'">
+                        AND(ROUTE_NAME='石灰乳化岗' )
+                    </if>
+                    <if test="equip=='破碎岗'">
+                        AND(ROUTE_NAME='破碎机岗')
+                    </if>
+                    <if test="duty=='白班'">
+                        AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                        AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                    </if>
+                    <if test="duty=='夜班'">
+                        AND concat("${time}", ' ', '08:00:00') > TASKSTART_TM
+                        AND  TASKSTART_TM >=  concat(DATE_FORMAT(date_sub("${time}",interval +1 day),'%Y-%m-%d'),' ', '20:00:00')
+                    </if>
+                </if>
+--          精尾生产
+                <if test="team=='精尾生产'">
+                    <if test="equip=='回水岗'">
+                        AND(ROUTE_NAME='回水岗' )
+                    </if>
+                    <if test="equip=='压滤机岗'">
+                        AND(ROUTE_NAME='压滤机岗' )
+                    </if>
+                    <if test="equip=='过滤机岗'">
+                        AND(ROUTE_NAME='过滤机岗')
+                    </if>
+                    <if test="equip=='尾砂泵岗'">
+                        AND(ROUTE_NAME='尾砂泵岗' )
+                    </if>
+                    <if test="equip=='中心气站岗'">
+                        AND(ROUTE_NAME='中心气站岗')
+                    </if>
+                    <if test="duty=='白班'">
+                        AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+                        AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+                    </if>
+                    <if test="duty=='夜班'">
+                        AND concat("${time}", ' ', '08:00:00') > TASKSTART_TM
+                        AND  TASKSTART_TM >=  concat(DATE_FORMAT(date_sub("${time}",interval +1 day),'%Y-%m-%d'),' ', '20:00:00')
+                    </if>
+                </if>
+            </if>
+-- 电仪
+        <if test="workshop=='电仪工段'">
+            DEPT_NAME="电仪工段"
+            <if test="equip=='重板颚破'">
+                AND ROUTE_NAME='碎矿系统' AND (ZONE_NAME='重板' OR  ZONE_NAME='颚破')
+            </if>
+            <if test="equip=='2#4#皮带'">
+                AND ROUTE_NAME='碎矿系统' AND (ZONE_NAME='2#皮带' OR  ZONE_NAME='4#皮带')
+            </if>
+            <if test="equip=='石灰输送'">
+                AND ROUTE_NAME='石灰输送'
+            </if>
+            <if test="equip=='浓密机'">
+                and (ROUTE_NAME='浓密机' OR ROUTE_NAME='厂前回水泵')
+            </if>
+            <if test="equip=='压滤过滤'">
+               and (ROUTE_NAME='压滤、过滤机' OR ROUTE_NAME='尾砂泵')
+            </if>
+            <if test="equip=='鼓风机'">
+                and (ROUTE_NAME='鼓风机')
+            </if>
+            <if test="equip=='空压机'">
+                AND (ROUTE_NAME='空气压缩机组')
+            </if>
+            <if test="equip=='中板皮带'">
+                AND (ROUTE_NAME='中板皮带' AND (devName='1#中重型板式给矿机电机'
+                OR devName='2#中重型板式给矿机电机' OR devName='5#皮带运输机电机'))
+            </if>
+            <if test="equip=='3M石灰'">
+               and (ROUTE_NAME='中板皮带' AND (devName='1#石灰搅拌桶加压电机'
+                OR devName='2#石灰搅拌桶加压电机' OR devName='3米石灰搅拌桶电机')
+                )
+            </if>
+            <if test="equip=='浮选泵'">
+                AND (ROUTE_NAME='浮选柱' OR ROUTE_NAME='浮选底层')
+            </if>
+            <if test="equip=='半自磨机'">
+                AND ((ZONE_NAME='磨机区域' AND devName='MZS6433半自磨机电机')
+                OR (ZONE_NAME='磨机底层' AND (devName='MZS6433半自磨机高压稀油站电机' OR devName='MZS6433半自磨机低压稀油站电机'
+                OR devName='1#离心式渣浆泵电机（粗砂）' OR devName='2#离心式渣浆泵电机（粗砂）')))
+            </if>
+            <if test="equip=='再磨机'">
+                AND ((ZONE_NAME='磨机区域' AND devName='MQY2745再磨机电机')
+                OR (ZONE_NAME='磨机底层' AND devName='MQY2745再磨机高低压稀油站电机'))
+            </if>
+            <if test="equip=='球磨机'">
+                AND ((ZONE_NAME='磨机区域' AND devName='MQY4870球磨机电机')
+                OR (ZONE_NAME='磨机底层' AND devName='MQY4870球磨机高低压稀油站电机'))
+            </if>
+            <if test="equip=='浮选机'">
+                AND ROUTE_NAME='浮选系统'
+            </if>
+            and TASKSTART_TM="${time}"
+        </if>
+
+        AND (ALTPID=1 OR ALTPID=2)
+        ORDER BY uploadTime
+
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="REPORT_SC_SPOT_LIST" resultType="com.demo.model.report.Report">
+
+        SELECT
+        COUNT(*) as 'zong' ,
+        count(case when ALTPID is NULL THEN 1 end ) as 'wjian',
+        count(case when ALTPID=0 THEN 1 end ) as 'zchang',
+
+        count(case when ALTPID=1 THEN 1 end ) as 'bjing',
+        count(case when ALTPID=2 THEN 1 end ) as 'wxian',
+        USERNAME as name
+        from dxj_spot_result WHERE
+
+        DEPT_NAME="${team}"
+        <if test="equip=='磨矿岗'">
+            AND(ROUTE_NAME='磨矿岗')
+        </if>
+        <if test="equip=='浮选岗'">
+            AND(ROUTE_NAME='浮选底层'or ROUTE_NAME='浮选柱' or ROUTE_NAME='浮选路线')
+        </if>
+        <if test="equip=='皮带岗'">
+            AND(ROUTE_NAME='皮带岗')
+        </if>
+        <if test="duty=='白班'">
+            AND uploadResultTime >= concat("${time}", ' ', '08:00:00')
+            AND   concat("${time}", ' ', '20:00:00')  >uploadResultTime
+        </if>
+        <if test="duty=='夜班'">
+            AND uploadResultTime >= concat("${time}", ' ', '20:00:00')
+            AND    concat(DATE_FORMAT(date_sub("${time}",interval -1 day),'%Y-%m-%d'),' ', '08:00:00')  >uploadResultTime
+        </if>
+
+
+    </select>
+
+    <select id="REPORT_SC_DEAL_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+        CONCAT(devName,SC_PART) as 'content'
+        ,COMPLETE_TM as 'uploadTime'
+        ,alarm_flag as 'deal'
+        ,alarm_remark as 'dealResult'
+        ,alarm_manage_name as 'dealName'
+        ,alarm_manage_time as 'dealTime'
+        from
+        dxj_spot_result
+        WHERE
+        DEPT_NAME="${team}"
+
+        <if test="equip=='磨矿岗'">
+            AND(ROUTE_NAME='磨矿岗')
+        </if>
+        <if test="equip=='浮选岗'">
+            AND(ROUTE_NAME='浮选底层'or ROUTE_NAME='浮选柱' or ROUTE_NAME='浮选路线')
+        </if>
+        <if test="equip=='皮带岗'">
+            AND(ROUTE_NAME='皮带岗')
+        </if>
+
+
+        <if test="duty=='白班'">
+            AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
+            AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
+        </if>
+        <if test="duty=='夜班'">
+            AND TASKSTART_TM >= concat("${time}", ' ', '20:00:00')
+            AND    concat(DATE_FORMAT(date_sub("${time}",interval -1 day),'%Y-%m-%d'),' ', '08:00:00')  >TASKSTART_TM
+        </if>
+        AND (ALTPID=1 OR ALTPID=2)
+
+    </select>
+
+</mapper>

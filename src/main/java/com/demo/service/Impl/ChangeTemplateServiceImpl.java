@@ -1,15 +1,8 @@
 package com.demo.service.Impl;
 
 
-import com.demo.mapper.changeShifts.ChangeShiftsMapper;
-import com.demo.mapper.changeShifts.ChangeShiftsSKSHSaveMapper;
-import com.demo.mapper.interlocking.ChangeTemplateMapper;
-import com.demo.model.changeShifts.ChangeShiftsConfig;
-import com.demo.model.changeShifts.ChangeShiftsSpot;
-import com.demo.model.changeShifts.jobs.CrushLime;
-import com.demo.model.changeShifts.jobs.CrushLimeExample;
+import com.demo.mapper.Cms.interlocking.ChangeTemplateMapper;
 import com.demo.model.interlocking.Interlocking;
-import com.demo.service.ChangeShiftsService;
 import com.demo.service.ChangeTemplateService;
 import org.springframework.stereotype.Service;
 

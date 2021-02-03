@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.process.ns.NS1NDLLMapper">
+
+    <select id="NS_1_NDLL_LIST" resultType="com.demo.model.index.IndexFlowChartData">
+    SELECT
+
+        ROUND(MAX(CASE WHEN TagName = 'NDJ1.ND' THEN DocValue/100  else 0 end ), 2) as  'NDJ1ND',
+
+        ROUND(MAX(CASE WHEN TagName = 'NDJ1.V' THEN DocValue/100  else 0 end ), 2) as  'NDJ1V',
+
+        ROUND(MAX(CASE WHEN TagName = 'NDJ2.ND' THEN DocValue/100  else 0 end ), 2) as  'NDJ2ND',
+
+        ROUND(MAX(CASE WHEN TagName = 'NDJ2.V' THEN DocValue/100  else 0 end ), 2) as  'NDJ2V'  ,
+
+        ROUND(MAX(CASE WHEN TagName = 'NDJ4.ND' THEN DocValue/100  else 0 end ), 2) as  'NDJ4ND',
+
+				ROUND(MAX(CASE WHEN TagName = 'NDJ4.V' THEN DocValue/100  else 0 end ), 2) as  'NDJ4V'
+
+                FROM
+                        rcd_hour
+                WHERE
+(
+                         TagName = 'NDJ1.ND'  -- 铜精矿浓密机底流浓度
+                        OR TagName = 'NDJ1.V'   -- 铜精矿浓密机底流流量
+                        OR TagName = 'NDJ2.ND'  -- 硫精矿浓密机底流浓度
+                        OR TagName = 'NDJ2.V'   -- 硫精矿浓密机底流流量
+												OR TagName = 'NDJ4.ND' -- 尾矿浓密机底流浓度
+												OR TagName = 'NDJ4.V' -- 尾矿浓密机底流流量
+                        )
+                   AND
+						DataTime>DATE_ADD(NOW(),INTERVAL -80 MINUTE)
+   </select>
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.report.equip.jw.ReportSBJWKYJMapper">
+    <select id="REPORT_SB_JW_KYJ_RUN_LIST" resultType="com.demo.model.report.Report">
+
+        select
+                ZONE_NAME as zoneName,
+                (case  WHEN devName = '1#冷冻式干燥机' THEN '1#螺杆式空气压缩机'
+                WHEN devName = '2#冷冻式干燥机' THEN '2#螺杆式空气压缩机'
+                WHEN devName = '3#冷冻式干燥机' THEN '3#螺杆式空气压缩机'
+                WHEN devName = '4#冷冻式干燥机' THEN '4#螺杆式空气压缩机'
+                WHEN devName = '5#冷冻式干燥机' THEN '5#螺杆式空气压缩机'
+                ELSE devName
+                END
+                )equipName ,
+                (CASE WHEN SC_CONTENT='运行是否正常' THEN '干燥机'
+                WHEN SC_CONTENT='进出口压差是否合理' THEN '干燥机'
+                when SC_PART='其它' and devName like '%冷冻式干燥机' then '干燥机其它'
+                when SC_PART='其它' and devName like '%螺杆式空气压缩机' then '螺杆泵其它'
+                ELSE SC_CONTENT
+                END  )as part
+                    ,RESULT as result
+                    ,ALTPID as altpid
+                from
+                        dxj_spot_result
+                WHERE
+                        DEPT_NAME='精尾设备' AND ROUTE_NAME='空气压缩机组'
+
+                      	AND TASKSTART_TM="${time}"
+
+                GROUP BY equipName,part
+                -- ORDER BY  CAST(TRIM('#' FROM equipName) AS SIGNED)
+                ORDER BY  equipName ,FIELD(part,'油位是否正常','压力是否正常','运行温度是否正常','加压是否过载','剩余保养时间','螺杆泵其它','干燥机','干燥机其它')
+    </select>
+    <select id="REPORT_SB_JW_WSB_RUN_LIST" resultType="com.demo.model.report.Report">
+
+
+
+        select
+                ZONE_NAME as zoneName,devName as equipName ,
+                (CASE when SC_PART = '其它' then  SC_PART
+                else
+                CONCAT(SC_PART,SC_CONTENT)
+                end ) as part
+
+                    ,RESULT as result
+                    ,ALTPID as altpid
+                from
+                        dxj_spot_result
+                WHERE
+                        DEPT_NAME='精尾设备' AND ROUTE_NAME='尾砂泵'
+
+                        	AND TASKSTART_TM="${time}"
+
+                ORDER BY  equipName,part DESC
+    </select>
+    <select id="REPORT_SB_JW_HS_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+           	(CASE WHEN devName='冷却水收集离心泵' THEN '冷却水收集离心泵' ELSE ZONE_NAME  END) AS zoneName,
+            devName as equipName,
+            SC_CONTENT AS part,
+            RESULT AS result,
+            ALTPID AS altpid
+        FROM
+            dxj_spot_result
+        WHERE
+            DEPT_NAME = '精尾设备'
+        AND ZONE_NAME = '厂前回水泵'
+       AND TASKSTART_TM="${time}"
+        GROUP BY
+            equipName,
+            part
+        ORDER BY
+            equipName,part DESC
+    </select>
+    <select id="REPORT_SB_JW_NMJ_RUN_LIST" resultType="com.demo.model.report.Report">
+        SELECT
+            ZONE_NAME AS zoneName,
+            (CASE when devName='NJG型周边传动浓缩机（硫浓密）' THEN '硫浓密机'
+
+when devName='NJG型周边传动浓缩机（铜浓密）' THEN '铜浓密机'
+when devName='NJG型周边传动浓缩机（事故浓密）' THEN '事故浓密机'
+ELSE devName end
+)equipName,
+        (case WHEN SC_PART ='减速机、液压控制泵站' THEN CONCAT(SC_PART,SC_CONTENT) ELSE SC_PART END)AS part,
+            RESULT AS result,
+            ALTPID AS altpid
+        FROM
+            dxj_spot_result
+        WHERE
+            DEPT_NAME = '精尾设备'
+        AND devName LIKE '%浓缩机%'
+         AND TASKSTART_TM="${time}"
+        GROUP BY
+        zoneName,
+            equipName,
+            part
+        ORDER BY
+            equipName DESC ,FIELD(part,'其它')
+    </select>
+    <select id="REPORT_SB_JW_NMJ_LXB_RUN_LIST" resultType="com.demo.model.report.Report">
+
+SELECT
+        	ZONE_NAME AS zoneName,
+	devName as equipName,
+(case WHEN SC_PART ='液力耦合器' THEN CONCAT(SC_PART,SC_CONTENT) ELSE SC_CONTENT END)AS part,
+-- SC_PART,SC_CONTENT as part,
+	RESULT AS result,
+	ALTPID AS altpid
+FROM
+	dxj_spot_result
+WHERE
+	DEPT_NAME = '精尾设备'
+AND ZONE_NAME LIKE '%浓密机%' AND devName LIKE '%离心式%'
+                AND TASKSTART_TM="${time}"
+GROUP BY
+	equipName,
+	part
+ORDER BY
+	equipName ,FIELD(part,'其它问题')
+    </select>
+
+</mapper>

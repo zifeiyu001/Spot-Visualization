@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.sk.ep.SpotSKEPDetailedMapper">
+    <select id="SK_EP_SB_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+
+				'碎矿' as 'devName',
+				MAX(CASE WHEN  SC_CONTENT = '小皮带轮轴承有无异响' THEN tempResult END ) as 'a1',
+				MAX(CASE WHEN  SC_CONTENT = '小皮带轮轴承温度' THEN Result END ) as 'a2',
+-- 				MAX(CASE WHEN  SC_CONTENT = '小皮带轮和皮带有无打滑现象' THEN tempResult END ) as 'a3',
+	      MAX(CASE WHEN  SC_CONTENT = '大皮带轮和皮带有无打滑现象' THEN tempResult END ) as 'a3',
+				MAX(CASE WHEN  SC_CONTENT LIKE '传动皮带有无断裂%' THEN tempResult END ) as 'a4',
+				MAX(CASE WHEN  SC_CONTENT LIKE '拉杆弹簧%' THEN tempResult END ) as 'a5',
+				MAX(CASE WHEN  SC_CONTENT = '动颚齿板是否磨损' THEN tempResult END ) as 'a6',
+				MAX(CASE WHEN  SC_CONTENT LIKE '动颚齿板及衬板%' THEN tempResult END ) as 'a7',
+				MAX(CASE WHEN  SC_CONTENT LIKE '动颚轴运转%' THEN tempResult END ) as 'a8',
+        MAX(CASE WHEN  SC_CONTENT = '偏心轴运转有无异响' THEN tempResult END ) as 'a9',
+				MAX(CASE WHEN  SC_CONTENT = '偏心轴轴瓦温度' THEN Result END ) as 'a10',
+        MAX(CASE WHEN  SC_CONTENT LIKE '油箱油位%' THEN tempResult END ) as 'a11',
+				MAX(CASE WHEN  SC_CONTENT LIKE '油箱内油质%' THEN tempResult END ) as 'a12',
+				MAX(CASE WHEN  SC_CONTENT LIKE '油泵运转%' THEN tempResult END ) as 'a13',
+				MAX(CASE WHEN  SC_CONTENT = '油泵供油压力' THEN tempResult END ) as 'a14',
+				MAX(CASE WHEN  SC_CONTENT LIKE '回油磁网%' THEN tempResult END ) as 'a15',
+				MAX(CASE WHEN  SC_CONTENT LIKE '冷却器%' THEN tempResult END ) as 'a16',
+				MAX(CASE WHEN  SC_CONTENT LIKE '供回油管%' THEN tempResult END ) as 'a17',
+        MAX(CASE WHEN  SC_CONTENT = '低压油站油箱温度' THEN Result END ) as 'a18'
+FROM
+		(SELECT
+					SC_CONTENT,RESULT,
+				(CASE
+               WHEN RESULT='停机不检' THEN RESULT
+				WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+				WHEN 	(ALTPID = 0)  THEN '正常'
+				WHEN  (ALTPID=1 OR ALTPID=2) THEN   CONCAT(RESULT,'故障')
+				ELSE RESULT
+				END ) as tempResult
+
+		FROM
+				dxj_spot_result
+		WHERE
+				(DEPT_NAME="碎矿设备"			AND devName="简摆颚式破碎机")
+				AND to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as tmp
+        </select>
+    <select id="SK_EP_SC_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+SELECT
+
+				'生产' as 'devName',
+
+				MAX(CASE WHEN  SC_CONTENT = '三角皮带磨损情况' THEN tempResult END ) as 'a1',
+				MAX(CASE WHEN  SC_CONTENT LIKE '动颚润滑%' THEN Result END ) as 'a2',
+				MAX(CASE WHEN  SC_CONTENT LIKE '前后肘板%' THEN tempResult END ) as 'a3',
+	      MAX(CASE WHEN  SC_CONTENT = '小皮带轮轴承有无异响' THEN tempResult END ) as 'a4',
+
+				MAX(CASE WHEN  SC_CONTENT LIKE '干油管%' THEN tempResult END ) as 'a5',
+				MAX(CASE WHEN  SC_CONTENT LIKE '颚破冷却水%' THEN tempResult END ) as 'a6',
+				MAX(CASE WHEN  SC_CONTENT LIKE '颚破机%' THEN tempResult END ) as 'a7',
+        MAX(CASE WHEN  SC_CONTENT = '地脚是否松动' THEN tempResult END ) as 'a8',
+				MAX(CASE WHEN SC_PART='破碎过程' AND SC_CONTENT = '破碎过程是否正常' THEN Result END ) as 'a9'
+
+
+FROM
+		(SELECT
+					SC_CONTENT,RESULT,SC_PART,
+				(CASE
+               WHEN RESULT='停机不检' THEN RESULT
+				WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+				WHEN 	(ALTPID = 0)  THEN '正常'
+				WHEN  (ALTPID=1 OR ALTPID=2) THEN   CONCAT(RESULT,'故障')
+				ELSE RESULT
+				END ) as tempResult
+
+		FROM
+				dxj_spot_result
+		WHERE
+				(DEPT_NAME="碎矿生产"			AND devName="简摆颚式破碎机")
+				AND to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as tmp
+
+
+    </select>
+    <select id="SK_EP_DY_Detailed_LIST" resultType="com.demo.model.equip.detailedData">
+        SELECT
+ '电仪' as 'devName',
+		MAX(CASE WHEN devName="简摆颚式破碎机电机" AND SC_CONTENT ='测振'         THEN tempResult  end )  as   'a1',
+		MAX(CASE WHEN devName="简摆颚式破碎机电机" AND SC_CONTENT ='测温'            THEN tempResult  end )  as   'a2',
+		MAX(CASE WHEN devName="简摆颚式破碎机电机" AND SC_CONTENT ='有无异常'          THEN tempResult  end )  as   'a3',
+		MAX(CASE WHEN devName="简摆颚式破碎机电机" AND SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a4',
+		MAX(CASE WHEN devName="颚破稀油站1号油泵电机" AND SC_CONTENT ='测振'         THEN tempResult  end )  as   'a5',
+		MAX(CASE WHEN devName="颚破稀油站1号油泵电机" AND SC_CONTENT ='测温'            THEN tempResult  end )  as   'a6',
+		MAX(CASE WHEN devName="颚破稀油站1号油泵电机" AND SC_CONTENT ='有无异常'          THEN tempResult  end )  as   'a7',
+		MAX(CASE WHEN devName="颚破稀油站1号油泵电机" AND SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a8',
+		MAX(CASE WHEN devName="颚破稀油站2号油泵电机" AND SC_CONTENT ='测振'         THEN tempResult  end )  as   'a9',
+		MAX(CASE WHEN devName="颚破稀油站2号油泵电机" AND SC_CONTENT ='测温'            THEN tempResult  end )  as   'a10',
+		MAX(CASE WHEN devName="颚破稀油站2号油泵电机" AND SC_CONTENT ='有无异常'          THEN tempResult  end )  as   'a11',
+		MAX(CASE WHEN devName="颚破稀油站2号油泵电机" AND SC_CONTENT ='有无松动'   THEN tempResult      end )  as   'a12'
+FROM
+		(
+			SELECT
+						SC_CONTENT,devName,
+						(CASE
+						WHEN RESULT='停机不检' THEN RESULT
+						WHEN 	(SC_CONTENT="测振" OR SC_CONTENT="测温") THEN RESULT
+						WHEN 	(ALTPID = 2 OR ALTPID=1)  THEN '故障'
+						WHEN 	(ALTPID = 0)  THEN '正常'
+						ELSE RESULT
+						END  ) as tempResult,
+						RESULT
+
+			FROM
+					dxj_spot_result
+			WHERE
+					(DEPT_NAME="电仪工段" AND (devName="简摆颚式破碎机电机" OR devName="颚破稀油站1号油泵电机" OR devName="颚破稀油站2号油泵电机"))
+			AND
+							to_days(TASKSTART_TM) = to_days(now())-- 当天数据
+		)as temp
+    </select>
+
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.ns.tnm.SpotNSTNMMapper">
+        <select id="SPOT_NS_TNM_LIST" resultType="com.demo.model.equip.SpotStatistics">
+        SELECT
+            (case  when DEPT_NAME='精尾设备' THEN '设备'
+        WHEN DEPT_NAME='精尾生产' THEN '生产'
+        WHEN DEPT_NAME='电仪工段' THEN '电仪' END
+        )section,
+            count(COMPLETESTATE = 'Y' OR NULL) AS checked,
+            count(COMPLETESTATE = 'W' OR NULL) AS unchecked,
+            count(ALTPID = 1 OR NULL) AS alarm,
+            count(ALTPID = 2 OR NULL) AS danger
+        FROM
+            dxj_spot_result
+        WHERE
+            ZONE_NAME="铜浓密机NJG30B"
+        AND --         YEARWEEK(date_format(TASKSTART_TM, '%Y-%m-%d'),1) = YEARWEEK(now(), 1) -- 一周数据（测试用）
+            to_days(TASKSTART_TM) = to_days(now()) -- 当天数据
+        GROUP BY
+            section
+
+
+        </select>
+
+
+</mapper>

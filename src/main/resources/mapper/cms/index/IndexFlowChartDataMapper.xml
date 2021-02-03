@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.index.IndexFlowChartDataMapper">
+    <select id="INDEX_FLOW_CHART_DATA_LIST" resultType="com.demo.model.index.IndexFlowChartData">
+    SELECT
+
+        ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV01_2' THEN DocValue  else 0 end ), 2) as  'Cu',      -- 原矿铜品位
+
+        ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV07_2' THEN DocValue  else 0 end ), 2) as  'WCu',     -- 总尾矿铜品位
+
+        ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV07_1' THEN DocValue  else 0 end ), 2) as  'WS',     -- 总尾矿硫品位
+
+        ROUND(MAX(CASE WHEN TagName = 'XFenXiYi_001.PV08_2' THEN DocValue  else 0 end ), 2) as  'CuCu',    -- 铜精矿铜品位
+
+        ROUND(MAX(CASE WHEN TagName = 'MK.FEED.ORE.WIC.SUM' THEN DocValue  else 0 end ), 2) as  'CLL',      -- 处理量
+
+        ROUND(MAX(CASE WHEN TagName = 'NDJ1.ND' THEN DocValue/100  else 0 end ), 2) as  'NDJ1ND'            -- 铜精矿浓密机底流浓度
+
+                FROM
+                        rcd_hour
+                WHERE
+                        (TagName = 'XFenXiYi_001.PV01_2'	-- 原矿铜品位
+
+                        OR TagName = 'XFenXiYi_001.PV07_2'  -- 总尾矿铜品位
+
+                        OR TagName = 'XFenXiYi_001.PV08_2'  -- 铜精矿铜品位
+
+                        OR TagName = 'MK.FEED.ORE.WIC.SUM'  -- 处理量
+
+                        OR  TagName='XFenXiYi_001.PV07_1'   -- 总尾矿硫品位
+
+                        OR TagName = 'NDJ1.ND'  -- 铜精矿浓密机底流浓度
+
+                        )
+                   AND
+						DataTime>DATE_ADD(NOW(),INTERVAL -80 MINUTE)
+    </select>
+    <select id="INDEX_FLOW_CHART_DATA2_LIST" resultType="com.demo.model.index.IndexFlowChartData">
+
+       SELECT
+            round(sum(DocValue),2) as 'water'
+        FROM
+            rcd_hour
+        WHERE
+            (
+                   TagName = 'PID_BS1.ELSE.CV_Output'
+                OR TagName = 'PID_BS2.ELSE.CV_Output'
+                OR TagName = 'PID_BS3.ELSE.CV_Output'
+            )
+        AND DataTime > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+-- and YEAR(DataTime)=YEAR(NOW())
+    </select>
+
+</mapper>

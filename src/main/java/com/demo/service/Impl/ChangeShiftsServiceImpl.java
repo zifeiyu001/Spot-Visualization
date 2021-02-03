@@ -1,8 +1,8 @@
 package com.demo.service.Impl;
 
 
-import com.demo.mapper.changeShifts.ChangeShiftsMapper;
-import com.demo.mapper.changeShifts.ChangeShiftsSKSHSaveMapper;
+import com.demo.mapper.Cms.changeShifts.ChangeShiftsMapper;
+import com.demo.mapper.Cms.changeShifts.ChangeShiftsSKSHSaveMapper;
 import com.demo.model.changeShifts.ChangeShiftsConfig;
 import com.demo.model.changeShifts.ChangeShiftsSpot;
 import com.demo.model.changeShifts.jobs.CrushLime;
@@ -10,7 +10,6 @@ import com.demo.model.changeShifts.jobs.CrushLimeExample;
 import com.demo.service.ChangeShiftsService;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**

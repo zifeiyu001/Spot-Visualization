@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.mk.gkfj.SpotGkfjDetailedXLQMapper">
+        <select id="SPOT_GKFJ_MK_DETAILED_XLQ_LIST" resultType="com.demo.model.equip.detailedData">
+         SELECT
+                '设备' as 'devName',
+                MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='内衬'  THEN temResult  end ) as  'a1',
+                MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_CONTENT='是否磨损泄漏'   THEN temResult  end ) as  'a2',
+                MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_CONTENT='是否磨损严重'     THEN temResult  end ) as  'a3',
+                MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_CONTENT='是否松动'  THEN temResult  end ) as  'a4',
+                MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_CONTENT='磨损量是否符合使用要求'  THEN temResult  end ) as  'a5',
+                MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_CONTENT='是否磨损泄漏'  THEN temResult  end ) as  'a6',
+                MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_CONTENT='是否磨损严重'   THEN temResult  end ) as  'a7',
+                MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_CONTENT='是否松动'  THEN temResult  end ) as  'a8',
+                MAX(CASE WHEN devName='FX660-GT旋流器（B组）' AND SC_CONTENT='磨损量是否符合使用要求'  THEN temResult  end ) as  'a9',
+                MAX(CASE WHEN devName='FX660-GT旋流器（B组）' AND SC_CONTENT='是否磨损泄漏'  THEN temResult  end ) as  'a10',
+                MAX(CASE WHEN devName='FX660-GT旋流器（B组）' AND SC_CONTENT='是否磨损严重'   THEN temResult  end ) as  'a11',
+                MAX(CASE WHEN devName='FX660-GT旋流器（B组）' AND SC_CONTENT='是否松动'  THEN temResult  end ) as  'a12'
+        FROM
+
+                (
+                SELECT
+                devName,SC_CONTENT,SC_PART,
+                        (CASE
+                                            WHEN RESULT='停机不检' THEN RESULT
+                                        WHEN  (ALTPID = 2 OR ALTPID=1)  THEN '故障'
+                WHEN ALTPID=0 THEN '正常' END
+
+                )temResult
+                 from dxj_spot_result
+
+                WHERE
+                    date(TASKSTART_TM)>= DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND
+                    DEPT_NAME='磨浮设备' AND
+                    (devName='FX350-GT旋流器' OR
+                    devName='FX660-GT旋流器（A组）'  OR devName='FX660-GT旋流器（B组）') )as tmp
+        </select>
+    <select id="SPOT_GKFJ_DY_DETAILED_XLQ_LIST" resultType="com.demo.model.equip.detailedData">
+                      SELECT
+										'电仪' as 'devName',
+										MAX(CASE WHEN devName='1#中重型板式给矿机电机' AND SC_CONTENT='测温'  THEN Result  end ) as  'a1',
+										MAX(CASE WHEN devName='1#中重型板式给矿机电机' AND SC_CONTENT='测振'   THEN Result  end ) as  'a2',
+										MAX(CASE WHEN devName='1#中重型板式给矿机电机' AND SC_CONTENT='有无异响'     THEN temResult  end ) as  'a3',
+										MAX(CASE WHEN devName='1#中重型板式给矿机电机' AND SC_CONTENT='有无松动'  THEN temResult  end ) as  'a4',
+										MAX(CASE WHEN devName='2#中重型板式给矿机电机' AND SC_CONTENT='测温'  THEN Result  end ) as  'a5',
+										MAX(CASE WHEN devName='2#中重型板式给矿机电机' AND SC_CONTENT='测振'   THEN Result  end ) as  'a6',
+										MAX(CASE WHEN devName='2#中重型板式给矿机电机' AND SC_CONTENT='有无异响'     THEN temResult  end ) as  'a7',
+										MAX(CASE WHEN devName='2#中重型板式给矿机电机' AND SC_CONTENT='有无松动'  THEN temResult  end ) as  'a8'
+								FROM
+										(
+										SELECT
+										devName,SC_CONTENT,SC_PART,Result,
+												(CASE
+																	WHEN RESULT='停机不检' THEN RESULT
+																WHEN  (ALTPID = 2 OR ALTPID=1)  THEN '故障'
+										WHEN ALTPID=0 THEN '正常' END
+
+										)temResult
+										 from dxj_spot_result
+
+										WHERE
+									TO_DAYS(TASKSTART_TM)=TO_DAYS(now())
+--            date(TASKSTART_TM)>= DATE_SUB(CURDATE(), INTERVAL 5 DAY)
+								AND	DEPT_NAME='电仪工段'
+								AND (devName='1#中重型板式给矿机电机'
+								OR devName='2#中重型板式给矿机电机') )as tmp
+
+    </select>
+    <select id="SPOT_GKFJ_SC_DETAILED_XLQ_LIST" resultType="com.demo.model.equip.detailedData">
+         SELECT
+										'生产' as 'devName',
+										MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='旋流器'  THEN temResult  end ) as  'a1',
+
+										MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='槽体'     THEN temResult  end ) as  'a2',
+										MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='补加水阀'  THEN temResult  end ) as  'a3',
+										MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='补加水管'   THEN temResult  end ) as  'a4',
+										MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='流量计'  AND SC_CONTENT='是否正常读数'   THEN temResult  end ) as  'a5',
+										MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='流量计'  AND SC_CONTENT='水量' THEN temResult  end ) as  'a6',
+	                                    MAX(CASE WHEN devName='FX350-GT旋流器' AND SC_PART='其它'   THEN temResult  end ) as  'a7',
+
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='旋流器'  THEN temResult  end ) as  'a8',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='槽体'     THEN temResult  end ) as  'a9',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='补加水阀'  THEN temResult  end ) as  'a10',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='补加水管'   THEN temResult  end ) as  'a11',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='流量计'  AND SC_CONTENT='是否正常读数'   THEN temResult  end ) as  'a12',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='流量计'  AND SC_CONTENT='水量' THEN temResult  end ) as  'a13',
+							            MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='其它'   THEN temResult  end ) as  'a14',
+
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='旋流器'  THEN temResult  end ) as  'a15',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='槽体'     THEN temResult  end ) as  'a16',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='补加水阀'  THEN temResult  end ) as  'a17',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='补加水管'   THEN temResult  end ) as  'a18',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='流量计'  AND SC_CONTENT='是否正常读数'   THEN temResult  end ) as  'a19',
+										MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='流量计'  AND SC_CONTENT='水量' THEN temResult  end ) as  'a20',
+							            MAX(CASE WHEN devName='FX660-GT旋流器（A组）' AND SC_PART='其它'   THEN temResult  end ) as  'a21'
+								FROM
+
+										(
+										SELECT
+										devName,SC_CONTENT,SC_PART,
+												(CASE
+																WHEN  (ALTPID = 2 OR ALTPID=1)  THEN '故障'
+										WHEN ALTPID=0 THEN '正常' ELSE RESULT END
+
+										)temResult
+										 from dxj_spot_result
+
+										WHERE
+													TO_DAYS( TASKSTART_TM)= TO_DAYS(NOW()) AND
+													DEPT_NAME='磨浮生产' AND
+														(devName='FX350-GT旋流器' OR
+														devName='FX660-GT旋流器（A组）'  OR devName='FX660-GT旋流器（B组）') )as tmp
+
+    </select>
+
+</mapper>

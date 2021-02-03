@@ -1,6 +1,6 @@
 package com.demo.controller;
 
-import com.demo.mapper.index.IndexAlarmMapper;
+import com.demo.mapper.Cms.index.IndexAlarmMapper;
 import com.demo.model.equip.SpotAlarm;
 import com.demo.service.IndexService;
 import org.springframework.beans.factory.annotation.Autowired;

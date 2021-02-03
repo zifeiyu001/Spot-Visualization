@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.equip.ns.lnm.AlarmNSLNMMapper">
+    <select id="NS_LNM_ALARM_LIST" resultType="com.demo.model.equip.SpotAlarm">
+   SELECT
+
+                        uploadResultTime AS time,
+                        devName AS equip,
+                        SC_PART AS part,
+                        SC_CONTENT AS spot,
+                             ID as id,
+                        RESULT AS value,
+                        (
+                            CASE
+                            WHEN ALTPID = 1 THEN
+                                "二级"
+                            WHEN ALTPID = 2 THEN
+                                "一级"
+                            END
+                        ) level,
+
+             (CASE   WHEN alarm_flag="N" THEN '未处理'
+                     WHEN alarm_flag="Y" THEN '已处理'
+                      END) flag,
+                        std_value AS standard
+                FROM
+                        dxj_spot_result
+                WHERE
+
+				    ZONE_NAME="硫浓密机NJG45S"
+                AND (ALTPID = 1 OR ALTPID = 2)
+--                 		and  alarm_flag='N'
+                AND date(TASKSTART_TM) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                ORDER BY
+                    uploadResultTime DESC;
+
+        </select>
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.mapper.Cms.report.equip.mf.ReportSBMFPDMapper">
+    <select id="REPORT_SB_MK_ZBPD_RUN_LIST" resultType="com.demo.model.report.Report">
+-- 中板皮带
+     select
+			devName as equipName
+			,
+(case  WHEN SC_PART='泵体' AND SC_CONTENT='是否漏浆' THEN '泵体无漏浆'
+WHEN SC_PART='泵体' AND SC_CONTENT='振动是否正常' THEN '泵体振动'
+WHEN SC_PART='轴承（上）' AND SC_CONTENT='温度' THEN '上轴承温度'
+WHEN SC_PART='轴承（下）' AND SC_CONTENT='温度' THEN '下轴承温度'
+WHEN SC_PART='轴承（上）' AND SC_CONTENT='润滑是否良好' THEN '上轴承润滑'
+WHEN SC_PART='轴承（下）' AND SC_CONTENT='润滑是否良好' THEN '下轴承润滑'
+ELSE SC_PART
+END
+)as part
+			,RESULT as result
+			,ALTPID as altpid
+        from
+			dxj_spot_result
+        WHERE
+			DEPT_NAME='磨浮设备'
+		AND
+			(ZONE_NAME='5#皮带' OR ZONE_NAME='中重型板式给料机'  OR ZONE_NAME='石灰泵房')
+		AND TASKSTART_TM="${time}"
+        GROUP BY
+			equipName,part
+        ORDER BY
+			FIELD(equipName,'5#皮带运输机','1#中重型板式给矿机','2#中重型板式给矿机','1#石灰泵','2#石灰泵','石灰搅拌桶'),part
+    </select>
+
+
+</mapper>
