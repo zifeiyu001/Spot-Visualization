@@ -157,6 +157,26 @@ jeDate({
     minDate:"1900-01-01 00:00:00",
     okfun:function(val){alert(val)}
 });
+//维修单时间选择
+jeDate({
+    dateCell:"#monthList-start-date",
+    format:"YYYY-MM-DD hh:mm:ss",
+    isinitVal:true,
+    isTime:true,
+    initHour:-24*30,
+    minDate:"1900-01-01 00:00:00",
+    okfun:function(val){alert(val)}
+});
+jeDate({
+    dateCell:"#monthList-end-date",
+    format:"YYYY-MM-DD hh:mm:ss",
+    // format:"YYYY-MM-DD 00:00:00",
+    isinitVal:true,
+    isTime:true, //isClear:false,
+    initHour:0,
+    minDate:"1900-01-01 00:00:00",
+    okfun:function(val){alert(val)}
+});
 /*========================================公共内容==========================================*/
 
 // 选择展示页面
@@ -605,17 +625,17 @@ function search(c,b) {
             var str='';
             for (var i = 0; i < length; i++) {
                 // alert(json[i].abnormalHandleDealDepart);
-                var alpid = json[i].altpid;
+                var altPid = json[i].altpid;
                 var abnormalHandleType=json[i].abnormalHandleType;
                 // alert(json[i].resultId);
                 var alarmFlag = json[i].alarmFlag;
-                if (abnormalHandleType == 0){
+                if (altPid == 0){
                     str += '<tr  style="background-color:rgba(0,162,44,0.57)"><td>'
                 }else if (alarmFlag =="Y") {
                     str += '<tr  style="background-color:rgba(64,162,56,0.57)"><td>'
-                }  else if(json[i].abnormalHandleAdminType == null && abnormalHandleType>0){
+                }  else if(json[i].abnormalHandleAdminType == null && altPid>0){
                     str += '<tr  style="background-color: #ffc2ff"><td>'
-                } else if (json[i].abnormalHandleAdminType == 1 &&  alarmFlag ==="N") {
+                } else if (json[i].abnormalHandleAdminType == 1 &&  alarmFlag ==="N" ) {
                     str += '<tr style="background-color: #ff2203"><td>'
                 } else if (json[i].abnormalHandleAdminType == 2 && alarmFlag ==="N") {
                     str += '<tr style="background-color: #ff9d09"><td>'
@@ -635,7 +655,7 @@ function search(c,b) {
                     // + (json[i].remark==null?"-":json[i].remark) + '</td><td>'
                     + (CheckIsNullOrEmpty(json[i].remark)?'-':json[i].remark) + '</td><td>'
                     + json[i].result + '</td><td>'
-                    + judgeAlarm(json[i].abnormalHandleType) + '</td><td>'
+                    + judgeAlarm(json[i].abnormalHandleType,altPid) + '</td><td>'
                     + (json[i].personLiable==null?"-":json[i].personLiable) + '</td><td>'
                     + (json[i].userName==null?"-":json[i].userName) + '</td><td>'
                     + json[i].taskStartTime + '</td><td>'
@@ -647,17 +667,17 @@ function search(c,b) {
                     // + (json[i].dealUser==null?'-':json[i].dealUser) + '</td><td>'
                     // +((json[i].deal_remark==null||json[i].deal_remark=='')?'-':json[i].deal_remark)+ '</td>';
 
-                if((json[i].abnormalHandleAdminType == null &&abnormalHandleType>0 &&alarmFlag=='N')&& getHour(json[i].uploadResultTime,getCurDate())>alarm_tips_time) {
-                        str += '<td  class="light">'+ judgeAlarm(json[i].abnormalHandleAdminType)+'</td><td>';
+                if((json[i].abnormalHandleAdminType == null &&altPid>0 &&alarmFlag=='N')&& getHour(json[i].uploadResultTime,getCurDate())>alarm_tips_time) {
+                        str += '<td  class="light">'+ judgeAlarm(json[i].abnormalHandleAdminType,altPid)+'</td><td>';
 
                 }
                 else {
-                    str += '<td>'+ judgeAlarm(json[i].abnormalHandleAdminType)+'</td><td>';
+                    str += '<td>'+ judgeAlarm(json[i].abnormalHandleAdminType,altPid)+'</td><td>';
                 }
 
                  str+= ((json[i].abnormalHandleDealDepart==null||json[i].abnormalHandleDealDepart=='')?'-':json[i].abnormalHandleDealDepart) + '</td><td>'
 
-                    + ((abnormalHandleType<1||alarmFlag=='Y'||json[i].abnormalHandleAdminType>1)?'<input type="button" class="btn btn-warning" value="修改" disabled style="border-color: #bebbb7;' +
+                    + ((altPid<1||alarmFlag=='Y'||json[i].abnormalHandleAdminType>1)?'<input type="button" class="btn btn-warning" value="修改" disabled style="border-color: #bebbb7;' +
                         'background-color: #bebbb7;background-image: linear-gradient(to bottom, #bebbb7 0%, #bebbb7 100%); ">':
                         '<input type="button" class="btn btn-warning" value="修改" style="cursor: pointer;"onclick="openModal(\''+json[i].resultId+'\'\,\''+json[i].deptName+'\')">')+'</td><td>'
 
@@ -795,17 +815,20 @@ function judgeRemark(remark) {
 
 }
 // ========================判断报警============================
-function judgeAlarm(dealEstimate) {
-    if(dealEstimate=='1'){
-        return 'A类'
-    }
-    else if(dealEstimate=='2'){
-        return 'B类'
-    }
-    else if(dealEstimate=='3'){
-        return 'C类'
-    }
-    else {return '-'}
+function judgeAlarm(dealEstimate,altpid) {
+    if (altpid>0){
+        if(dealEstimate=='1'){
+            return 'A类'
+        }
+        else if(dealEstimate=='2'){
+            return 'B类'
+        }
+        else if(dealEstimate=='3'){
+            return 'C类'
+        }else {return '-'}
+
+    }   else {return '-'}
+
 
 }
 
@@ -1179,10 +1202,11 @@ function search_bc_alarm_data(){
             if(json.length>0) {
                 var str = '';
                 for (var i = 0; i < json.length; i++) {
+                    // alert(json[i].monthly_alarm_list);
                     str +=((json[i].monthly_alarm_list=='Y'||json[i].alarm_merge=='Y')?
                         '<tr><td>'+'<input type="checkbox"  class="mergeBCAlarmType" name="mergeBCAlarmType" style="cursor: pointer;" disabled>'+'</td><td>':
                         '<tr><td>'+ '<input type="checkbox"  class="mergeBCAlarmType" name="mergeBCAlarmType" style="cursor: pointer;" ' +
-                        'value='+json[i].alarmId+","+json[i].deptName+","+json[i].abnormalHandleAdminType+","+json[i].resultId+'>'+'</td><td>');
+                        'value='+json[i].alarmId+"#"+json[i].deptName+"#"+json[i].abnormalHandleAdminType+"#"+json[i].resultId+'>'+'</td><td>');
                     str+= (i + 1) + '</td><td>'
                         + json[i].deptName + '</td><td>'
                         // + json[i].routeName + '</td><td>'
@@ -1196,23 +1220,23 @@ function search_bc_alarm_data(){
                         + '</td><td>'
                         // + dateFormat(json[i].uploadResultTime,'yyyy-MM-dd HH:mm:ss') + '</td><td>'
                         + json[i].alarm_times + '</td><td>'
-                        + (json[i].monthly_alarm_list=='Y'?'是':'否') + '</td><td>'
+                        // + (json[i].monthly_alarm_list=='Y'?'是':'否') + '</td><td>'
                         +(json[i].alarm_deal_delay=='Y'?'是':'否') + '</td><td>'
                         +((json[i].alarm_deal_delay_remark==null||json[i].alarm_deal_delay_remark=='')?'-':json[i].alarm_deal_delay_remark) + '</td><td>'
                         +((json[i].monthly_alarm_list=='Y'||json[i].alarm_merge=='Y')?
-                            '<input type="button"  class="btn btn-primary " value="合并" disabled >' + '</td><td>':
-                            '<input type="button"  class="btn btn-primary " value="合并"  onclick="mergeAlarm(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"alarmData"+'\')">' + '</td><td>');
-                    if(alarm_type==2){
-                        str+=((json[i].monthly_alarm_list=='Y'|| json[i].alarm_merge=='Y')?'<input type="button" class="btn btn-primary"  value="添加" disabled>'+ '</td><td>':
-                            '<input type="button" class="btn btn-primary  " value="添加"  onclick="addAlarmToMonthlyList(\''+json[i].deptName+'\',\''+json[i].alarmId+'\')">' + '</td><td>');
-                    }
-                    else{
-                        str+=((json[i].alarm_merge=='Y')?'<input type="button" class="btn btn-primary  operation"  disabled value="处理">' + '</td><td>':
-                            '<input type="button" class="btn btn-primary  operation"   value="处理" disabled  onclick="openDealBCModal(\''+json[i].alarmId+'\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"alarmData"+'\')">' + '</td><td>');
-                    }
+                            '<input type="button"  class="btn btn-primary c-deal" value="合并" disabled >' + '</td><td>':
+                            '<input type="button"  class="btn btn-primary c-deal" value="合并"  onclick="mergeAlarm(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"alarmData"+'\')">' + '</td><td>');
+                    // if(alarm_type==3){
+                    //     str+=((json[i].monthly_alarm_list=='Y'|| json[i].alarm_merge=='Y')?'<input type="button" class="btn btn-primary c-deal"  value="添加" disabled>'+ '</td><td>':
+                    //         '<input type="button" class="btn btn-primary c-deal " value="添加"  onclick="addAlarmToMonthlyList(\''+json[i].deptName+'\',\''+json[i].alarmId+'\')">' + '</td><td>');
+                    // }
+                    // else{
+                        str+=((json[i].monthly_alarm_list=='Y')?'<input type="button" class="btn btn-primary c-deal"  disabled value="处理">' + '</td><td>':
+                            '<input type="button" class="btn btn-primary c-deal operation"   value="处理" disabled  onclick="openDealBCModal(\''+json[i].alarmId+'\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"alarmData"+'\')">' + '</td><td>');
+                    // }
                     str+=((json[i].monthly_alarm_list=='Y'||json[i].alarm_merge=='Y')?
-                        '<input type="button" class="btn btn-primary" value="修改" disabled>' + '</td></tr>':
-                        '<input type="button" class="btn btn-primary  " value="修改"  onclick="openChangeBCModal(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+"alarmData"+'\')">' +'</td></tr>');
+                        '<input type="button" class="btn btn-primary c-deal" value="修改" disabled>' + '</td></tr>':
+                        '<input type="button" class="btn btn-primary  c-deal" value="修改"  onclick="openChangeBCModal(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+"alarmData"+'\')">' +'</td></tr>');
                 }
 
                 $("#bcAlarm-tbody").append(str);
@@ -1291,11 +1315,20 @@ function search_bc_monthly_alarm_list(param){
     else {
         deptName=param;
     }
+    var start = $("#monthList-start-date").val();
+    var end = $("#monthList-end-date").val();
+    var state=$("#month-list-deal_status  option:selected").val();
+    var type=$("#month-list-alarm_type   option:selected").val();
+    // alert(start+"---"+end+"---"+state+"-----"+type);
     $.ajax({
         url: "/interlocking/repair/getMonthlyAlarmList",
         contentType: "application/json",
         data: JSON.stringify({
-            "deptName":deptName
+            "deptName":deptName,
+            "startTime":start,
+            "endTime":end,
+            "state":state,
+            "type":type
         }),
         type: "post",
         cache: true,
@@ -1311,7 +1344,7 @@ function search_bc_monthly_alarm_list(param){
                 var str = '';
                 for (var i = 0; i < json.length; i++) {
                     str += '<tr><td>'+ '<input type="checkbox"  class="mergeBCAlarmToList" name="mergeBCAlarmToList" style="cursor: pointer;" ' +
-                        'value='+json[i].alarmId+","+json[i].deptName+","+json[i].abnormalHandleAdminType+","+json[i].resultId+'>'+'</td><td>'
+                        'value='+json[i].alarmId+"#"+json[i].deptName+"#"+json[i].abnormalHandleAdminType+"#"+json[i].resultId+'>'+'</td><td>'
                         + (i + 1) + '</td><td>'
                         + json[i].deptName + '</td><td>'
                         // + json[i].routeName + '</td><td>'
@@ -1326,10 +1359,19 @@ function search_bc_monthly_alarm_list(param){
                         // + dateFormat(json[i].uploadResultTime,'yyyy-MM-dd HH:mm:ss') + '</td><td>'
                         + json[i].alarm_times + '</td><td>'
                         +(json[i].alarm_deal_delay=='Y'?'是':'否') + '</td><td>'
-                        +((json[i].alarm_deal_delay_remark==null||json[i].alarm_deal_delay_remark=='')?'-':json[i].alarm_deal_delay_remark) + '</td><td>'
-                        + '<input type="button"  class="btn btn-primary  operation " value="合并"  onclick="mergeAlarm(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"monthlyList"+'\')">' + '</td><td>'
-                        + '<input type="button" class="btn btn-primary  operation" disabled value="处理"  onclick="openDealBCModal(\''+json[i].alarmId+'\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"monthlyList"+'\')">' + '</td><td>'
-                        + '<input type="button" class="btn btn-primary  operation" value="修改"  onclick="openChangeBCModal(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+"monthlyList"+'\')">' + '</td></tr>'
+                        +((json[i].alarm_deal_delay_remark==null||json[i].alarm_deal_delay_remark=='')?'-':json[i].alarm_deal_delay_remark) + '</td>';
+                        if(state==2){
+                            // $('#hiddenMega').css('display','none');
+                            str+= '<td>'+json[i].dealUser + '</td>'
+                                + '<td colspan="2">'+json[i].dealDate + '</td><tr>'
+                        }else{
+                            // $('#hiddenMega').css('display','table-cell');
+                            str+= '<td><input type="button"  class="btn btn-primary c-deal operation " value="合并"  onclick="mergeAlarm(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"monthlyList"+'\')">' + '</td><td>'
+                            + '<input type="button" class="btn btn-primary c-deal operation" disabled value="处理"  onclick="openDealBCModal(\''+json[i].alarmId+'\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+json[i].resultId+'\',\''+"monthlyList"+'\')">' + '</td><td>'
+                            + '<input type="button" class="btn btn-primary c-deal operation" value="修改"  onclick="openChangeBCModal(\'' + json[i].alarmId + '\',\''+json[i].deptName+'\',\''+json[i].abnormalHandleAdminType+'\',\''+"monthlyList"+'\')">' + '</td></tr>'
+
+                        }
+
                 }
                 $("#monthly-alarm-list-tbody").append(str);
             }
@@ -1348,6 +1390,16 @@ function search_bc_monthly_alarm_list(param){
         }
     });
 }
+
+$("#month-list-deal_status").on("change",function () {
+    var statue=$("#month-list-deal_status  option:selected").val();
+    if (statue==1){
+        $("#month_list_time_choose").css("display",'none')
+    }
+    else {
+        $("#month_list_time_choose").css("display",'block')
+    }
+});
 //bc报警页面全选
 $(".mergeBCAlarmTypeAll").click(function(){
     sameCheckedSet2($(this));
@@ -1451,12 +1503,13 @@ $("#monthly-alarm-list-tbody").on("click",".mergeBCAlarmToList",function(){
 
 /*==============合并bc报警数据=====================*/
 function mergeAlarm(alarmId,deptName,alarmType,resultId,type) {
+
     var mergeIds=new Array();
     var resultIds=new Array();
     if (type=='monthlyList'){
         $("input[name=mergeBCAlarmToList]:checked").each(function(){
-            var mergeId= $(this).val().split(',')[0];
-            var resultId= $(this).val().split(',')[3];
+            var mergeId= $(this).val().split('#')[0];
+            var resultId= $(this).val().split('#')[3];
             if (mergeId!='on'){
                 mergeIds.push(mergeId);
                 resultIds.push(resultId);
@@ -1464,16 +1517,17 @@ function mergeAlarm(alarmId,deptName,alarmType,resultId,type) {
         });
     } else {
         $("input[name=mergeBCAlarmType]:checked").each(function(){
-            var mergeId= $(this).val().split(',')[0];
-            var resultId= $(this).val().split(',')[3];
+            var mergeId= $(this).val().split('#')[0];
+            var resultId= $(this).val().split('#')[3];
             if (mergeId!='on'){
                 mergeIds.push(mergeId);
                 resultIds.push(resultId);
             }
 
         });
+
     }
-    // alert(mergeId.toString());
+
     //将合并项中的最后保留项删除
     var index = mergeIds.indexOf(alarmId);
     var index1 = resultIds.indexOf(resultId);
@@ -1483,7 +1537,9 @@ function mergeAlarm(alarmId,deptName,alarmType,resultId,type) {
     if (index1 > -1) {
         resultIds.splice(index1, 1);
     }
+    // alert(resultId);
     if (mergeIds.toString().length>0) {
+        // alert(resultIds.toString()+"------------");
         $.ajax({
             url: "/interlocking/merge/bcAlarm",
             contentType: "application/json",
@@ -1492,7 +1548,7 @@ function mergeAlarm(alarmId,deptName,alarmType,resultId,type) {
                 "mergeId": mergeIds.toString(),
                 "deptName": deptName,
                 "alarmType": alarmType,
-                "resultId": resultIds.toString()
+                "resultId": resultId
             }),
             type: "post",
             cache: true,
@@ -1585,7 +1641,8 @@ function    dealAlarm2(dealStatus,dealRemark){
     var resultIds=new Array();
     if (dealBCAlarm_type=='monthlyList') {
         $("input[name=mergeBCAlarmToList]:checked").each(function(){
-            var a= $(this).val().split(",");
+
+            var a= $(this).val().split("#");
             alarmIds.push(a[0]);
             deptNames.push(a[1]);
             alarmTypes.push(a[2]);
@@ -1594,16 +1651,14 @@ function    dealAlarm2(dealStatus,dealRemark){
         });
     }else {
         $("input[name=mergeBCAlarmType]:checked").each(function(){
-            var a= $(this).val().split(",");
+            var a= $(this).val().split("#");
             alarmIds.push(a[0]);
             deptNames.push(a[1]);
             alarmTypes.push(a[2]);
             resultIds.push(a[3]);
-
         });
     }
-    // alert(alarmIds.concat(dealBCAlarm_alarmId).toString()+"==="+deptNames.concat(dealBCAlarm_deptName).toString()+"==="
-    //     +alarmTypes.concat(dealBCAlarm_alarmType).toString()+"=============="+resultIds.concat(dealBCAlarm_resultId).toString());
+    // alert(deptNames.concat(dealBCAlarm_deptName).toString());
     $.ajax({
         url: "/interlocking/repair/deal/bcAlarm",
         contentType: "application/json",
@@ -1672,13 +1727,13 @@ function changeBCAlarmType() {
     //判断为月度清单
     if (changeBCAlarmType_table_name=='monthlyList') {
         $("input[name=mergeBCAlarmToList]:checked").each(function(){
-            var a= $(this).val().split(",");
+            var a= $(this).val().split("#");
             alarmIds.push(a[0]);
             deptNames.push(a[1]);
         });
     }else {  //判断为报警清单
         $("input[name=mergeBCAlarmType]:checked").each(function(){
-            var a= $(this).val().split(",");
+            var a= $(this).val().split("#");
             alarmIds.push(a[0]);
             deptNames.push(a[1]);
         });
@@ -1836,17 +1891,21 @@ function differenceValue(startDays,endDays){
 function downloadBB(){
 
     var deptName = $("#workshop4 option:selected").val();
+    var start = $("#monthList-start-date").val();
+    var end = $("#monthList-end-date").val();
+    var state=$("#month-list-deal_status  option:selected").val();
+    var type=$("#month-list-alarm_type   option:selected").val();
     var title='';
     if (deptName=='test'){
         title='选矿厂'
     }else {
         title=deptName;
     }
-    var da=['部门','设备','部位','内容','时间','次数','责任人'].toString();
+    // var da=['部门','设备','部位','内容','时间','次数','责任人'].toString();
 
-    var data=['所属工段','序号','检修项目','检修内容','所需材料','检修时间（h）','检修人员','项目(安全)负责人','厂技术负责人','备注'].toString();
+    var data=['所属工段','序号','检修项目','巡检内容','检修内容','所需材料','检修时间（h）','检修人员','项目(安全)负责人','厂技术负责人','备注'].toString();
     // location.href = "/downloadBB123?data="+da+"&title="+title+"月度报警清单";
-    location.href = "/downloadBB123?data="+data+"&title="+deptName;
+    location.href = "/downloadBB123?data="+data+"&title="+deptName+"&params="+start+","+end+","+state+","+type;
 }
 
 

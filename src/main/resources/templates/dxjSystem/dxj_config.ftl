@@ -22,23 +22,39 @@
         .choosedept input{    margin: -1px 11px 0;}
         #choose input{margin: 0px 0 0 10px};
         .col-sm-12{width: 80% !important;margin-left: 20% !important;}
+        html,body{
+            height: 100%;}
+        .table-input{width: 100%;}
+        .form3-table-td1{width: 20%;font-size: 20px;font-family: initial;}
+        .form3-table-td2{width: 10%;font-weight: bold;}
+        .form3-table-td3{width: 10%}
+        .form3-table-td4{width: 10%;font-weight: bold;}
+        .form3-table-td5{width: 10%;font-weight: bold;}
+        .form3-table-td6{width: 10%}
+        .form3-table-td7{width: 10%;font-weight: bold;}
+        #myform3 table input{text-align-last: center;}
     </style>
 </head>
 <body>
-<div class="htmleaf-container" style=" padding: 1em 20px 1em;letter-spacing: -1px;">
+<div class="htmleaf-container" style="height: 100%; padding: 1em 20px 1em;letter-spacing: -1px;">
 	<!------页面主体---------------------------------------------------------------------------------------------->
-	<div class="row">
+	<div class="row" style="height: 100%;">
  <!-----------------------------------------------------责任人---------------------------------------------------------------->
-        <div class="col-sm-9" style="  width: 100%; " >
+        <div class="col-sm-9" style="  width: 100%; height: 100%;" >
             <nav class="navbar navbar-default" style="width: 20%; position: fixed">
                 <ul class="nav nav-tabs nav-justified">
                     <li id="li1" style="cursor: pointer"><a onclick="chooseItem('duty')">报警责任人配置</a></li>
                 <ul class="nav nav-tabs nav-justified">
-                        <li id="li2" style="cursor: pointer"><a onclick="chooseItem('manage')">报警分类管理人员配置</a></li>
-
+                    <li id="li2" style="cursor: pointer"><a onclick="chooseItem('manage')">报警分类管理人员配置</a></li>
                 </ul>
                 <ul class="nav nav-tabs nav-justified">
-                        <li id="li3" style="cursor: pointer"><a onclick="chooseItem('config')">月度清单配置</a></li>
+                    <li id="li3" style="cursor: pointer"><a onclick="chooseItem('config')">月度清单配置</a></li>
+                </ul>
+                <ul class="nav nav-tabs nav-justified">
+                    <li id="li4" style="cursor: pointer"><a onclick="chooseItem('template')">报警分类模板配置</a></li>
+                </ul>
+                <ul class="nav nav-tabs nav-justified">
+                    <li id="li5" style="cursor: pointer"><a onclick="chooseItem('overhaul')">检修数据模板配置</a></li>
                 </ul>
             </nav><!-- /导航区域 -->
             <div class="col-sm-12  form1" style="width: 80% ;margin-left: 20% ;">
@@ -210,63 +226,101 @@
 			</div>
 <#-- ==========================配置页面======================-->
             <div class="col-sm-12  form3" style="width: 80% ;margin-left: 20% ;display: none">
-                <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;">
-                    <div class="form-group" style = "width:auto;margin-left:2%;">
-                        <label for="ass_role_id" class="col-sm-2 control-label " style = "width:25%;text-align: center;font-size: 20px;" >月度报警清单生成时间</label>
-                        <label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto;margin-left: 10%;" >月初</label>
-                        <div class="col-md-4" style="width: 10%;" >
-                            <input style="width: 100%"  id="alarmList_start" class="form-control" type="text" placeholder="请输入天数">
-                        </div>
-                        <div class="col-md-4" style=" width: 6%;margin-left: -3%;" >
-                            <label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>
-                        </div>
-                        <label for="ass_role_id" class="col-sm-2 control-label" style = "width:auto;margin-left: 10%;" >月末</label>
-                        <div class="col-md-4" style="width:10%;" >
-                            <input style="width: 100%"  id="alarmList_end" class="form-control" type="text" placeholder="请输入天数">
-                        </div>
-                        <div class="col-md-4" style=" width: 6%;margin-left: -3%;" >
-                            <label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>
-                        </div>
-                    </div>
-                    <div class="form-group" style = "width:auto;margin-left:2%;">
-                        <label for="ass_role_id" class="col-sm-2 control-label " style = "width:25%;text-align: center;font-size: 20px;" >C类报警处理时间</label>
-                        <label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto;margin-left: 10%;" >月初</label>
-                        <div class="col-md-4" style="width: 10%;" >
-                            <input style="width: 100%"  id="alarm_c_deal_start" class="form-control" type="text" placeholder="请输入天数">
-                        </div>
-                        <div class="col-md-4" style=" width: 6%;margin-left: -3%;" >
-                            <label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>
-                        </div>
-                        <label for="ass_role_id" class="col-sm-2 control-label" style = "width:auto;margin-left: 10%;" >月末</label>
-                        <div class="col-md-4" style="width: 10%;" >
-                            <input style="width: 100%"  id="alarm_c_deal_end" class="form-control" type="text" placeholder="请输入天数">
-                        </div>
-                        <div class="col-md-4" style=" width: 6%;margin-left: -3%;" >
-                            <label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>
-                        </div>
-                    </div>
-                    <div class="form-group" style = "width:auto;margin-left:2%;">
-                        <label for="ass_role_id" class="col-sm-2 control-label " style = "width:25%;text-align: center;font-size: 20px;" >报警类型选择超时</label>
-                        <label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto;margin-left: 10%;" >超过</label>
-                        <div class="col-md-4" style="width: 10%;" >
-                            <input style="width: 100%"  id="alarm_tips_time" class="form-control" type="text" placeholder="请输入小时数">
-                        </div>
-                        <div class="col-md-4" style=" width: 6%;margin-left: -3%;" >
-                            <label for="ass_role_id" class="col-sm-2 control-label " style = "" >小时</label>
-                        </div>
+                <form  id="myform3" name="myform" class="form-horizontal" role="form" style="margin-top:10px;">
+                    <table style="margin-left: 10%;width: 90%;" class="table table-striped table-bordered table-hover">
+                        <thead id="groupTable-thead" align="center">
+                        </thead>
+                        <tbody align="center" class="">
+                            <tr>
+                                <td class="form3-table-td1">月度报警清单生成时间</td>
+                                <td class="form3-table-td2">月初</td>
+                                <td class="form3-table-td3"><input   id="alarmList_start" class="form-control table-input" type="text" placeholder="请输入天数"></td>
+                                <td class="form3-table-td4">天</td>
+                                <td class="form3-table-td5">月末</td>
+                                <td class="form3-table-td6"><input   id="alarmList_end" class="form-control table-input" type="text" placeholder="请输入天数"></td>
+                                <td class="form3-table-td7">天</td>
+                            </tr>
+                            <tr>
+                                <td class="form3-table-td1">C类报警处理时间</td>
+                                <td class="form3-table-td2">月初</td>
+                                <td class="form3-table-td3"><input   id="alarm_c_deal_start" class="form-control table-input" type="text" placeholder="请输入天数"></td>
+                                <td class="form3-table-td4">天</td>
+                                <td class="form3-table-td5">月末</td>
+                                <td class="form3-table-td6"><input   id="alarm_c_deal_end" class="form-control table-input" type="text" placeholder="请输入天数"></td>
+                                <td class="form3-table-td7">天</td>
+                            </tr>
+                            <tr>
+                                <td class="form3-table-td1">报警类型选择超时</td>
+                                <td class="form3-table-td2">超过</td>
+                                <td class="form3-table-td3"><input   id="alarm_tips_time" class="form-control table-input" type="text" placeholder="请输入小时数"></td>
+                                <td class="form3-table-td4">小时</td>
+                                <td colspan="3"><label type="button" class="btn btn-primary" style = "width:60%; " onclick="updateConfigData()">确定</label></td>
 
-                    </div>
-                    <div class="form-group" style = "width:auto;text-align: center;    margin-left: 2%;" >
-                        <label type="button" class="btn btn-primary" style = "width:23%; " onclick="updateConfigData()">确定</label>
-                    </div>
+                            </tr>
+                        </tbody>
+                  <#--      <tfoot>
+                            <tr><td><label type="button" class="btn btn-primary" style = "width:23%; " onclick="updateConfigData()">确定</label></td></tr>
+                        </tfoot>-->
+                    <#--<div class="form-group" style = "width:auto;margin-left:2%;">-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "width:25%;text-align: center;font-size: 20px;" >月度报警清单生成时间</label>-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto;margin-left: 10%;" >月初</label>-->
+                        <#--<div class="col-md-4" style="width: 10%;" >-->
+                            <#--<input style="width: 100%"  id="alarmList_start" class="form-control" type="text" placeholder="请输入天数">-->
+                        <#--</div>-->
+                        <#--<div class="col-md-4" style=" width: 6%;margin-left: -3%;" >-->
+                            <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>-->
+                        <#--</div>-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label" style = "width:auto;margin-left: 10%;" >月末</label>-->
+                        <#--<div class="col-md-4" style="width:10%;" >-->
+                            <#--<input style="width: 100%"  id="alarmList_end" class="form-control" type="text" placeholder="请输入天数">-->
+                        <#--</div>-->
+                        <#--<div class="col-md-4" style=" width: 6%;margin-left: -3%;" >-->
+                            <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>-->
+                        <#--</div>-->
+                    <#--</div>-->
+                    <#--<div class="form-group" style = "width:auto;margin-left:2%;">-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "width:25%;text-align: center;font-size: 20px;" >C类报警处理时间</label>-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto;margin-left: 10%;" >月初</label>-->
+                        <#--<div class="col-md-4" style="width: 10%;" >-->
+                            <#--<input style="width: 100%"  id="alarm_c_deal_start" class="form-control" type="text" placeholder="请输入天数">-->
+                        <#--</div>-->
+                        <#--<div class="col-md-4" style=" width: 6%;margin-left: -3%;" >-->
+                            <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>-->
+                        <#--</div>-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label" style = "width:auto;margin-left: 10%;" >月末</label>-->
+                        <#--<div class="col-md-4" style="width: 10%;" >-->
+                            <#--<input style="width: 100%"  id="alarm_c_deal_end" class="form-control" type="text" placeholder="请输入天数">-->
+                        <#--</div>-->
+                        <#--<div class="col-md-4" style=" width: 6%;margin-left: -3%;" >-->
+                            <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "" >天</label>-->
+                        <#--</div>-->
+                    <#--</div>-->
+                    <#--<div class="form-group" style = "width:auto;margin-left:2%;">-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "width:25%;text-align: center;font-size: 20px;" >报警类型选择超时</label>-->
+                        <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto;margin-left: 10%;" >超过</label>-->
+                        <#--<div class="col-md-4" style="width: 10%;" >-->
+                            <#--<input style="width: 100%"  id="alarm_tips_time" class="form-control" type="text" placeholder="请输入小时数">-->
+                        <#--</div>-->
+                        <#--<div class="col-md-4" style=" width: 6%;margin-left: -3%;" >-->
+                            <#--<label for="ass_role_id" class="col-sm-2 control-label " style = "" >小时</label>-->
+                        <#--</div>-->
 
+                    <#--</div>-->
+                    <#--<div class="form-group" style = "width:auto;text-align: center;    margin-left: 2%;" >-->
+                        <#--<label type="button" class="btn btn-primary" style = "width:23%; " onclick="updateConfigData()">确定</label>-->
+                    <#--</div>-->
 
+                    </table>
                 </form>
             </div>
-            <script type="text/javascript">
-
-
-            </script>
+            <div class="col-sm-12  form4" style="width: 80% ;margin-left: 20% ;height: 100%;display: none">
+                <iframe  src="/changeTemplateAlarmType" style="margin-top:10px;width: 100%;height: 100%;" frameborder="0">
+                </iframe>
+            </div>
+            <div class="col-sm-12  form5" style="width: 80% ;margin-left: 20% ;height: 100%;display: none">
+                <iframe  src="/changeTemplateOverhaul" style="margin-top:10px;width: 100%;height: 100%;" frameborder="0">
+                </iframe>
+            </div>
         </div>
 	</div>
 </div>

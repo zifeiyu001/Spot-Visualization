@@ -4,8 +4,9 @@
 
 <mapper namespace="com.demo.mapper.interlocking.InterlockingMapper">
     <insert id="Interlocking_insert_temp_result">
-        INSERT INTO dxj_alarmtype_temp(deptName,routeName,zoneName,devName,scPart,scContent,altpid,abnormalHandleAdminType,dealUser,abnormalHandleDealDepart)
-        VALUES ("${deptName}" ,"${routeName}","${zoneName}","${devName}","${scPart}","${scContent}","${altpid}","${alarmType}","${dealPersonLiable}","${selectDepart}")
+        INSERT INTO dxj_alarmtype_temp(deptName,routeName,zoneName,devName,scPart,scContent,abnormalHandleType,abnormalHandleAdminType,dealUser,abnormalHandleDealDepart)
+        VALUES ("${deptName}" ,"${routeName}","${zoneName}","${devName}","${scPart}","${scContent}","${abnormalHandleType}","${abnormalHandleAdminType}","${dealPersonLiable}","${selectDepart}")
+
     </insert>
     <insert id="writeDealData">
         INSERT INTO dxj_spot_deal(
@@ -35,6 +36,16 @@
           values ("${resultId}","${deptName}","${routeName}","${zoneName}","${devName}","${scPart}","${scContent}","${remark}","${spotResult}","${userName1}"
           ,"${uploadResultTime}","${selectDepart}","${alarmType}","${user}","${pid}","Y")
     </insert>
+    <insert id="insert_overhaul_into_month">
+              INSERT  INTO dxj_spot_alarm_result(
+              deptName,devName,scPart,scContent,uploadResultTime,abnormalHandleAdminType,remark)
+          values ("${deptName}","${devName}","${scPart}","${scContent}",now(),'2','')
+    </insert>
+    <insert id="changeTemplateOverhaul_addData">
+              INSERT  INTO
+              dxj_spot_alarm_regular (deptName,devName,scPart,scContent)
+          values ("${deptName}","${devName}","${scPart}","${scContent}")
+    </insert>
     <update id="addAlarmToMonthlyList">
         UPDATE dxj_spot_alarm_result SET monthly_alarm_list='Y' WHERE id in ${mergeIds}
     </update>
@@ -46,10 +57,10 @@
     </update>
     <update id="Interlocking_update_temp_result">
         UPDATE  dxj_alarmtype_temp
-        SET abnormalHandleAdminType ="${alarmType}",dealUser ="${dealPersonLiable}" ,abnormalHandleDealDepart="${selectDepart}"
+        SET abnormalHandleAdminType ="${abnormalHandleAdminType}",dealUser ="${dealPersonLiable}" ,abnormalHandleDealDepart="${selectDepart}"
         WHERE deptName="${deptName}"  and  routeName="${routeName}" AND  zoneName="${zoneName}"
             AND   devName="${devName}" AND scPart="${scPart}" AND scContent="${scContent}"
-           AND altpid="${altpid}"
+           AND abnormalHandleType="${abnormalHandleType}"
     </update>
     <update id="Interlocking_changeAlarmPersonLiable">
               UPDATE dxj_spot_result SET  alarm_personLiable="${alarm_personLiable}"  WHERE ID ="${resultId}"
@@ -143,12 +154,12 @@
     </update>
 
     <delete id="dealBCAlarm">
---         UPDATE   dxj_spot_alarm_result
---         SET alarm_flag='Y',monthly_alarm_list='N',alarm_deal_delay='N',alarm_deal_delay_remark="" ,
---         alarm_remark="${dealRemark}",alarm_manage_time=NOW(),alarm_manage_name="${user}"
--- 		WHERE
+        UPDATE   dxj_spot_alarm_result
+        SET alarm_flag='Y',alarm_deal_delay='N',alarm_deal_delay_remark="" ,
+        alarm_remark="${dealRemark}",alarm_manage_time=NOW(),alarm_manage_name="${user}"
+		WHERE ID IN ${alarmId}
 
-        DELETE FROM dxj_spot_alarm_result WHERE   ID IN ${alarmId}
+--         DELETE FROM dxj_spot_alarm_result WHERE   ID IN ${alarmId}
 
     </delete>
 
@@ -167,8 +178,16 @@
         WHERE id="${alarmId}"
 
     </update>
+    <update id="changeTemplateOverhaul_changeData">
+        UPDATE dxj_spot_alarm_regular
+        SET devName="${devName}",scPart="${scPart}",scContent= "${scContent}"
+        WHERE id="${id}"
+    </update>
     <delete id="delete_alarm_result_by_alarmId">
         DELETE FROM dxj_spot_alarm_result WHERE  id="${alarmId}"
+    </delete>
+    <delete id="changeTemplateOverhaul_deleteData">
+           DELETE FROM dxj_spot_alarm_regular WHERE  id="${id}"
     </delete>
     <select id="Interlocking_get_deptName" resultType="com.demo.model.interlocking.Interlocking">
             SELECT deptName from dxj_spot_rout_zone_devname
@@ -262,13 +281,14 @@
         and(
                  1=2
             <if test="zcCheck=='true'">
-                or ( abnormalHandleType =0 and  ALTPID=0)
+--                 or ( abnormalHandleType =0 and  ALTPID=0)
+                or  ALTPID=0
             </if>
             <if test="wjCheck=='true'">
                 or ALTPID is  null
             </if>
             <if test="bjCheck=='true'">
-                or ( abnormalHandleType>0)
+                or  ALTPID>0
             </if>
             <!--<if test="bjType1=='true'">-->
                 <!--or abnormalHandleAdminType =1-->
@@ -287,26 +307,20 @@
             <!--</if>-->
 -- 报警查询，eg：选择A类时，显示管理人员A类及点检员A类
         <if test="bjType1=='true'">
-            or abnormalHandleAdminType =1
-            or ( abnormalHandleAdminType is null
-            and abnormalHandleType =  1 )
+            or (( abnormalHandleAdminType =1 or ( abnormalHandleAdminType is null and abnormalHandleType =  1 ))and  ALTPID >0)
         </if>
         <if test="bjType2=='true'">
-            or  abnormalHandleAdminType =2
-            or ( abnormalHandleAdminType is null
-            and abnormalHandleType =  2 )
+            or (( abnormalHandleAdminType =2 or ( abnormalHandleAdminType is null and abnormalHandleType =  2 ))and  ALTPID >0)
         </if>
         <if test="bjType3=='true'">
-            or  abnormalHandleAdminType =3
-            or ( abnormalHandleAdminType is null
-            and abnormalHandleType =  3 )
+            or (( abnormalHandleAdminType =3 or ( abnormalHandleAdminType is null and abnormalHandleType =  3 ))and  ALTPID >0)
         </if>
         )
 --         ORDER BY abnormalHandleAdminType DESC
 --         ORDER BY abnormalHandleAdminType is null , abnormalHandleAdminType
 --         ORDER BY IF ( (abnormalHandleType is NULL OR abnormalHandleType=0),1,0),IF ( (abnormalHandleAdminType is NULL),0,1) ,abnormalHandleAdminType
 
-        ORDER BY IF ( (abnormalHandleType is NULL OR abnormalHandleType=0),1,0),IF ( (abnormalHandleAdminType is NULL ),0,1)
+        ORDER BY IF ( (ALTPID is NULL OR ALTPID=0),1,0),IF ( (abnormalHandleAdminType is NULL ),0,1)
         ,IF ( (alarm_flag ='N' ),0,1),abnormalHandleAdminType
         LIMIT ${startPage},${numPerPage}
 
@@ -359,13 +373,13 @@
             <!--or ALTPID is  null-->
         <!--</if>-->
         <if test="zcCheck=='true'">
-            or ( abnormalHandleType =0 and  ALTPID=0)
+            or  ALTPID=0
         </if>
         <if test="wjCheck=='true'">
             or ALTPID is  null
         </if>
         <if test="bjCheck=='true'">
-            or ( abnormalHandleType>0)
+            or (ALTPID>0)
         </if>
         <!--<if test="RDStatus=='yes'">-->
           <!--and  abnormalHandleDealDepart is not null-->
@@ -389,20 +403,29 @@
             <!--and abnormalHandleAdminType is null )-->
         <!--</if>-->
 -- 报警查询，eg：选择A类时，显示管理人员A类及点检员A类
+        <!--<if test="bjType1=='true'">-->
+            <!--or abnormalHandleAdminType =1-->
+            <!--or ( abnormalHandleAdminType is null-->
+            <!--and abnormalHandleType =  1 )-->
+        <!--</if>-->
+        <!--<if test="bjType2=='true'">-->
+            <!--or  abnormalHandleAdminType =2-->
+            <!--or ( abnormalHandleAdminType is null-->
+            <!--and abnormalHandleType =  2 )-->
+        <!--</if>-->
+        <!--<if test="bjType3=='true'">-->
+            <!--or  abnormalHandleAdminType =3-->
+            <!--or ( abnormalHandleAdminType is null-->
+            <!--and abnormalHandleType =  3 )-->
+        <!--</if>-->
         <if test="bjType1=='true'">
-            or abnormalHandleAdminType =1
-            or ( abnormalHandleAdminType is null
-            and abnormalHandleType =  1 )
+            or (( abnormalHandleAdminType =1 or ( abnormalHandleAdminType is null and abnormalHandleType =  1 ))and  ALTPID >0)
         </if>
         <if test="bjType2=='true'">
-            or  abnormalHandleAdminType =2
-            or ( abnormalHandleAdminType is null
-            and abnormalHandleType =  2 )
+            or (( abnormalHandleAdminType =2 or ( abnormalHandleAdminType is null and abnormalHandleType =  2 ))and  ALTPID >0)
         </if>
         <if test="bjType3=='true'">
-            or  abnormalHandleAdminType =3
-            or ( abnormalHandleAdminType is null
-            and abnormalHandleType =  3 )
+            or (( abnormalHandleAdminType =3 or ( abnormalHandleAdminType is null and abnormalHandleType =  3 ))and  ALTPID >0)
         </if>
         )
 
@@ -412,7 +435,7 @@
                    ID as resultId,
                 DEPT_NAME as deptName,ROUTE_NAME as routeName ,ZONE_NAME as zoneName ,devName,SC_PART as scPart,SC_CONTENT as scContent,
                 std_value as stdValue, ALTPID as altpid,abnormalHandleDealDepart,abnormalHandleAdminType,  SHIFTGROUPNAME as team,uploadResultTime
-                ,REMARK remark ,RESULT as result ,USERNAME userName
+                ,REMARK remark ,RESULT as result ,USERNAME userName ,abnormalHandleType
            FROM dxj_spot_result WHERE ID="${resultId}"
 
 
@@ -420,7 +443,7 @@
     <select id="Interlocking_get_temp_result" resultType="com.demo.model.interlocking.Interlocking">
           SELECT * FROM dxj_alarmtype_temp WHERE  deptName="${deptName}"  and  routeName="${routeName}" AND  zoneName="${zoneName}"
             AND   devName="${devName}" AND scPart="${scPart}" AND scContent="${scContent}"
-           AND altpid="${altpid}"
+           AND  abnormalHandleType= "${abnormalHandleType}"
     </select>
     <select id="search_config_alarm_liable_all" resultType="com.demo.model.universal.ConfigUser">
         SELECT user,alarmType,department,team FROM dxj_config_liable
@@ -433,8 +456,12 @@
             SC_CONTENT as scContent,
             std_value as stdValue,
             ALTPID as altpid,
+            RESULT as result,
+            REMARK as remark,
+            USERNAME as userName,
             abnormalHandleUser,
             abnormalHandleAdminType,
+            abnormalHandleType,
             abnormalHandleDealDepart,
             uploadResultTime
         FROM
@@ -671,7 +698,7 @@
 --             a.devId=b.devId
         SELECT
 			a.ID 'result_id',a.DEPT_NAME 'dev_depart', a.devId,a.devName as 'dev_name',
-            a.uploadResultTime 'alarm_time',a.abnormalHandleAdminType 'alarm_type',a.CHARGE_CNAME 'alarm_name',
+            a.uploadResultTime 'alarm_time',a.abnormalHandleAdminType 'alarm_type',a.USERNAME 'alarm_name',
             a.SC_PART 'dev_part',a.SC_CONTENT 'dev_content',a.RESULT 'dev_result',a.REMARK 'dev_remark',b.model as 'dev_model',b.`code` as 'dev_code'
         FROM
 			(SELECT * FROM  dxj_spot_result  WHERE ID="${resultID}") a
@@ -703,7 +730,7 @@
 
 
             AND deptName !="综合工段"
-
+            AND alarm_flag='N'
         <if test="deptName!='test'">
                 AND deptName="${deptName}"
             </if>
@@ -713,7 +740,8 @@
             <if test="alarm_type != 'test'">
                 AND abnormalHandleAdminType="${alarm_type}"
             </if>
---             AND monthly_alarm_list='N'  -- 此为取消B类清单中显示的已添加到月度清单的数据，暂时不用
+          AND monthly_alarm_list='N'
+-- 此为取消B类清单中显示的已添加到月度清单的数据，暂时不用
             ORDER BY alarm_merge,deptName,monthly_alarm_list ,uploadResultTime DESC
     </select>
     <select id="getbcAlarmContent" resultType="com.demo.model.interlocking.Interlocking">
@@ -738,19 +766,49 @@
     <select id="getbcMonthlyAlarmListData" resultType="com.demo.model.interlocking.Interlocking">
         SELECT         deptName,routeName,zoneName,devName,scPart,monthly_alarm_list,
                 scContent,uploadResultTime,alarm_times ,id as alarmId,abnormalHandleAdminType,pid ,
-                remark,alarm_personLiable as dealPerson,alarm_deal_delay,alarm_deal_delay_remark,resultId,uploadResultTimeEnd,result,std_value as 'stdValue'
+                remark,alarm_personLiable as dealPerson,alarm_deal_delay,alarm_deal_delay_remark,resultId,uploadResultTimeEnd,result,std_value as 'stdValue',
+                alarm_manage_name as 'dealUser',alarm_manage_time as 'dealDate'
+
          from dxj_spot_alarm_result WHERE
-          monthly_alarm_list='Y'
-          and alarm_merge='N'
+--         (monthly_alarm_list='Y' or abnormalHandleAdminType=2)
+--                   and
+          alarm_merge='N'
         <if test="deptName!='test'">
          and   deptName="${deptName}"
+        </if>
+        <if test="type==2">
+            and abnormalHandleAdminType=2
+        </if>
+        <if test="type==3">
+            and abnormalHandleAdminType=3
+        </if>
+        <if test="type==1">
+            and (abnormalHandleAdminType=3 or abnormalHandleAdminType=2)
+        </if>
+        <if test="state==2">
+          and
+            ((
+            uploadResultTime>="${startTime}"
+            AND "${endTime}">=uploadResultTime
+            )
+            or (
+            uploadResultTimeEnd>="${startTime}"
+            AND "${endTime}">=uploadResultTimeEnd
+            ))
+            and alarm_flag='Y'
+        </if>
+        <if test="state==1">
+            and alarm_flag='N'
+        </if>
+        <if test="state==3">
+            and alarm_flag='N' and alarm_deal_delay='Y'
         </if>
           ORDER BY  deptName,uploadResultTime DESC
 
     </select>
     <select id="getbcAlarmDataResultId" resultType="com.demo.model.interlocking.Interlocking">
 
-        SELECT  * FROM dxj_spot_alarm_result WHERE ID  in   ${alarmIds} OR  pid in ${alarmIds}
+        SELECT  * FROM dxj_spot_alarm_result WHERE ID  in   ${alarmIds}
 
     </select>
     <select id="get_resultId_alarmid" resultType="com.demo.model.interlocking.Interlocking">
@@ -767,9 +825,9 @@
         AND devName= "${devName}"
         AND scPart =  "${scPart}"
         AND  scContent =  "${scContent}"
-        AND  remark= "${remark}"
         AND abnormalHandleAdminType="${alarmType}"
         AND alarm_merge="N"
+        AND alarm_flag="N"
     </select>
     <select id="getBCData" resultType="com.demo.model.interlocking.Interlocking">
         SELECT DEPT_NAME as 'deptName' ,uploadResultTime,devName,SC_PART as 'scPart' ,SC_CONTENT as 'scContent',
@@ -803,8 +861,18 @@
         devName,scPart ,scContent,
         abnormalHandleAdminType,alarm_flag as 'alarmFlag',remark,alarm_times
         FROM dxj_spot_alarm_result
-        WHERE uploadResultTime>="${start}"
-        AND  "${end}">uploadResultTime
+        WHERE
+--         uploadResultTime>="${start}"
+--         AND  "${end}">uploadResultTime
+
+        ((
+        uploadResultTime>="${start}"
+        AND "${end}">=uploadResultTime
+        )
+        or (
+        uploadResultTimeEnd>="${start}"
+        AND "${end}">=uploadResultTimeEnd
+        ))
         <if test="deptName!='test'">
             AND deptName="${deptName}"
         </if>
@@ -814,9 +882,49 @@
         <if test="alarmType==0">
             AND (abnormalHandleAdminType='2' OR abnormalHandleAdminType='3')
         </if>
+        and  alarm_flag='N'
         ORDER BY deptName,uploadResultTime
     </select>
+    <select id="get_all_regular_overhaul" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT * FROM dxj_spot_alarm_regular
+    </select>
+    <select id="get_month_list_by_regular_overhaul" resultType="com.demo.model.interlocking.Interlocking">
+        select
+            *
+        from
+            dxj_spot_alarm_result
+        where
+            deptName="${deptName}" and devName="${devName}" and scPart="${scPart}" and  scContent="${scContent}" and alarm_flag='N' and alarm_deal_delay='N'
+    </select>
+    <select id="get_regular_overhaul_dev" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT devName FROM dxj_spot_alarm_regular WHERE deptName="${deptName}" GROUP BY devName
+    </select>
+    <select id="get_regular_overhaul_part" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT scPart FROM dxj_spot_alarm_regular WHERE deptName="${deptName}" and devName="${devName}"  GROUP BY scPart
+    </select>
+    <select id="get_regular_overhaul_content" resultType="com.demo.model.interlocking.Interlocking">
+        SELECT scContent FROM dxj_spot_alarm_regular WHERE deptName="${deptName}" and devName="${devName}" and scPart="${scPart}"
+         GROUP BY scContent
+    </select>
+    <select id="get_regular_overhaul" resultType="com.demo.model.interlocking.Interlocking">
+       SELECT
+            id as 'resultId' ,deptName,devName,scPart,scContent
+       FROM dxj_spot_alarm_regular WHERE
+           1=1
+        <if test="deptName!='test'">
+            AND deptName="${deptName}"
+        </if>
+        <if test="devName!='test'">
+            AND devName="${devName}"
+        </if>
+        <if test="scPart!='test'">
+            AND scPart="${scPart}"
+        </if>
+        <if test="scContent!='test'">
+            AND scContent="${scContent}"
+        </if>
 
+    </select>
 
 
 </mapper>

@@ -93,17 +93,19 @@ public interface InterlockingMapper {
                                             @Param("pid") String pid);
 //    查询临时表是否有数据
     List<Interlocking> Interlocking_get_temp_result(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
-                                               @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,@Param("altpid") String altpid);
+                                               @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,
+                                                    @Param("abnormalHandleType") String abnormalHandleType);
 //    更新临时表数据
     Integer Interlocking_update_temp_result(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
                                                     @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,
-                                                    @Param("altpid") String altpid,
-                                                       @Param("alarmType") String alarmType, @Param("dealPersonLiable") String dealPersonLiable, @Param("selectDepart") String selectDepart);
+                                                    @Param("abnormalHandleType") String abnormalHandleType, @Param("abnormalHandleAdminType") String abnormalHandleAdminType,
+                                                    @Param("dealPersonLiable") String dealPersonLiable, @Param("selectDepart") String selectDepart);
 //    出入临时表数据
     Integer Interlocking_insert_temp_result(@Param("deptName") String deptName, @Param("routeName") String routeName, @Param("zoneName") String zoneName,
                                                        @Param("devName") String devName, @Param("scPart") String scPart, @Param("scContent") String scContent,
-                                                       @Param("altpid") String altpid, @Param("alarmType") String alarmType,
+                                                       @Param("abnormalHandleType") String abnormalHandleType, @Param("abnormalHandleAdminType") String abnormalHandleAdminType,
                                                         @Param("dealPersonLiable") String dealPersonLiable, @Param("selectDepart") String selectDepart);
+
 
     List<Interlocking> Interlocking_get_all_alarm_byDay();
     List<Interlocking> Interlocking_get_all_alarmType();
@@ -140,7 +142,8 @@ public interface InterlockingMapper {
     Integer addAlarmToMonthlyList( @Param("mergeIds") String mergeId);
 
     //    获取月度报警清单
-    List<Interlocking> getbcMonthlyAlarmListData(@Param("deptName") String deptName);
+    List<Interlocking> getbcMonthlyAlarmListData(@Param("deptName") String deptName,@Param("startTime") String startTime,
+                                                 @Param("endTime") String endTime,@Param("state") String state,@Param("type") String type);
     //     处理BC类报警
     Integer dealBCAlarm( @Param("alarmId") String alarmId,@Param("dealRemark") String dealRemark,@Param("user") String user);
     //    延期bc类报警
@@ -236,4 +239,30 @@ public interface InterlockingMapper {
                          ,@Param("alarm_tips_time") String alarm_tips_time
     );
 
+    /*添加定期检修工作的月度计划*/
+    List<Interlocking> get_all_regular_overhaul();
+    List<Interlocking> get_month_list_by_regular_overhaul( @Param("deptName") String deptName,@Param("devName") String devName,
+                                                           @Param("scPart") String scPart, @Param("scContent") String scContent);
+    Integer insert_overhaul_into_month( @Param("deptName") String deptName,@Param("devName") String devName,
+                                        @Param("scPart") String scPart, @Param("scContent") String scContent);
+
+    //    获取检修数据设备
+    List<Interlocking> get_regular_overhaul_dev(@Param("deptName") String deptName);
+    //    获取检修数据部位
+    List<Interlocking> get_regular_overhaul_part(@Param("deptName") String deptName,@Param("devName") String devName);
+    //    获取检修数据内容
+    List<Interlocking> get_regular_overhaul_content(@Param("deptName") String deptName,@Param("devName") String devName,
+                                                    @Param("scPart") String scPart);
+    //    获取检修数据
+
+    List<Interlocking> get_regular_overhaul(@Param("deptName") String deptName,@Param("devName") String devName,
+                                            @Param("scPart") String scPart, @Param("scContent") String scContent);
+    //    删除数据
+    Integer  changeTemplateOverhaul_deleteData(@Param("id") String id);
+    //    修改数据
+    Integer  changeTemplateOverhaul_changeData(@Param("id") String id,@Param("devName") String devName,
+                                               @Param("scPart") String scPart, @Param("scContent") String scContent) ;
+    //    添加数据
+     Integer  changeTemplateOverhaul_addData(@Param("deptName") String deptName,@Param("devName") String devName,
+                                             @Param("scPart") String scPart, @Param("scContent") String scContent) ;
 }

@@ -43,6 +43,8 @@ public class CommonExcelController {
         String data = request.getParameter("data");
         String[] headers = data.split(",");
         String title = request.getParameter("title");
+        String params = request.getParameter("params");
+        String[] param = params.split(",");
         String date = CurrentDate.getDate();
         if (title.equals("test")){
             title="选矿厂"+date+"检修计划安排表";
@@ -146,7 +148,7 @@ public class CommonExcelController {
 
    /*     //新增数据行，并且设置单元格数据*/
         int rowNum = 2;
-        List<Interlocking> Interlockings = indexService.getbcMonthlyAlarmListData(deptName);
+        List<Interlocking> Interlockings = indexService.getbcMonthlyAlarmListData(deptName,param[0],param[1],param[2],param[3]);
             int num=1;
             for (Interlocking p : Interlockings) {  //行
                 HSSFRow row1 = sheet.createRow(rowNum);
@@ -179,19 +181,24 @@ public class CommonExcelController {
                             break;
                         case 3:
                             if (null != p.getScPart()) {
-                                cells.setCellValue(p.getScPart()+""+p.getScContent()+"(结果："+p.getResult()+"；备注："+p.getRemark()+";标准值："+p.getStdValue()+")");
+
+                                if (p.getResult()==null||p.getResult().isEmpty()){
+                                    cells.setCellValue(p.getScPart()+""+p.getScContent());
+                                }else {
+                                    cells.setCellValue(p.getScPart()+""+p.getScContent()+"  (结果："+p.getResult()+")");
+                                }
                             } else {
                                 cells.setCellValue("");
                             }
                             break;
-                        case 7:
+                        case 8:
                             if (null != p.getDeptName()) {
                                 cells.setCellValue(getManUser(p.getDeptName()));
                             } else {
                                 cells.setCellValue("");
                             }
                             break;
-                        case 8:
+                        case 9:
                             if (null != p.getScContent()) {
                                 cells.setCellValue(p.getDealPerson());
                             } else {
@@ -207,7 +214,7 @@ public class CommonExcelController {
             }
 
 
-        CellRangeAddress region = new CellRangeAddress(0, 0, 0, 9);
+        CellRangeAddress region = new CellRangeAddress(0, 0, 0, headers.length-1);
         sheet.addMergedRegion(region);
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);

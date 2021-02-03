@@ -182,9 +182,6 @@ public class IndexController {
     }
 
 
-
-
-
 // =====================通用判断用户是否存在=================================
     @PostMapping("/spot/user")
     @ResponseBody
@@ -1370,6 +1367,10 @@ public class IndexController {
 
     @GetMapping("/test5")
     public String totest5(){ return "/test5";  }
+    @GetMapping("/changeTemplateAlarmType")
+    public String totest6(){ return "/changeTemplateAlarmType";  }
+    @GetMapping("/changeTemplateOverhaul")
+    public String totest7(){ return "/changeTemplateOverhaul";  }
 
     @GetMapping("/weixiu")
     public String toweixiu(){ return "/weixiu";  }

@@ -197,11 +197,17 @@
             height: 13%;
             color: red;
             font-size: 20px;
-            }
-            .cell1{width:100px}
-            .cell2{ width: 219px}
-
-</style>
+        }
+        .cell1{width:100px}
+        .cell2{ width: 219px}
+        .centerdiv{
+            float:left;
+            border-right: 2px dashed black;
+            padding-bottom:100000px;  /*关键*/
+            margin-bottom:-100000px;  /*关键*/
+        }
+        .c-deal{padding: 4px}
+    </style>
 </head>
 <body id="cc">
 
@@ -370,7 +376,8 @@
 <#-------------------------B、C类报警处理------------------------------------->
                 <div id="search_service" class="form2" style=" display: none">
                     <div class="col-sm-9" style="width:50%;">
-                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">BC类未处理清单</h1>
+                        <#--<h1 style="text-align: center ;font-size: 24px;font-weight: bold;">BC类未处理清单</h1>-->
+                        <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">C类未处理清单</h1>
                         <div class="col-sm-12" >
                             <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;  ">
                                 <#--<div style="width: 300px;height: 400px;background-color: #00FFFF"></div>-->
@@ -391,12 +398,13 @@
                                         <select class="form-control" id="workshop3" style = "width:100%" >
                                         </select>
                                     </div>
-                                    <label for="ass_role_id" class="col-sm-2 control-label"  style = "width:auto;margin-left: 7%;">报警类型</label>
+                                    <label for="ass_role_id" class="col-sm-2 control-label"   style = "
+                                    width:auto;margin-left: 7%;display: none">报警类型</label>
                                     <div class="col-md-4"  style="width: 20%;">
-                                        <select class="form-control" id="alarm-type"  style = "width:100%" >
+                                        <select class="form-control" id="alarm-type"  style = "width:100%;display: none" >
                                             <#--<option value="test">全部选择</option>-->
-                                            <option value="2" selected>B类报警</option>
-                                            <option value="3">C类报警</option>
+                                            <option value="2" >B类报警</option>
+                                            <option value="3" selected>C类报警</option>
                                         </select>
                                     </div>
                                     <label type="button" class="btn btn-primary" style = "width:14%;    margin-left: 9%;" onclick="search_bc_alarm_data()">查询</label>
@@ -426,7 +434,7 @@
                                         <td>备注</td>
                                         <td>时间</td>
                                         <td>次数</td>
-                                        <td>月度清单</td>
+                                        <#--<td>月度清单</td>-->
                                         <td>延期</td>
                                         <td>延期备注</td>
                                         <td colspan="3">操作</td>
@@ -438,18 +446,48 @@
                             </div>
                         </div>
                     </div>
+                    <div class="centerdiv"></div>
                     <div class="col-sm-9" style="width:50%;">
                         <h1 style="text-align: center ;font-size: 24px;font-weight: bold;">待修清单</h1>
                         <div class="col-sm-12" >
                             <form  id="myform" name="myform" class="form-horizontal" role="form" style="margin-top:10px;">
-                                <div class="form-group" style = "width:auto;margin-left:10%;" >
+                                <div class="form-group" style = "width:auto;" >
                                     <label for="ass_role_id" class="col-sm-2 control-label"  style = "width:auto">工段选择</label>
-                                    <div class="col-md-4"  style="width: 34%;">
+                                    <div class="col-md-4"  style="width:35%;">
                                         <select class="form-control" id="workshop4" style = "width:100%" >
                                         </select>
                                     </div>
-                                    <label type="button" class="btn btn-primary" style = "width:12%;    margin-left: 9%;" onclick="search_bc_monthly_alarm_list('default')">查询</label>
-                                    <label type="button" class="btn btn-primary" style = "width:12%;    margin-left: 9%;" onclick="downloadBB()">下载</label>
+                                    <label for="ass_role_id" class="col-sm-2 control-label"  style = "width:auto">处理状态</label>
+                                    <div class="col-md-4"  style="width: 35%;">
+                                        <select class="form-control" id="month-list-deal_status" style = "width:100%" >
+                                            <option value="1">未处理</option>
+                                            <option value="2">已处理</option>
+                                            <option value="3">已延期</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" style = "width:auto;" >
+                                    <label for="ass_role_id" class="col-sm-2 control-label"  style = "width:auto">报警类型</label>
+                                    <div class="col-md-4"  style="width: 35%;">
+                                        <select class="form-control" id="month-list-alarm_type" style = "width:100%" >
+                                            <option value="2">B类报警</option>
+                                            <option value="3">C类报警</option>
+                                            <option value="1">全部类型</option>
+                                        </select>
+                                    </div>
+                                    <label type="button" class="btn btn-primary" style = "width:21%;    margin-left: 1%;" onclick="search_bc_monthly_alarm_list('default')">查询</label>
+                                    <label type="button" class="btn btn-primary" style = "width:21%;    margin-left: 1%;" onclick="downloadBB()">下载</label>
+                                </div>
+                                <div class="form-group" style = "width:auto; display:none" id="month_list_time_choose">
+                                    <label for="ass_role_id" class="col-sm-2 control-label " style = "width:auto" >开始时间</label>
+                                    <div class="col-md-4" style="width: 31%;" >
+                                        <input class="form-control " id="monthList-start-date"  type="text" placeholder="请选择" readonly style = "width:auto">
+                                    </div>
+                                    <label for="ass_role_id"  class="col-sm-2 control-label" style = "width:auto;    margin-left: 9%;" >结束时间</label>
+                                    <div class="col-md-4" style="width: 18%;">
+                                        <input class="form-control " id="monthList-end-date"  type="text" placeholder="请选择" readonly style = "width:auto">
+                                    </div>
+
                                 </div>
                             </form>
                             <div class="form-group col-sm-12" style="margin-top:1%;   width: 100%; " id="liable-details-div">
@@ -467,7 +505,7 @@
                                             <td>次数</td>
                                             <td>延期</td>
                                             <td>延期备注</td>
-                                            <td colspan="3">操作</td>
+                                            <td colspan="3" id="hiddenMega">操作</td>
                                         </tr>
                                     </thead>
                                     <tbody id="monthly-alarm-list-tbody" align="center" class="liabletbody">
@@ -884,7 +922,7 @@
             </div>
         </div>
 
-<script type="text/javascript" src="/js/searchResult-1.1.1.js?"></script>
+<script type="text/javascript" src="/js/searchResult-1.1.5.js?"></script>
 
 </body>
 </html>

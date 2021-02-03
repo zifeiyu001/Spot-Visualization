@@ -250,44 +250,63 @@ function chaxun(workshop,team,equip,time,duty_name){
                 //标题
                 $("#titleName").html(team+" "+ equip+" "+duty_name+"报表");
 
-                if(team=='精尾生产'||(team=='碎矿生产' && equip=='皮带岗')){
+                if((team=='碎矿生产' && equip=='皮带岗')){
 
                     for (var m = 0; m < data.length; m++) {
 
                         sc_content += '<tr style="text-align: center;border: 1px solid ;"><td colspan="2" style="text-align: center;">'
                             + data[m].zoneName + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                            + data[m].equipName + '</td><td colspan="2" style="border: 1px solid ;" >'
-                            + judgeEquip(data[m].oneNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                            + judgeEquip(data[m].twoNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                            + judgeEquip(data[m].threeNum) + '</td></tr>';
+                            + data[m].equipName + '</td><td colspan="3" style="border: 1px solid ;" >'
+                            + judgeEquip(data[m].oneNum) + '</td><td colspan="3" style="border: 1px solid ;">'
+                            + judgeEquip(data[m].twoNum) + '</td></tr>';
                     }
 
+                }
+                else if(team=='精尾生产'){
+                    for (var m = 0; m < data.length; m++) {
+
+                        sc_content += '<tr style="text-align: center;border: 1px solid ;"><td colspan="2" style="text-align: center;">'
+                            + data[m].zoneName + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
+                            + data[m].equipName + '</td><td colspan="6" style="border: 1px solid ;" >'
+                            + judgeEquip(data[m].oneNum) + '</td></tr>';
+                    }
                 }
                 else {
                        for (var m = 0; m < data.length; m++) {
 
                             sc_content += '<tr style="text-align: center;border: 1px solid ;"><td style="text-align: center;border: 1px solid ;">'
                                 + (m + 1) + '</td><td colspan="3" style="border: 1px solid ;text-align: center;"> '
-                                + data[m].equipName + '</td><td colspan="2" style="border: 1px solid ;" >'
-                                + judgeEquip(data[m].oneNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                                + judgeEquip(data[m].twoNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                                + judgeEquip(data[m].threeNum) + '</td></tr>';
+                                + data[m].equipName + '</td><td colspan="3" style="border: 1px solid ;" >'
+                                + judgeEquip(data[m].oneNum) + '</td><td colspan="3" style="border: 1px solid ;">'
+                                + judgeEquip(data[m].twoNum) + '</td></tr>';
                         }
                 }
 //======================生产点检时间选择=========================
                 if(duty_name=='白班') {
-                    sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
-                        + "时间" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "08:00-11:59" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "12:00-15:59" + '</td><td colspan="2" style="border: 1px solid ;" >'
-                        + "16:00-19:59" + '</td></tr>' + sc_content;
+                    if (team=='精尾生产'){
+                        sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
+                            + "时间" + '</td><td colspan="6" style="border: 1px solid ;text-align: center;"> '
+                            + "08:00-19:59" + '</td></tr>' + sc_content;
+                    } else {
+                        sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
+                            + "时间" + '</td><td colspan="3" style="border: 1px solid ;text-align: center;"> '
+                            + "08:00-13:59" + '</td><td colspan="3" style="border: 1px solid ;text-align: center;"> '
+                            + "14:00-19:59" + '</td></tr>' + sc_content;
+                    }
+
                 }
                 else {
-                    sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
-                        + "时间" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "20:00-23:59" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "00:00-03:59" + '</td><td colspan="2" style="border: 1px solid ;" >'
-                        + "04:00-07:59" + '</td></tr>' + sc_content;
+                    if (team=='精尾生产'){
+                        sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
+                            + "时间" + '</td><td colspan="6" style="border: 1px solid ;text-align: center;"> '
+                            + "20:00-07:59" + '</td></tr>' + sc_content;
+                    } else {
+                        sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
+                            + "时间" + '</td><td colspan="3" style="border: 1px solid ;text-align: center;"> '
+                            + "20:00-23:59" + '</td><td colspan="3" style="border: 1px solid ;text-align: center;"> '
+                            + "00:00-07:59" + '</td></tr>' + sc_content;
+                    }
+
                 }
 
                 $('#run').append(sc_content1);

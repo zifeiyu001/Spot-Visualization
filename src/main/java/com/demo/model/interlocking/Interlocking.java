@@ -40,6 +40,8 @@ public class Interlocking {
     private  String dealPerson;
 //    处理人
     private  String dealUser;
+//    处理人
+    private  String dealDate;
 //    处理备注
     private  String  deal_remark;
 //    报警处理标签
@@ -359,5 +361,13 @@ public class Interlocking {
 
     public void setUploadResultTimeEnd(String uploadResultTimeEnd) {
         this.uploadResultTimeEnd = uploadResultTimeEnd;
+    }
+
+    public String getDealDate() {
+        return dealDate;
+    }
+
+    public void setDealDate(String dealDate) {
+        this.dealDate = dealDate;
     }
 }

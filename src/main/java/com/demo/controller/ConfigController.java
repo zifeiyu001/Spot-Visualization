@@ -99,23 +99,37 @@ public class ConfigController {
         String username = (String)session.getAttribute("username");
     //判断是否存在需要的权限
         boolean xk_bj_type = judgeUserAuthority(request);
+        if (username==null){
+            hashMap.put("data","登陆已超时，请刷新页面重新登录");
+            hashMap.put("data1","no");
+        }else {
+            //当满足条件时执行需要操作
+            if (xk_bj_type == true || username.equals("cmstk")) {
+                if (configUsers.size() > 0) {
+                    Integer integer = indexService.update_config_partment_user(deptName, deptId, user, userId, department, alarmType, team);
+                    if (integer >= 0) {
+                        hashMap.put("data", "更新成功！");
+                        hashMap.put("data1", "ok");
+                    } else {
+                        hashMap.put("data", "更新失败！");
+                        hashMap.put("data1", "no");
+                    }
+                } else {
+                    Integer integer = indexService.set_config_partment_user(deptName, deptId, user, userId, department, alarmType, team);
+                    if (integer >= 0) {
+                        hashMap.put("data", "保存成功！");
+                        hashMap.put("data1", "ok");
+                    } else {
+                        hashMap.put("data", "保存失败！");
+                        hashMap.put("data1", "no");
+                    }
+                }
+            } else {
+                hashMap.put("data", "无权限！");
+                hashMap.put("data1", "no");
+            }
 
-    //当满足条件时执行需要操作
-        if(xk_bj_type==true||username.equals("cmstk")){
-           if (configUsers.size()>0){
-               Integer integer = indexService.update_config_partment_user(deptName, deptId, user, userId, department,alarmType,team);
-               if (integer>=0){ hashMap.put("data","更新成功！");hashMap.put("data1","ok");
-               } else { hashMap.put("data","更新失败！");hashMap.put("data1","no"); }
-           }else {
-               Integer integer = indexService.set_config_partment_user(deptName, deptId, user, userId, department,alarmType,team);
-               if (integer>=0){ hashMap.put("data","保存成功！"); hashMap.put("data1","ok");}
-               else { hashMap.put("data","保存失败！");hashMap.put("data1","no"); } }
-       }
-       else {
-           hashMap.put("data","无权限！");hashMap.put("data1","no");
-       }
-
-
+        }
             return hashMap;
     }
 

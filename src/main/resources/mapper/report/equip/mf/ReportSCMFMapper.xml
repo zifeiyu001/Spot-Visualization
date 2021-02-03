@@ -5,18 +5,16 @@
 <mapper namespace="com.demo.mapper.report.equip.mf.ReportSCMFMapper">
 
     <select id="REPORT_SC_MF_PDG_RUN_LIST" resultType="com.demo.model.report.Report">
-        SELECT  equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum,MAX(threeNum) as threeNum FROM (
+        SELECT  equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
             SELECT
                     devName as equipName,
                     <if test="duty=='白班'">
                         (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='12:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='16:00:00'   THEN Max(ALTPID) END) AS threeNum
+                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
                     </if>
                     <if test="duty=='夜班'">
                         (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='04:00:00'   THEN Max(ALTPID) END) AS threeNum
+                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
                     </if>
                         from dxj_spot_result
              WHERE
@@ -32,7 +30,7 @@
                                     AND(ZONE_NAME='一段工艺' OR ZONE_NAME='二段工艺')
                                 </if>
                             </if>
-                --  白班、页面时间划分
+
                         <if test="duty=='白班'">
                             AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
                             AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
@@ -48,7 +46,7 @@
 
     </select>
     <select id="REPORT_SC_MF_FXG_1_RUN_LIST" resultType="com.demo.model.report.Report">
-        SELECT equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum,MAX(threeNum) as threeNum FROM (
+        SELECT equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
             SELECT
                     (CASE WHEN devName='原矿4.5m搅拌桶' AND  SC_PART='矿浆浓度' THEN '一段浓度（%）'
                     WHEN devName='原矿4.5m搅拌桶' AND  SC_PART='矿浆细度' THEN '一段细度（%）'
@@ -60,16 +58,14 @@
                     WHEN devName='2#选硫搅拌桶' AND  SC_PART='矿浆pH值' THEN '选硫pH值（ml/PH）'
                     ELSE devName
                     END)as equipName,
-                    <if test="duty=='白班'">
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='12:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='16:00:00'   THEN Max(ALTPID) END) AS threeNum
-                    </if>
-                    <if test="duty=='夜班'">
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                        (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='04:00:00'   THEN Max(ALTPID) END) AS threeNum
-                    </if>
+        <if test="duty=='白班'">
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
+        </if>
+        <if test="duty=='夜班'">
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
+            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
+        </if>
 
              from
                      dxj_spot_result
@@ -98,18 +94,18 @@
 
     </select>
     <select id="REPORT_SC_MF_FXG_2_RUN_LIST" resultType="com.demo.model.report.Report">
-        SELECT  equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum,MAX(threeNum) as threeNum FROM (
+        SELECT  equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
                 SELECT
                         (CASE WHEN ROUTE_NAME='浮选底层' THEN ZONE_NAME ELSE ROUTE_NAME END)  equipName,
                         <if test="duty=='白班'">
                             (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='12:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='16:00:00'   THEN Max(ALTPID) END) AS threeNum
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
+
                         </if>
                         <if test="duty=='夜班'">
                             (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='04:00:00'   THEN Max(ALTPID) END) AS threeNum
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
+
                         </if>
 
                 from
@@ -125,7 +121,7 @@
 
                         OR ROUTE_NAME='鼓风机')
 
-         --  白班、页面时间划分
+
                         <if test="duty=='白班'">
                         AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
                         AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM
@@ -145,7 +141,7 @@
 
     </select>
     <select id="REPORT_SC_MF_MKG_2_RUN_LIST" resultType="com.demo.model.report.Report">
-        SELECT equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum,MAX(threeNum) as threeNum FROM (
+        SELECT equipName,MAX(oneNum) as oneNum,MAX(twoNum) as twoNum  FROM (
                 SELECT
                         (CASE WHEN devName='MQY2745高低压稀油润滑系统' THEN 'MQY2745再磨机稀油站'
                         WHEN devName='MQY4870高低压稀油润滑系统' THEN 'MQY4870球磨机稀油站'
@@ -160,13 +156,11 @@
 
                         <if test="duty=='白班'">
                             (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='08:00:00'   THEN max(ALTPID) END) AS oneNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='12:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='16:00:00'   THEN Max(ALTPID) END) AS threeNum
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='14:00:00'   THEN Max(ALTPID) END) AS twoNum
                         </if>
                         <if test="duty=='夜班'">
                             (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='20:00:00'   THEN max(ALTPID) END) AS oneNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum,
-                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='04:00:00'   THEN Max(ALTPID) END) AS threeNum
+                            (CASE  WHEN   DATE_FORMAT(TASKSTART_TM,'%H:%i:%s')='00:00:00'   THEN Max(ALTPID) END) AS twoNum
                         </if>
                  from
                       dxj_spot_result
@@ -175,7 +169,6 @@
                     AND(
                           ( ROUTE_NAME='磨矿岗'AND devName!='球磨机结构')
                           OR( ROUTE_NAME='浮选底层' AND ZONE_NAME='浮选底层区域三' AND devName LIKE '%（再磨砂）'))
-                --  白班、页面时间划分
                     <if test="duty=='白班'">
                     AND TASKSTART_TM >= concat("${time}", ' ', '08:00:00')
                     AND   concat("${time}", ' ', '20:00:00')  >TASKSTART_TM

@@ -463,22 +463,20 @@ public interface IndexService {
                                             String spotResult,String userName1,String uploadResultTime,String selectDepart,String alarmType,String user,String pid);
 
     List<Interlocking> Interlocking_get_temp_result(String deptName,  String routeName, String zoneName,
-                                               String devName, String scPart,String scContent, String altpid );
+                                               String devName, String scPart,String scContent,String abnormalHandleType );
     Integer Interlocking_update_temp_result( String deptName, String routeName, String zoneName,
                                                        String devName, String scPart, String scContent,
-                                                        String altpid,
-                                                        String alarmType,String dealPersonLiable,String selectDepart);
+                                                        String abnormalHandleType,
+                                                        String abnormalHandleAdminType,String dealPersonLiable,String selectDepart);
    Integer Interlocking_insert_temp_result( String deptName, String routeName, String zoneName,
                                                         String devName, String scPart, String scContent,
-                                                        String altpid,
-                                                        String alarmType,String dealPersonLiable,String selectDepart);
+                                                        String abnormalHandleType, String abnormalHandleAdminType,String dealPersonLiable,String selectDepart);
 
     Integer Interlocking_update_alarm_result( String deptName, String routeName, String zoneName,
                                              String devName, String scPart, String scContent,
                                              String alarm_manage,String alarm_type);
 
     Integer Interlocking_update_alarm_liable(String resultId,String liable);
-
     //   根据用户id查询所在工段
     List<Interlocking> search_dxj_dept_id(String userId);
 
@@ -494,7 +492,7 @@ public interface IndexService {
 //    添加数据到月度报警清单
    Integer addAlarmToMonthlyList(String mergeId);
 //    获取月度报警清单
-    List<Interlocking> getbcMonthlyAlarmListData(String deptName);
+    List<Interlocking> getbcMonthlyAlarmListData(String deptName,String startTime,String endTime,String state,String type);
 //    处理BC类报警
     Integer dealBCAlarm(String alarmId,String dealRemark,String user);
 //    延期bc类报警
@@ -695,4 +693,26 @@ List<AppDCS> app_jjb_getRunTimeField( String equip);
     Integer setConfigData(String alarm_list_start,String alarm_list_end,String alarm_c_deal_start,String alarm_c_deal_end,String alarm_tips_time);
 
 
+
+    /*添加定期检修工作的月度计划*/
+//    获取所有检修数据
+    List<Interlocking> get_all_regular_overhaul();
+//    获取报警表中是否有未处理的检修数据
+    List<Interlocking> get_month_list_by_regular_overhaul(String deptName,String devName,String scPart,String scContent);
+//    向于都清单中插入检修数据
+    Integer insert_overhaul_into_month(String deptName,String devName,String scPart,String scContent);
+//    获取检修数据设备
+    List<Interlocking> get_regular_overhaul_dev(String deptName);
+//    获取检修数据部位
+    List<Interlocking> get_regular_overhaul_part(String deptName,String devName);
+//    获取检修数据内容
+    List<Interlocking> get_regular_overhaul_content(String deptName,String devName,String scPart);
+//    获取检修数据
+    List<Interlocking> get_regular_overhaul(String deptName,String devName,String scPart,String scContent);
+//    删除数据
+    Integer  changeTemplateOverhaul_deleteData(String id);
+//    修改数据
+    Integer changeTemplateOverhaul_changeData(String id,String devName,String scPart,String scContent);
+//    添加数据
+    Integer changeTemplateOverhaul_addData(String deptName,String devName,String scPart,String scContent);
 }

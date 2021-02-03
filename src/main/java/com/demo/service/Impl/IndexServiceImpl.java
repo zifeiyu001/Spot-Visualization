@@ -1487,7 +1487,7 @@ public class IndexServiceImpl implements IndexService {
         return interlockingMapper.Interlocking_get_byId_result(resultId);
     }
 
-    //  查询alarmResult表中是否有相同数据
+    //  查询alarmResult表中是否有相同数据S
     @Override
     public List<Interlocking> searchAlarmResultDataByInfo(String deptName,String routeName,String zoneName,String devName,String scPart,String scContent,String remark,String alarmType){
             return interlockingMapper.searchAlarmResultDataByInfo(deptName,routeName,zoneName,devName,scPart,scContent,remark,alarmType);
@@ -1514,18 +1514,22 @@ public class IndexServiceImpl implements IndexService {
                 spotResult,userName1,uploadResultTime,selectDepart,alarmType,user,pid);
     };
     @Override
-    public List<Interlocking> Interlocking_get_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid) {
-        return interlockingMapper.Interlocking_get_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,altpid);
+    public List<Interlocking> Interlocking_get_temp_result(String deptName, String routeName, String zoneName, String devName,
+                                                           String scPart, String scContent, String abnormalHandleType) {
+        return interlockingMapper.Interlocking_get_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,abnormalHandleType);
     }
 
     @Override
-    public Integer Interlocking_update_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid,  String alarmType, String dealPersonLiable, String selectDepart) {
-        return interlockingMapper.Interlocking_update_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,altpid,alarmType,dealPersonLiable,selectDepart);
+    public Integer Interlocking_update_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart,
+                                                   String scContent, String abnormalHandleType,  String abnormalHandleAdminType, String dealPersonLiable, String selectDepart) {
+        return interlockingMapper.Interlocking_update_temp_result(deptName,routeName,zoneName,devName,scPart,
+                scContent,abnormalHandleType,abnormalHandleAdminType,dealPersonLiable,selectDepart);
     }
 
     @Override
-    public Integer Interlocking_insert_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart, String scContent, String altpid,String alarmType, String dealPersonLiable, String selectDepart) {
-        return interlockingMapper.Interlocking_insert_temp_result(deptName,routeName,zoneName,devName,scPart,scContent,altpid,alarmType,dealPersonLiable,selectDepart);
+    public Integer Interlocking_insert_temp_result(String deptName, String routeName, String zoneName, String devName, String scPart,
+                                                   String scContent,String abnormalHandleType, String abnormalHandleAdminType, String dealPersonLiable, String selectDepart) {
+        return interlockingMapper.Interlocking_insert_temp_result(deptName,routeName,zoneName,devName,scPart,scContent, abnormalHandleType,  abnormalHandleAdminType,dealPersonLiable,selectDepart);
     }
 
     @Override
@@ -1574,8 +1578,8 @@ public class IndexServiceImpl implements IndexService {
 
 //    获取月度报警清单
     @Override
-    public List<Interlocking> getbcMonthlyAlarmListData(String deptName){
-        return interlockingMapper.getbcMonthlyAlarmListData(deptName);
+    public List<Interlocking> getbcMonthlyAlarmListData(String deptName,String startTime,String endTime,String state,String type){
+        return interlockingMapper.getbcMonthlyAlarmListData(deptName, startTime, endTime, state, type);
     };
 
 //    处理BC类报警
@@ -1969,8 +1973,60 @@ public class IndexServiceImpl implements IndexService {
     @Override
     public Integer setConfigData(String alarm_list_start,String alarm_list_end,String alarm_c_deal_start,String alarm_c_deal_end,String alarm_tips_time){
         return interlockingMapper.setConfigData(alarm_list_start, alarm_list_end,alarm_c_deal_start,alarm_c_deal_end,alarm_tips_time);
-    };
+    }
 
+    /*添加定期检修工作的月度计划*/
+    @Override
+    public List<Interlocking> get_all_regular_overhaul() {
+        return interlockingMapper.get_all_regular_overhaul();
+    }
 
+    @Override
+    public List<Interlocking> get_month_list_by_regular_overhaul(String deptName, String devName, String scPart, String scContent) {
+        return interlockingMapper.get_month_list_by_regular_overhaul( deptName, devName, scPart, scContent);
+    }
+
+    @Override
+    public Integer insert_overhaul_into_month(String deptName, String devName, String scPart, String scContent) {
+        return interlockingMapper.insert_overhaul_into_month( deptName, devName, scPart, scContent);
+    }
+    //    获取检修数据设备
+    @Override
+    public List<Interlocking> get_regular_overhaul_dev(String deptName) {
+        return interlockingMapper.get_regular_overhaul_dev( deptName);
+    }
+    //    获取检修数据部位
+    @Override
+    public List<Interlocking> get_regular_overhaul_part(String deptName,String devName) {
+        return interlockingMapper.get_regular_overhaul_part( deptName,devName);
+    }
+    //    获取检修数据内容
+    @Override
+    public List<Interlocking> get_regular_overhaul_content(String deptName,String devName,String scPart) {
+
+        return interlockingMapper.get_regular_overhaul_content( deptName,devName, scPart);
+    }
+    //    获取检修数据
+    @Override
+    public List<Interlocking> get_regular_overhaul(String deptName,String devName,String scPart,String scContent) {
+
+        return interlockingMapper.get_regular_overhaul( deptName,devName, scPart,scContent);
+    }
+    //    删除数据
+    @Override
+    public Integer  changeTemplateOverhaul_deleteData(String id) {
+        return interlockingMapper.changeTemplateOverhaul_deleteData(id);
+    }
+    //    修改数据
+    @Override
+    public Integer  changeTemplateOverhaul_changeData(String id,String devName,String scPart,String scContent) {
+        return interlockingMapper.changeTemplateOverhaul_changeData(id,devName,scPart,scContent);
+    }
+
+    //    添加数据
+    @Override
+    public Integer  changeTemplateOverhaul_addData(String deptName,String devName,String scPart,String scContent) {
+        return interlockingMapper.changeTemplateOverhaul_addData(deptName,devName,scPart,scContent);
+    }
 
 }

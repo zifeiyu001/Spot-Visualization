@@ -10,9 +10,13 @@ function chooseItem(param){
         $("#li1").attr("class","active");
         $("#li2").attr("class","");
         $("#li3").attr("class","");
+        $("#li4").attr("class","");
+        $("#li5").attr("class","");
         $(".form1").show();
         $(".form2").hide();
         $(".form3").hide();
+        $(".form4").hide();
+        $(".form5").hide();
         getAllDept(param);
     }
     else if(param==='manage'){
@@ -20,18 +24,50 @@ function chooseItem(param){
         $("#li1").attr("class","");
         $("#li2").attr("class","active");
         $("#li3").attr("class","");
+        $("#li4").attr("class","");
+        $("#li5").attr("class","");
         $(".form1").hide();
         $(".form2").show();
         $(".form3").hide();
+        $(".form4").hide();
+        $(".form5").hide();
         getAllDept(param);
-    }else {
+    }
+    else if(param==='template'){
+        $("#li1").attr("class","");
+        $("#li2").attr("class","");
+        $("#li3").attr("class","");
+        $("#li4").attr("class","active");
+        $("#li5").attr("class","");
+        $(".form1").hide();
+        $(".form2").hide();
+        $(".form3").hide();
+        $(".form4").show();
+        $(".form5").hide();
+    }
+    else if (param==='config') {
         $("#li1").attr("class","");
         $("#li2").attr("class","");
         $("#li3").attr("class","active");
+        $("#li4").attr("class","");
+        $("#li5").attr("class","");
         $(".form1").hide();
         $(".form2").hide();
         $(".form3").show();
+        $(".form4").hide();
+        $(".form5").hide();
         getConfigData();
+    }else {
+        $("#li1").attr("class","");
+        $("#li2").attr("class","");
+        $("#li3").attr("class","");
+        $("#li4").attr("class","");
+        $("#li5").attr("class","active");
+        $(".form1").hide();
+        $(".form2").hide();
+        $(".form3").hide();
+        $(".form4").hide();
+        $(".form5").show();
     }
 }
 function updateConfigData() {

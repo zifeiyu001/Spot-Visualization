@@ -1,4 +1,5 @@
 function chaxun(workshop,team,equip,time,duty_name){
+    alert("============");
  var value=workshop+'='+team+"="+equip+"="+time+"="+duty_name;
     var loading='';
     $.ajax({
@@ -96,19 +97,24 @@ function chaxun(workshop,team,equip,time,duty_name){
 
                     if (dept == dept1) {
 
-                        contentData += partLocation(data[a].part) + '&#12288;<u>' + isNumber(dept, data[a].part, data[a].result, data[a].altpid) + '</u>&#12288;' + alarm(data[a].altpid) + "；" + '&#12288;';
+                        contentData += partLocation(data[a].part) + '&#12288;<u>' + isNumber(dept, data[a].part, data[a].result, data[a].altpid) + '</u>&#12288;'
+                            + alarm(data[a].altpid) + "；" + '&#12288;';
 
                         if (a == data.length - 2) {
-                            contentData += partLocation(data[a + 1].part) + '&nbsp;<u>' + isNumber(dept, data[a + 1].part, data[a + 1].result, data[a + 1].altpid) + '</u>&nbsp;' + alarm(data[a + 1].altpid) + "；" + '&nbsp;';
+                            contentData += partLocation(data[a + 1].part) + '&nbsp;<u>' + isNumber(dept, data[a + 1].part, data[a + 1].result, data[a + 1].altpid) + '</u>&nbsp;'
+                                + alarm(data[a + 1].altpid) + "；" + '&nbsp;';
 
                             if (team != '精尾设备') {
 
-                                tableData += '<tr><td colspan="2" class="backgroundColor1" style="background-color: lightcyan ;border: 1px solid ;text-align: center; ">' + data[a].equipName + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
+                                tableData += '<tr><td colspan="2" class="backgroundColor1" style="background-color: lightcyan ;border: 1px solid ;text-align: center; ">'
+                                    + data[a].equipName + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
                                     + contentData +
                                     '</td></tr>';
 
                             } else {
-                                tableData += '<tr ><td  class="backgroundColor1" style="background-color: lightcyan ;border: 1px solid text-align: center;width: 10%;">' + data[a].zoneName + '</td><td class="backgroundColor1"  style="  border: 1px solid ;text-align: center;">' + data[a].equipName + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
+                                tableData += '<tr ><td  class="backgroundColor1" style="background-color: lightcyan ;border: 1px solid text-align: center;width: 10%;">'
+                                    + data[a].zoneName + '</td><td class="backgroundColor1"  style="  border: 1px solid ;text-align: center;">' + data[a].equipName
+                                    + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
                                     + contentData +
                                     '</td></tr>';
                             }
@@ -120,13 +126,16 @@ function chaxun(workshop,team,equip,time,duty_name){
 
                         if (team != '精尾设备') {
 
-                            tableData += '<tr><td colspan="2" class="backgroundColor1" style="background-color: lightcyan ;text-align: center;border: 1px solid;">' + data[a].equipName + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
+                            tableData += '<tr><td colspan="2" class="backgroundColor1" style="background-color: lightcyan ;text-align: center;border: 1px solid;">'
+                                + data[a].equipName + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
                                 + contentData +
                                 '</td></tr>';
 
                         } else {
 
-                            tableData += '<tr ><td class="backgroundColor1" style="background-color: lightcyan ;text-align: center;border: 1px solid ;width: 10%;">' + data[a].zoneName + '</td><td class="backgroundColor1"  style="  border: 1px solid ;text-align: center;">' + data[a].equipName + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
+                            tableData += '<tr ><td class="backgroundColor1" style="background-color: lightcyan ;text-align: center;border: 1px solid ;width: 10%;">'
+                                + data[a].zoneName + '</td><td class="backgroundColor1"  style="  border: 1px solid ;text-align: center;">' + data[a].equipName
+                                + '</td><td colspan="8"  id="runcontent"  style="  border: 1px solid ;">'
                                 + contentData +
                                 '</td></tr>';
                         }
@@ -173,10 +182,12 @@ function chaxun(workshop,team,equip,time,duty_name){
 
                         sc_content += '<tr style="text-align: center;border: 1px solid ;"><td colspan="2" style="text-align: center;">'
                             + data[m].zoneName + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                            + data[m].equipName + '</td><td colspan="2" style="border: 1px solid ;" >'
-                            + judgeEquip(data[m].oneNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                            + judgeEquip(data[m].twoNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                            + judgeEquip(data[m].threeNum) + '</td></tr>';
+                            + data[m].equipName + '</td><td colspan="3" style="border: 1px solid ;" >'
+                            + judgeEquip(data[m].oneNum) + '</td><td colspan="3" style="border: 1px solid ;">'
+                            + judgeEquip(data[m].twoNum) + '</td></tr>';
+                        // +
+                        //     '<td colspan="3" style="border: 1px solid ;">'
+                        //     + judgeEquip(data[m].threeNum) + '</td></tr>';
                     }
 
                 }
@@ -185,26 +196,24 @@ function chaxun(workshop,team,equip,time,duty_name){
 
                             sc_content += '<tr style="text-align: center;border: 1px solid ;"><td style="text-align: center;">'
                                 + (m + 1) + '</td><td colspan="3" style="border: 1px solid ;text-align: center;"> '
-                                + data[m].equipName + '</td><td colspan="2" style="border: 1px solid ;" >'
-                                + judgeEquip(data[m].oneNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                                + judgeEquip(data[m].twoNum) + '</td><td colspan="2" style="border: 1px solid ;">'
-                                + judgeEquip(data[m].threeNum) + '</td></tr>';
+                                + data[m].equipName + '</td><td colspan="3" style="border: 1px solid ;" >'
+                                + judgeEquip(data[m].oneNum) + '</td><td colspan="3" style="border: 1px solid ;">'
+                                + judgeEquip(data[m].twoNum) + '</td></tr>>';
                         }
                 }
 //======================生产点检时间选择=========================
                 if(duty_name=='白班') {
                     sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
-                        + "时间" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "08:00-11:59" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "12:00-15:59" + '</td><td colspan="2" style="border: 1px solid ;" >'
-                        + "16:00-19:59" + '</td></tr>' + sc_content;
+                        + "时间" + '</td><td colspan="4" style="border: 1px solid ;text-align: center;"> '
+                        + "08:00-13:59" + '</td><td colspan="4" style="border: 1px solid ;text-align: center;"> '
+                        + "14:00-19:59" + '</td></tr>'+ sc_content;
                 }
                 else {
+                    alert(sc_content+"======"+sc_content1);
                     sc_content1 += '<tr style="text-align: center; background-color: lightcyan ;border: 1px solid ;"><td colspan="4" style="text-align: center;">'
-                        + "时间" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "20:00-23:59" + '</td><td colspan="2" style="border: 1px solid ;text-align: center;"> '
-                        + "00:00-03:59" + '</td><td colspan="2" style="border: 1px solid ;" >'
-                        + "04:00-07:59" + '</td></tr>' + sc_content;
+                        + "时间" + '</td><td colspan="4" style="border: 1px solid ;text-align: center;"> '
+                        + "20:00-23:59" + '</td><td colspan="4" style="border: 1px solid ;text-align: center;"> '
+                        + "00:00-07:59" + '</td></tr>'+ sc_content;
                 }
 
                 $('#run').append(sc_content1);
